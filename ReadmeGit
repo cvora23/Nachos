@@ -1,0 +1,59 @@
+**************************************************** GIT SET UP ALUDRA USC *******************************************
+
+    On Aludra server make sure you have nachos-csci402 directory which is extracted version of nachos-f2011.tgz.
+
+    mkdir git
+
+    mkdir git/nachos-csci402.git
+
+    cd git/nachos-csci402.git
+
+    git init --bare  ================ This creates empty bare repository and initializes it as empty.
+
+    cd nachos-csci402
+
+    git init ======================== This creates a non-bare repository.
+
+    Now that you have a non-bare repository you need to add files to that repository and commit the changes.
+
+    git add .
+
+    git commit -m 'initial commit' 
+
+    You are now ready to add the bare repository as the remote origin.
+
+    git remote add origin ~/git/nachos-csci402.git
+
+    Now you are ready to push changes to your bare repository, which is now the origin. One command to go:
+
+    git push --all
+
+    Go to cd nachos-csci402/.git
+
+    cat > config 
+    Add the following lines:
+    [branch "master"]  
+    remote = origin  
+    merge = refs/heads/master
+
+    Now the config file for original server copy of nachos is setup for push and pull from bare repository.
+
+    Check out (or clone for git) from your local machine
+
+    Your git repo is ready now. What is left is testing it. Open up a shell in your local computer and execute:
+
+    mkdir localNachosRepo
+
+    cd localNachosRepo
+
+    git clone -u /usr/usc/git/1.6.4.2/bin/git-upload-pack ptaskar@aludra.usc.edu:/home/scf-05/ptaskar/git/nachos-csci402.git
+
+    cd localNachosRepo/nachos-csci402/.git
+    gedit config
+    Add the following lines:
+	uploadpack = /usr/usc/git/1.6.4.2/bin/git-upload-pack
+	receivepack = /usr/usc/git/1.6.4.2/bin/git-receive-pack
+
+    
+    YOU ARE READY TO RUN THE SHOW !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 
