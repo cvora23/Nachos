@@ -28,7 +28,8 @@ SimpleThread(int which)
     
     for (num = 0; num < 5; num++)
     {
-    	printf("*********************************** Thread Name: %s \n",currentThread->Print());
+    	printf("*********************************** Thread Name:\n");
+    	currentThread->Print();
     	printf("*** thread %d looped %d times\n", which, num);
         currentThread->Yield();
     }
