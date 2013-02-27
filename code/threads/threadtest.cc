@@ -26,7 +26,7 @@ SimpleThread(int which)
 {
     int num;
     
-    for (num = 0; num < 1; num++)
+    for (num = 0; num < 2; num++)
     {
     	printf(" \n Thread Name: ");
     	currentThread->Print();
