@@ -86,12 +86,12 @@ main(int argc, char **argv)
     (void) Initialize(argc, argv);
     
 #ifdef THREADS
-	if (!strcmp(*argv, "-S"))
+	if (!strcmp(*(argv+1), "-S"))
 	{
 		//run the initial thread ping pong test for Context Switch
 	    ThreadTest();
 	}
-	if (!strcmp(*argv, "-T"))
+	if (!strcmp(*(argv+1), "-T"))
 	{
 		//run the test suite provided for Assignment 1 - Part 1
 		TestSuite();
