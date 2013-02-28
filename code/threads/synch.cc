@@ -255,6 +255,12 @@ void Condition::Wait(Lock* conditionLock)
         (void) interrupt->SetLevel(oldLevel);
         return;
     }
+    else if(!(conditionLock->isHeldByCurrentThread()))
+    {
+        DEBUG('t', "ConditionalLock is not acquired by you to call Wait on a Condition \n");
+        (void) interrupt->SetLevel(oldLevel);
+        return;
+    }
     else if(cvWaitLock == NULL)
     {
     	cvWaitLock = conditionLock;
@@ -281,7 +287,14 @@ void Condition::Signal(Lock* conditionLock)
 {
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    if(cvWaitQueue->IsEmpty())
+    if(!(conditionLock->isHeldByCurrentThread()))
+    {
+        DEBUG('t', "ConditionalLock is not acquired by you to call Signal on a Condition \n");
+        (void) interrupt->SetLevel(oldLevel);
+        return;
+    }
+
+    else if(cvWaitQueue->IsEmpty())
     {
         DEBUG('t', " Wait Queue for Condition Variable is Empty... Returning  !!!!! \n");
         (void) interrupt->SetLevel(oldLevel);
