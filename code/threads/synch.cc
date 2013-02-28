@@ -206,7 +206,7 @@ void Lock::Release()
 //----------------------------------------------------------------------
 bool Lock::isHeldByCurrentThread(void)
 {
-	return (currentThread == (Thread*)currentLockOwner) ? true:false;
+	return ((currentThread == (Thread*)currentLockOwner) ? true:false);
 }
 
 //----------------------------------------------------------------------
