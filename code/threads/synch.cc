@@ -164,8 +164,6 @@ void Lock::Acquire()
 
     (void) interrupt->SetLevel(oldLevel);
 
-    DEBUG('t', "Lock Acquire DONE !!!! \n");
-
 }
 
 //----------------------------------------------------------------------
