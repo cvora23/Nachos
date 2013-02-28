@@ -84,20 +84,22 @@ main(int argc, char **argv)
 
     DEBUG('t', "Entering main");
     (void) Initialize(argc, argv);
-    
+    for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount)
+    {
+    	argCount = 1;
 #ifdef THREADS
-	if (!strcmp(*(argv+1), "-S"))
+	if (!strcmp(*(argv), "-S"))
 	{
 		//run the initial thread ping pong test for Context Switch
 	    ThreadTest();
 	}
-	if (!strcmp(*(argv+1), "-T"))
+	if (!strcmp(*(argv), "-T"))
 	{
 		//run the test suite provided for Assignment 1 - Part 1
 		TestSuite();
 	}
 #endif
-
+    }
     for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount) {
 	argCount = 1;
         if (!strcmp(*argv, "-z"))               // print copyright
