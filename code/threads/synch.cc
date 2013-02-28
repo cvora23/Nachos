@@ -102,6 +102,18 @@ Semaphore::V()
 // Dummy functions -- so we can compile our later assignments 
 // Note -- without a correct implementation of Condition::Wait(), 
 // the test case in the network assignment won't work!
+
+
+//----------------------------------------------------------------------
+// Lock::Lock
+// 	Initialize a Lock, so that it can be used for synchronization.
+//
+//	"debugName" is an arbitrary name, useful for debugging. Copy that
+//  into local name.
+//	initialize lockWaitQueue -  Wait Queue used with current lock
+//  initialize currentLockOwner - current thread owning the lock
+//  initialize mState - current state of the lock
+//----------------------------------------------------------------------
 Lock::Lock(char* debugName)
 {
 	name = new char[strlen(debugName) + 1];
@@ -111,12 +123,24 @@ Lock::Lock(char* debugName)
 	mState = FREE;
 }
 
+//----------------------------------------------------------------------
+// Lock::Lock
+// 	De-allocate Lock, when no longer needed. Assume no one is still
+//  waiting on the Lock!
+//  De-allocate all the dynamically allocated member variables of Lock
+//	Class.
+//----------------------------------------------------------------------
 Lock::~Lock()
 {
 	delete name;
 	delete lockWaitQueue;
 }
 
+//----------------------------------------------------------------------
+// Lock::Acquire
+// 	Trying to Acquire a lock for synchronization.
+//
+//----------------------------------------------------------------------
 void Lock::Acquire()
 {
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
@@ -141,6 +165,11 @@ void Lock::Acquire()
     (void) interrupt->SetLevel(oldLevel);
 }
 
+//----------------------------------------------------------------------
+// Lock::Release
+// 	Trying to Release a lock used for synchronization.
+//
+//----------------------------------------------------------------------
 void Lock::Release()
 {
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
@@ -170,25 +199,52 @@ void Lock::Release()
     (void) interrupt->SetLevel(oldLevel);
 }
 
+//----------------------------------------------------------------------
+// Lock::isHeldByCurrentThread
+// 	Check to see if current thread owns the lock
+//
+//----------------------------------------------------------------------
 bool Lock::isHeldByCurrentThread(void)
 {
 	return (currentThread == (Thread*)currentLockOwner) ? true:false;
 }
 
+//----------------------------------------------------------------------
+// Condition::Condition
+// 	Initialize a Condition, so that it can be used for mutual exclusion.
+//
+//	"debugName" is an arbitrary name, useful for debugging. Copy that
+//  into local name.
+//	initialize cvWaitQueue -  Wait Queue used with current Condition
+//	Variable
+//  initialize cvWaitLock -   lock associated with this Condition
+//	Variable
+//----------------------------------------------------------------------
 Condition::Condition(char* debugName)
 {
 	name = new char[strlen(debugName) + 1];
 	strncpy(name, debugName, strlen(debugName) + 1);
 	cvWaitQueue = new List;
-	waitLock = NULL;
+	cvWaitLock = NULL;
 }
 
+//----------------------------------------------------------------------
+// Condition::Condition
+// 	De-allocate Lock, when no longer needed. Assume no one is still
+//  waiting on the Lock!
+//  De-allocate all the dynamically allocated member variables of
+// 	Condition Class.
+//----------------------------------------------------------------------
 Condition::~Condition()
 {
 	delete name;
 	delete cvWaitQueue;
 }
 
+//----------------------------------------------------------------------
+// Condition::Wait
+// 	Waiting for a particular condition to occur. Till then sleep.
+//----------------------------------------------------------------------
 void Condition::Wait(Lock* conditionLock)
 {
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
@@ -199,13 +255,12 @@ void Condition::Wait(Lock* conditionLock)
         (void) interrupt->SetLevel(oldLevel);
         return;
     }
-    else if(waitLock == NULL)
+    else if(cvWaitLock == NULL)
     {
-    	waitLock = conditionLock;
+    	cvWaitLock = conditionLock;
     }
-    else if(waitLock != conditionLock)
+    else if(!isValidCvWaitLock(conditionLock))
     {
-    	//TODO: Create a Member function for statements below.
         DEBUG('t', "ConditionalLock passed is never meant to be used with given Condition Variable \n");
         (void) interrupt->SetLevel(oldLevel);
         return;
@@ -214,10 +269,14 @@ void Condition::Wait(Lock* conditionLock)
     conditionLock->Release();
 	cvWaitQueue->Append((void *)currentThread);
 	currentThread->Sleep();
-	waitLock->Acquire();
+	cvWaitLock->Acquire();
     (void) interrupt->SetLevel(oldLevel);
 }
 
+//----------------------------------------------------------------------
+// Condition::Signal
+// 	Signaling single thread waiting this Condition to occur.
+//----------------------------------------------------------------------
 void Condition::Signal(Lock* conditionLock)
 {
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
@@ -228,9 +287,8 @@ void Condition::Signal(Lock* conditionLock)
         (void) interrupt->SetLevel(oldLevel);
         return;
     }
-    else if(waitLock != conditionLock)
+    else if(!isValidCvWaitLock(conditionLock))
     {
-    	//TODO: Create a Member function for statements below.
         DEBUG('t', "ConditionalLock passed is never meant to be used with given Condition Variable \n");
         (void) interrupt->SetLevel(oldLevel);
         return;
@@ -241,15 +299,29 @@ void Condition::Signal(Lock* conditionLock)
 
 	if(cvWaitQueue->IsEmpty())
 	{
-		waitLock = NULL;
+		cvWaitLock = NULL;
 	}
 
     (void) interrupt->SetLevel(oldLevel);
 }
+
+//----------------------------------------------------------------------
+// Condition::Broadcast
+// 	Broadcasting all threads waiting this Condition to occur.
+//----------------------------------------------------------------------
 void Condition::Broadcast(Lock* conditionLock)
 {
 	while(!cvWaitQueue->IsEmpty())
 	{
 		Signal(conditionLock);
 	}
+}
+
+//----------------------------------------------------------------------
+// Condition::isValidCvWaitLock
+// 	Checking validity of the lock used with this Condition Variable.
+//----------------------------------------------------------------------
+bool Condition::isValidCvWaitLock(Lock* conditionLock)
+{
+	return (cvWaitLock == conditionLock) ? true : false;
 }

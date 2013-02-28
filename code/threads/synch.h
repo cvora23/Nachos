@@ -131,10 +131,11 @@ class Condition {
     void Signal(Lock *conditionLock);   // conditionLock must be held by
     void Broadcast(Lock *conditionLock);// the currentThread for all of 
 					// these operations
+    bool isValidCvWaitLock(Lock* conditionLock); // check the validity of condition lock supplied.
 
   private:
     char* name;
-    Lock* waitLock; // Wait Lock associated with a particular condition variable.
+    Lock* cvWaitLock; // Wait Lock associated with a particular condition variable.
     				// It is assumed for Nachos Assignment that Condition Varible
     				// would be used with the same lock. If NOT document it please !!!!!
     List* cvWaitQueue; // Wait for a particular condition variable.
