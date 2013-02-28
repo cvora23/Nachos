@@ -1,5 +1,9 @@
 **************************************************** GIT SET UP ALUDRA USC *******************************************
-
+    
+    NOTE: *******************************************************************************
+    NEVER PULL FROM THE SERVER FOR NACHOS PROJECT ATLEAST !!!!!!!!!!!!!!!
+    NOTE: *******************************************************************************
+    
     On Aludra server make sure you have nachos-csci402 directory which is extracted version of nachos-f2011.tgz.
 
     mkdir git
