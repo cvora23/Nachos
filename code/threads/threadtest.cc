@@ -11,7 +11,9 @@
 
 #include "copyright.h"
 #include "system.h"
-
+#ifdef CHANGED
+#include "synch.h"
+#endif
 //----------------------------------------------------------------------
 // SimpleThread
 // 	Loop 5 times, yielding the CPU to another ready thread 
@@ -51,10 +53,6 @@ ThreadTest()
     t->Fork(SimpleThread, 1);
     SimpleThread(0);
 }
-
-#ifdef CHANGED
-#include "synch.h"
-#endif
 
 #ifdef CHANGED
 // --------------------------------------------------
