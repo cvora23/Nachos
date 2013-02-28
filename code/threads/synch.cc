@@ -145,7 +145,7 @@ void Lock::Acquire()
 {
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    if(isHeldByCurrentThread)
+    if(isHeldByCurrentThread())
     {
         DEBUG('t', "Current Thread is the lock Owner.... Wasting your time buddy !!!! \n");
         (void) interrupt->SetLevel(oldLevel);
@@ -174,7 +174,7 @@ void Lock::Release()
 {
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    if(!isHeldByCurrentThread)
+    if(!isHeldByCurrentThread())
     {
         DEBUG('t', "Current Thread is not the lock Owner to Release the lock"
         		".... Wasting your time buddy !!!! \n");
