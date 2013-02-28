@@ -225,7 +225,7 @@ Condition::Condition(char* debugName)
 	name = new char[strlen(debugName) + 1];
 	strncpy(name, debugName, strlen(debugName) + 1);
 	cvWaitQueue = new List;
-	cvWaitLock = NULL;
+	cvWaitLock = new Lock(debugName);
 }
 
 //----------------------------------------------------------------------
@@ -239,6 +239,7 @@ Condition::~Condition()
 {
 	delete name;
 	delete cvWaitQueue;
+	delete cvWaitLock;
 }
 
 //----------------------------------------------------------------------
@@ -287,7 +288,13 @@ void Condition::Signal(Lock* conditionLock)
 {
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    if(!(conditionLock->isHeldByCurrentThread()))
+    if(conditionLock == NULL)
+    {
+        DEBUG('t', "ConditionalLock passed is invalid and NULL \n");
+        (void) interrupt->SetLevel(oldLevel);
+        return;
+    }
+    else if(!(conditionLock->isHeldByCurrentThread()))
     {
         DEBUG('t', "ConditionalLock is not acquired by you to call Signal on a Condition \n");
         (void) interrupt->SetLevel(oldLevel);
