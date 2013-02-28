@@ -65,6 +65,7 @@ class Semaphore {
 
 class Lock {
   public:
+    enum LockState {FREE=0,BUSY}; // State of the lock whether it is free or busy
     Lock(char* debugName);  		// initialize lock to be FREE
     ~Lock();				// deallocate lock
     char* getName() { return name; }	// debugging assist
@@ -78,8 +79,10 @@ class Lock {
 					// Condition variable ops below.
 
   private:
+    LockState mState; //State of Current Lock.
+    void* currentLockOwner; //Current Lock Owner. Usually a pointer to Thread Class
     char* name;				// for debugging
-    // plus some other stuff you'll need to define
+    List *lockWaitQueue; // Wait Queue for Lock
 };
 
 // The following class defines a "condition variable".  A condition
@@ -131,6 +134,10 @@ class Condition {
 
   private:
     char* name;
+    Lock* waitLock; // Wait Lock associated with a particular condition variable.
+    				// It is assumed for Nachos Assignment that Condition Varible
+    				// would be used with the same lock. If NOT document it please !!!!!
+    List* cvWaitQueue; // Wait for a particular condition variable.
     // plus some other stuff you'll need to define
 };
 #endif // SYNCH_H

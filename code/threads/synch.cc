@@ -25,6 +25,8 @@
 #include "synch.h"
 #include "system.h"
 
+//TODO: DOCUMENT ERROR CONDITIONS PROPERLY BEFORE PUSHING CHANGES TO SERVER
+
 //----------------------------------------------------------------------
 // Semaphore::Semaphore
 // 	Initialize a semaphore, so that it can be used for synchronization.
@@ -100,13 +102,154 @@ Semaphore::V()
 // Dummy functions -- so we can compile our later assignments 
 // Note -- without a correct implementation of Condition::Wait(), 
 // the test case in the network assignment won't work!
-Lock::Lock(char* debugName) {}
-Lock::~Lock() {}
-void Lock::Acquire() {}
-void Lock::Release() {}
+Lock::Lock(char* debugName)
+{
+	name = new char[strlen(debugName) + 1];
+	strncpy(name, debugName, strlen(debugName) + 1);
+	lockWaitQueue = new List;
+	currentLockOwner = NULL;
+	mState = FREE;
+}
 
-Condition::Condition(char* debugName) { }
-Condition::~Condition() { }
-void Condition::Wait(Lock* conditionLock) { ASSERT(FALSE); }
-void Condition::Signal(Lock* conditionLock) { }
-void Condition::Broadcast(Lock* conditionLock) { }
+Lock::~Lock()
+{
+	delete name;
+	delete lockWaitQueue;
+}
+
+void Lock::Acquire()
+{
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);
+
+    if(isHeldByCurrentThread)
+    {
+        DEBUG('t', "Current Thread is the lock Owner.... Wasting your time buddy !!!! \n");
+        (void) interrupt->SetLevel(oldLevel);
+        return;
+    }
+    else if(mState == FREE)
+    {
+    	mState = BUSY;
+    	currentLockOwner = currentThread;
+    }
+    else
+    {
+    	lockWaitQueue->Append((void *)currentThread);
+    	currentThread->Sleep();
+    }
+
+    (void) interrupt->SetLevel(oldLevel);
+}
+
+void Lock::Release()
+{
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);
+
+    if(!isHeldByCurrentThread)
+    {
+        DEBUG('t', "Current Thread is not the lock Owner to Release the lock"
+        		".... Wasting your time buddy !!!! \n");
+        (void) interrupt->SetLevel(oldLevel);
+        return;
+    }
+    else if(!lockWaitQueue->IsEmpty())
+    {
+    	Thread* firstWaitingThreadForLock = (Thread*)lockWaitQueue->Remove();
+    	if(firstWaitingThreadForLock != NULL)
+    	{
+        	mState = BUSY;
+			currentLockOwner = firstWaitingThreadForLock;
+			scheduler->ReadyToRun(firstWaitingThreadForLock);
+    	}
+    }
+    else
+    {
+    	mState = FREE;
+    	currentLockOwner = NULL;
+    }
+    (void) interrupt->SetLevel(oldLevel);
+}
+
+bool Lock::isHeldByCurrentThread(void)
+{
+	return (currentThread == (Thread*)currentLockOwner) ? true:false;
+}
+
+Condition::Condition(char* debugName)
+{
+	name = new char[strlen(debugName) + 1];
+	strncpy(name, debugName, strlen(debugName) + 1);
+	cvWaitQueue = new List;
+	waitLock = NULL;
+}
+
+Condition::~Condition()
+{
+	delete name;
+	delete cvWaitQueue;
+}
+
+void Condition::Wait(Lock* conditionLock)
+{
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);
+
+    if(conditionLock == NULL)
+    {
+        DEBUG('t', "ConditionalLock passed is invalid and NULL \n");
+        (void) interrupt->SetLevel(oldLevel);
+        return;
+    }
+    else if(waitLock == NULL)
+    {
+    	waitLock = conditionLock;
+    }
+    else if(waitLock != conditionLock)
+    {
+    	//TODO: Create a Member function for statements below.
+        DEBUG('t', "ConditionalLock passed is never meant to be used with given Condition Variable \n");
+        (void) interrupt->SetLevel(oldLevel);
+        return;
+    }
+
+    conditionLock->Release();
+	cvWaitQueue->Append((void *)currentThread);
+	currentThread->Sleep();
+	waitLock->Acquire();
+    (void) interrupt->SetLevel(oldLevel);
+}
+
+void Condition::Signal(Lock* conditionLock)
+{
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);
+
+    if(cvWaitQueue->IsEmpty())
+    {
+        DEBUG('t', " Wait Queue for Condition Variable is Empty... Returning  !!!!! \n");
+        (void) interrupt->SetLevel(oldLevel);
+        return;
+    }
+    else if(waitLock != conditionLock)
+    {
+    	//TODO: Create a Member function for statements below.
+        DEBUG('t', "ConditionalLock passed is never meant to be used with given Condition Variable \n");
+        (void) interrupt->SetLevel(oldLevel);
+        return;
+    }
+
+    Thread* firstWaitingThreadForCV = (Thread*)cvWaitQueue->Remove();
+	scheduler->ReadyToRun(firstWaitingThreadForCV);
+
+	if(cvWaitQueue->IsEmpty())
+	{
+		waitLock = NULL;
+	}
+
+    (void) interrupt->SetLevel(oldLevel);
+}
+void Condition::Broadcast(Lock* conditionLock)
+{
+	while(!cvWaitQueue->IsEmpty())
+	{
+		Signal(conditionLock);
+	}
+}
