@@ -538,9 +538,8 @@ void Consumer()
     while(count != 0)
     {
     	bufPtr = get();
-    	DEBUG('t',"%c !!!!!",bufPtr);
+    	DEBUG('t',"%c",bufPtr);
     }
-
     DEBUG('t', "Consumer Done !!!!! ");
 }
 
