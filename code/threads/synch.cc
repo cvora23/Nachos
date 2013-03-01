@@ -277,7 +277,7 @@ void Condition::Wait(Lock* conditionLock)
     conditionLock->Release();
 	cvWaitQueue->Append((void *)currentThread);
 	currentThread->Sleep();
-	cvWaitLock->Acquire();
+	conditionLock->Acquire();
     (void) interrupt->SetLevel(oldLevel);
 }
 
