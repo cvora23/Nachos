@@ -596,7 +596,7 @@ int T7_end = 0;
  */
 void T7_put(char c)
 {
-	BufferLock.Acquire();
+	T7_BufferLock.Acquire();
 	while(T7_count == T7_BUFSIZE)
 	{
 		T7_BufferLock.Release();
@@ -643,7 +643,7 @@ void T7_Producer()
     char* putBuffer = "Hello World";
     while(*putBuffer)
     {
-    	put(*putBuffer);
+    	T7_put(*putBuffer);
     	*putBuffer++;
     }
     DEBUG('t', "T7_Producer Done !!!! \n");
