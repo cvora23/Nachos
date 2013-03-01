@@ -518,14 +518,14 @@ char get()
  */
 void Producer()
 {
-    DEBUG('t', "Producer Started !!!!! ");
+    DEBUG('t', "Producer Started !!!!! \n");
     char* putBuffer = "Hello World";
     while(*putBuffer)
     {
     	put(*putBuffer);
     	*putBuffer++;
     }
-    DEBUG('t', "Producer Done !!!! ");
+    DEBUG('t', "Producer Done !!!! \n");
 }
 
 /**
@@ -533,7 +533,7 @@ void Producer()
  */
 void Consumer()
 {
-    DEBUG('t', "Consumer Started !!!!! ");
+    DEBUG('t', "Consumer Started !!!!! \n");
     char bufPtr;
     while(count != 0)
     {
@@ -549,7 +549,7 @@ void TestSuite6()
     Thread *t;
     char *name;
 
-    DEBUG('t', "Entering TestSuite6");
+    DEBUG('t', "Entering TestSuite6 !!!!!!! \n");
 
     t = new Thread("Producer");
     t->Fork((VoidFunctionPtr)Producer,0);
