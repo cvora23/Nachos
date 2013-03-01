@@ -489,7 +489,7 @@ void put(char c)
 	count++;
 	buffer[head] = c;
 	head++;
-	if(head == SIZE)
+	if(head == BUFSIZE)
 	{
 		head = 0;
 	}
@@ -505,7 +505,7 @@ char get()
 	count--;
 	c = buffer[tail];
 	tail++;
-	if(tail == SIZE)
+	if(tail == BUFSIZE)
 	{
 		tail = 0;
 	}
