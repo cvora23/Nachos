@@ -130,8 +130,9 @@ main(int argc, char **argv)
 	}
 #endif
     }
-    for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount) {
-	argCount = 1;
+    for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount)
+    {
+    	argCount = 1;
         if (!strcmp(*argv, "-z"))               // print copyright
             printf (copyright);
 #ifdef USER_PROGRAM
