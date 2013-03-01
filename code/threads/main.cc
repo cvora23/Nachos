@@ -136,6 +136,11 @@ main(int argc, char **argv)
 		//run the test suite provided for Assignment 1 - Part 1
 		TestSuite5();
 	}
+	if (!strcmp(*(argv), "-T6"))
+	{
+		//run the test suite provided for Assignment 1 - Part 1
+		TestSuite6();
+	}
 #endif
     }
     for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount)
