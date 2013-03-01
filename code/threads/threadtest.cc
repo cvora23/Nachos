@@ -540,7 +540,7 @@ void Consumer()
     	bufPtr = get();
     	DEBUG('t',"%c",bufPtr);
     }
-    DEBUG('t', "Consumer Done !!!!! \n");
+    DEBUG('t', "\nConsumer Done !!!!! \n");
 }
 
 
