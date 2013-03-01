@@ -71,7 +71,7 @@ extern void TestSuite3();
 extern void TestSuite4();
 extern void TestSuite5();
 extern void TestSuite6();
-
+extern void TestSuite7();
 #endif
 
 
@@ -140,6 +140,11 @@ main(int argc, char **argv)
 	{
 		//run the test suite provided for Assignment 1 - Part 1
 		TestSuite6();
+	}
+	if (!strcmp(*(argv), "-T7"))
+	{
+		//run the test suite provided for Assignment 1 - Part 1
+		TestSuite7();
 	}
 #endif
     }

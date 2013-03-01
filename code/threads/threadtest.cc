@@ -559,6 +559,130 @@ void TestSuite6()
 
 }
 
+/**
+ * TestSuite7() Producer Consumer Implementation only with locks:
+ * 	1:	Producers add characters to a buffer.
+ * 	2: 	Consumers remove characters from buffer.
+ * 	3:	Characters will removed in the same order added.
+ * 	4:  Test also covers the empty/full cases with protected buffer.
+ */
+
+/**
+ * Size of Buffer
+ */
+#define T7_BUFSIZE 5
+/*
+ * Buffer used to read from and write to
+ */
+char T7_buffer[T7_BUFSIZE];
+/**
+ * Head and Tail of the buffer
+ */
+int T7_head = 0,T7_tail = 0;
+/**
+ * Lock used to protect the buffer for mutual exclusion
+ */
+Lock T7_BufferLock("T7_BufferLock");
+/**
+ * Counter to keep track of number of bytes added to Buffer
+ */
+int T7_count;
+/**
+ * End the test now
+ */
+int T7_end = 0;
+/**
+ * put function to add characters to protected buffer
+ */
+void T7_put(char c)
+{
+	BufferLock.Acquire();
+	while(T7_count == SIZE)
+	{
+		T7_BufferLock.Release();
+		T7_BUfferLock.Acquire();
+	}
+	T7_count++;
+	T7_buffer[T7_head] = c;
+	T7_head++;
+	if(T7_head == T7_BUFSIZE)
+	{
+		T7_head = 0;
+	}
+	T7_BufferLock.Release();
+}
+/**
+ * get function to remove characters from protected buffer
+ */
+char T7_get()
+{
+	char c;
+	T7_BufferLock.Acquire();
+	while(T7_count == 0)
+	{
+		T7_BufferLock.Release();
+		T7_BUfferLock.Acquire();
+	}
+	T7_count--;
+	c = T7_buffer[tail];
+	T7_tail++;
+	if(T7_tail == T7_BUFSIZE)
+	{
+		T7_tail = 0;
+	}
+	T7_BufferLock.Release();
+	return c;
+}
+
+/**
+ * Producer Thread - Adds character to a buffer
+ */
+void T7_Producer()
+{
+    DEBUG('t', "T7_Producer Started !!!!! \n");
+    char* putBuffer = "Hello World";
+    while(*putBuffer)
+    {
+    	put(*putBuffer);
+    	*putBuffer++;
+    }
+    DEBUG('t', "T7_Producer Done !!!! \n");
+    T7_end = 1;
+}
+
+/**
+ * Consumer Thread - Removes character from a buffer
+ */
+void T7_Consumer()
+{
+    DEBUG('t', "T7_Consumer Started !!!!! \n");
+    char bufPtr;
+    while(T7_end != 1)
+    {
+    	bufPtr = T7_get();
+    	DEBUG('t',"%c",bufPtr);
+    }
+    DEBUG('t', "\nT7_Consumer Done !!!!! \n");
+}
+
+
+void TestSuite7()
+{
+    Thread *t;
+    char *name;
+
+    DEBUG('t', "Entering TestSuite7 !!!!!!! \n");
+
+    t = new Thread("T7_Producer");
+    t->Fork((VoidFunctionPtr)T7_Producer,0);
+
+    t = new Thread("T7_Consumer");
+    t->Fork((VoidFunctionPtr)T7_Consumer,0);
+
+}
+
+
+
 // --------------------------------------------------
 // TestSuite()
 //     This is the main thread of the test suite.  It runs the
