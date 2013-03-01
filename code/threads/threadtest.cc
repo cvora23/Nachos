@@ -600,6 +600,7 @@ void T7_put(char c)
 	while(T7_count == T7_BUFSIZE)
 	{
 		T7_BufferLock.Release();
+		currentThread->Yield();
 		T7_BufferLock.Acquire();
 	}
 	T7_count++;
@@ -621,6 +622,7 @@ char T7_get()
 	while(T7_count == 0)
 	{
 		T7_BufferLock.Release();
+		currentThread->Yield();
 		T7_BufferLock.Acquire();
 	}
 	T7_count--;
