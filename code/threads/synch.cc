@@ -226,7 +226,7 @@ Condition::Condition(char* debugName)
 	name = new char[strlen(debugName) + 1];
 	strncpy(name, debugName, strlen(debugName) + 1);
 	cvWaitQueue = new List;
-	cvWaitLock = new Lock(debugName);
+	cvWaitLock = NULL;
 }
 
 //----------------------------------------------------------------------
@@ -257,15 +257,15 @@ void Condition::Wait(Lock* conditionLock)
         (void) interrupt->SetLevel(oldLevel);
         return;
     }
+    else if(cvWaitLock == NULL)
+    {
+    	cvWaitLock = conditionLock;
+    }
     else if(!(conditionLock->isHeldByCurrentThread()))
     {
         DEBUG('t', "ConditionalLock is not acquired by you to call Wait on a Condition \n");
         (void) interrupt->SetLevel(oldLevel);
         return;
-    }
-    else if(cvWaitLock == NULL)
-    {
-    	cvWaitLock = conditionLock;
     }
     else if(!isValidCvWaitLock(conditionLock))
     {
