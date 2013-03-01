@@ -57,7 +57,7 @@
     Add the following lines:
 	uploadpack = /usr/usc/git/1.6.4.2/bin/git-upload-pack
 	receivepack = /usr/usc/git/1.6.4.2/bin/git-receive-pack
-
+    
     
     YOU ARE READY TO RUN THE SHOW !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  

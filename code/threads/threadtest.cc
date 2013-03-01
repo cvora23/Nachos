@@ -306,6 +306,141 @@ void t5_t2() {
 }
 
 // --------------------------------------------------
+// TestSuite1()
+//     This is the main thread of the test suite.  It runs the
+//     following tests:
+//
+//       1.  Show that a thread trying to release a lock it does not
+//           hold does not work
+// --------------------------------------------------
+void TestSuite1()
+{
+    Thread *t;
+    char *name;
+    int i;
+
+    // Test 1
+
+    printf("Starting Test 1\n");
+
+    t = new Thread("t1_t1");
+    t->Fork((VoidFunctionPtr)t1_t1,0);
+
+    t = new Thread("t1_t2");
+    t->Fork((VoidFunctionPtr)t1_t2,0);
+
+    t = new Thread("t1_t3");
+    t->Fork((VoidFunctionPtr)t1_t3,0);
+
+    // Wait for Test 1 to complete
+    for (  i = 0; i < 2; i++ )
+	t1_done.P();
+}
+
+// --------------------------------------------------
+// TestSuite2()
+//     This is the main thread of the test suite.  It runs the
+//     following tests:
+//
+//       2.  Show that Signals are not stored -- a Signal with no
+//           thread waiting is ignored
+// --------------------------------------------------
+void TestSuite2()
+{
+    // Test 2
+
+    printf("Starting Test 2.  Note that it is an error if thread t2_t2\n");
+    printf("completes\n");
+
+    t = new Thread("t2_t1");
+    t->Fork((VoidFunctionPtr)t2_t1,0);
+
+    t = new Thread("t2_t2");
+    t->Fork((VoidFunctionPtr)t2_t2,0);
+
+    // Wait for Test 2 to complete
+    t2_done.P();
+}
+
+// --------------------------------------------------
+// TestSuite3()
+//     This is the main thread of the test suite.  It runs the
+//     following tests:
+//
+//       3.  Show that Signal only wakes 1 thread
+// --------------------------------------------------
+void TestSuite3()
+{
+    // Test 3
+
+    printf("Starting Test 3\n");
+
+    for (  i = 0 ; i < 5 ; i++ ) {
+	name = new char [20];
+	sprintf(name,"t3_waiter%d",i);
+	t = new Thread(name);
+	t->Fork((VoidFunctionPtr)t3_waiter,0);
+    }
+    t = new Thread("t3_signaller");
+    t->Fork((VoidFunctionPtr)t3_signaller,0);
+
+    // Wait for Test 3 to complete
+    for (  i = 0; i < 2; i++ )
+	t3_done.P();
+}
+
+// --------------------------------------------------
+// TestSuite4()
+//     This is the main thread of the test suite.  It runs the
+//     following tests:
+//
+//	 	 4.  Show that Broadcast wakes all waiting threads
+// --------------------------------------------------
+void TestSuite4()
+{
+    // Test 4
+
+    printf("Starting Test 4\n");
+
+    for (  i = 0 ; i < 5 ; i++ ) {
+	name = new char [20];
+	sprintf(name,"t4_waiter%d",i);
+	t = new Thread(name);
+	t->Fork((VoidFunctionPtr)t4_waiter,0);
+    }
+    t = new Thread("t4_signaller");
+    t->Fork((VoidFunctionPtr)t4_signaller,0);
+
+    // Wait for Test 4 to complete
+    for (  i = 0; i < 6; i++ )
+	t4_done.P();
+}
+
+// --------------------------------------------------
+// TestSuite5()
+//     This is the main thread of the test suite.  It runs the
+//     following tests:
+//
+//       5.  Show that Signaling a thread waiting under one lock
+//           while holding another is a Fatal error
+//
+// --------------------------------------------------
+void TestSuite5()
+{
+    // Test 5
+
+    printf("Starting Test 5.  Note that it is an error if thread t5_t1\n");
+    printf("completes\n");
+
+    t = new Thread("t5_t1");
+    t->Fork((VoidFunctionPtr)t5_t1,0);
+
+    t = new Thread("t5_t2");
+    t->Fork((VoidFunctionPtr)t5_t2,0);
+}
+
+
+// --------------------------------------------------
 // TestSuite()
 //     This is the main thread of the test suite.  It runs the
 //     following tests:
@@ -325,7 +460,9 @@ void t5_t2() {
 //
 //           Fatal errors terminate the thread in question.
 // --------------------------------------------------
-void TestSuite() {
+
+void TestSuite()
+{
     Thread *t;
     char *name;
     int i;

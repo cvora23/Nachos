@@ -61,6 +61,11 @@ extern void Print(char *file), PerformanceTest(void);
 extern void StartProcess(char *file), ConsoleTest(char *in, char *out);
 extern void MailTest(int networkID);
 extern void TestSuite();
+extern void TestSuite1();
+extern void TestSuite2();
+extern void TestSuite3();
+extern void TestSuite4();
+extern void TestSuite5();
 
 //----------------------------------------------------------------------
 // main
@@ -97,6 +102,31 @@ main(int argc, char **argv)
 	{
 		//run the test suite provided for Assignment 1 - Part 1
 		TestSuite();
+	}
+	if (!strcmp(*(argv), "-T1"))
+	{
+		//run the test suite provided for Assignment 1 - Part 1
+		TestSuite1();
+	}
+	if (!strcmp(*(argv), "-T2"))
+	{
+		//run the test suite provided for Assignment 1 - Part 1
+		TestSuite2();
+	}
+	if (!strcmp(*(argv), "-T3"))
+	{
+		//run the test suite provided for Assignment 1 - Part 1
+		TestSuite3();
+	}
+	if (!strcmp(*(argv), "-T4"))
+	{
+		//run the test suite provided for Assignment 1 - Part 1
+		TestSuite4();
+	}
+	if (!strcmp(*(argv), "-T5"))
+	{
+		//run the test suite provided for Assignment 1 - Part 1
+		TestSuite5();
 	}
 #endif
     }
