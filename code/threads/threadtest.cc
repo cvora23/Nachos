@@ -626,7 +626,7 @@ char T7_get()
 		T7_BufferLock.Acquire();
 	}
 	T7_count--;
-	c = T7_buffer[tail];
+	c = T7_buffer[T7_tail];
 	T7_tail++;
 	if(T7_tail == T7_BUFSIZE)
 	{
