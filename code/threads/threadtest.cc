@@ -537,7 +537,7 @@ void Consumer()
     char* bufPtr;
     while(count != 0)
     {
-    	bufPtr = get();
+    	*bufPtr = get();
     	DEBUG('t',"Value received %s !!!!!",bufPtr);
     }
 
