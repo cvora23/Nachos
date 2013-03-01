@@ -534,11 +534,11 @@ void Producer()
 void Consumer()
 {
     DEBUG('t', "Consumer Started !!!!! ");
-    char* bufPtr;
+    char bufPtr;
     while(count != 0)
     {
-    	*bufPtr = get();
-    	DEBUG('t',"Value received %s !!!!!",bufPtr);
+    	bufPtr = get();
+    	DEBUG('t',"Value received %c !!!!!",bufPtr);
     }
 
     DEBUG('t', "Consumer Done !!!!! ");
