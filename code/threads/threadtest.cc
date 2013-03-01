@@ -453,6 +453,113 @@ void TestSuite5()
 }
 
 
+/**
+ * TestSuite6() Producer Consumer Implementation only with locks:
+ * 	1:	Producers add characters to a buffer.
+ * 	2: 	Consumers remove characters from buffer.
+ * 	3:	Characters will removed in the same order added.
+ */
+
+/**
+ * Size of Buffer
+ */
+#define BUFSIZE 256
+/*
+ * Buffer used to read from and write to
+ */
+char buffer[BUFSIZE];
+/**
+ * Head and Tail of the buffer
+ */
+int head = 0,tail = 0;
+/**
+ * Lock used to protect the buffer for mutual exclusion
+ */
+Lock BufferLock("BufferLock");
+/**
+ * Counter to keep track of number of bytes added to Buffer
+ */
+int count;
+/**
+ * put function to add characters to protected buffer
+ */
+void put(char c)
+{
+	BufferLock.Acquire();
+	count++;
+	buffer[head] = c;
+	head++;
+	if(head == SIZE)
+	{
+		head = 0;
+	}
+	BufferLock.Release();
+}
+/**
+ * get function to remove characters from protected buffer
+ */
+char get()
+{
+	char c;
+	BufferLock.Acquire();
+	count--;
+	c = buffer[tail];
+	tail++;
+	if(tail == SIZE)
+	{
+		tail = 0;
+	}
+	BufferLock.Release();
+	return c;
+}
+
+/**
+ * Producer Thread - Adds character to a buffer
+ */
+void Producer()
+{
+    DEBUG('t', "Producer Started !!!!! ");
+    char* putBuffer = "Hello World";
+    while(*putBuffer)
+    {
+    	put(*putBuffer);
+    	*putBuffer++;
+    }
+    DEBUG('t', "Producer Done !!!! ");
+}
+
+/**
+ * Consumer Thread - Removes character from a buffer
+ */
+void Consumer()
+{
+    DEBUG('t', "Consumer Started !!!!! ");
+    char* bufPtr;
+    while(count != 0)
+    {
+    	bufPtr = get();
+    	DEBUG('t',"Value received %s !!!!!",bufPtr);
+    }
+
+    DEBUG('t', "Consumer Done !!!!! ");
+}
+
+
+void TestSuite6()
+{
+    Thread *t;
+    char *name;
+
+    DEBUG('t', "Entering TestSuite6");
+
+    t = new Thread("Producer");
+    t->Fork((VoidFunctionPtr)Producer,0);
+
+    t = new Thread("Consumer");
+    t->Fork((VoidFunctionPtr)Consumer,0);
+
+}
+
 // --------------------------------------------------
 // TestSuite()
 //     This is the main thread of the test suite.  It runs the
