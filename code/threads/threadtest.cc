@@ -597,10 +597,10 @@ int T7_end = 0;
 void T7_put(char c)
 {
 	BufferLock.Acquire();
-	while(T7_count == SIZE)
+	while(T7_count == T7_BUFSIZE)
 	{
 		T7_BufferLock.Release();
-		T7_BUfferLock.Acquire();
+		T7_BufferLock.Acquire();
 	}
 	T7_count++;
 	T7_buffer[T7_head] = c;
@@ -621,7 +621,7 @@ char T7_get()
 	while(T7_count == 0)
 	{
 		T7_BufferLock.Release();
-		T7_BUfferLock.Acquire();
+		T7_BufferLock.Acquire();
 	}
 	T7_count--;
 	c = T7_buffer[tail];
