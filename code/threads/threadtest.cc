@@ -347,6 +347,9 @@ void TestSuite1()
 // --------------------------------------------------
 void TestSuite2()
 {
+    Thread *t;
+    char *name;
+    int i;
     // Test 2
 
     printf("Starting Test 2.  Note that it is an error if thread t2_t2\n");
@@ -371,6 +374,9 @@ void TestSuite2()
 // --------------------------------------------------
 void TestSuite3()
 {
+    Thread *t;
+    char *name;
+    int i;
     // Test 3
 
     printf("Starting Test 3\n");
@@ -398,6 +404,9 @@ void TestSuite3()
 // --------------------------------------------------
 void TestSuite4()
 {
+    Thread *t;
+    char *name;
+    int i;
     // Test 4
 
     printf("Starting Test 4\n");
@@ -427,6 +436,9 @@ void TestSuite4()
 // --------------------------------------------------
 void TestSuite5()
 {
+    Thread *t;
+    char *name;
+    int i;
     // Test 5
 
     printf("Starting Test 5.  Note that it is an error if thread t5_t1\n");
