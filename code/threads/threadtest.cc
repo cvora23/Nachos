@@ -806,7 +806,7 @@ void T8_Consumer()
 }
 
 
-void TestSuite7()
+void TestSuite8()
 {
     Thread *t;
     char *name;
