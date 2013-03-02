@@ -147,7 +147,7 @@ void Lock::Acquire()
 
     if(isHeldByCurrentThread())
     {
-        DEBUG('t', "Current Thread is the lock Owner.... Wasting your time buddy !!!! \n");
+        DEBUG('t', "\nCurrent Thread is the lock Owner.... Wasting your time buddy !!!! \n");
         (void) interrupt->SetLevel(oldLevel);
         return;
     }
@@ -177,7 +177,7 @@ void Lock::Release()
 
     if(!isHeldByCurrentThread())
     {
-        DEBUG('t', "Current Thread is not the lock Owner to Release the lock"
+        DEBUG('t', "\nCurrent Thread is not the lock Owner to Release the lock"
         		".... Wasting your time buddy !!!! \n");
         (void) interrupt->SetLevel(oldLevel);
         return;
@@ -253,7 +253,7 @@ void Condition::Wait(Lock* conditionLock)
 
     if(conditionLock == NULL)
     {
-        DEBUG('t', "ConditionalLock passed is invalid and NULL \n");
+        DEBUG('t', "\nConditionalLock passed is invalid and NULL \n");
         (void) interrupt->SetLevel(oldLevel);
         return;
     }
@@ -263,13 +263,13 @@ void Condition::Wait(Lock* conditionLock)
     }
     else if(!(conditionLock->isHeldByCurrentThread()))
     {
-        DEBUG('t', "ConditionalLock is not acquired by you to call Wait on a Condition \n");
+        DEBUG('t', "\nConditionalLock is not acquired by you to call Wait on a Condition \n");
         (void) interrupt->SetLevel(oldLevel);
         return;
     }
     else if(!isValidCvWaitLock(conditionLock))
     {
-        DEBUG('t', "ConditionalLock passed is never meant to be used with given Condition Variable \n");
+        DEBUG('t', "\nConditionalLock passed is never meant to be used with given Condition Variable \n");
         (void) interrupt->SetLevel(oldLevel);
         return;
     }
@@ -291,26 +291,26 @@ void Condition::Signal(Lock* conditionLock)
 
     if(conditionLock == NULL)
     {
-        DEBUG('t', "ConditionalLock passed is invalid and NULL \n");
+        DEBUG('t', "\nConditionalLock passed is invalid and NULL \n");
         (void) interrupt->SetLevel(oldLevel);
         return;
     }
     else if(!(conditionLock->isHeldByCurrentThread()))
     {
-        DEBUG('t', "ConditionalLock is not acquired by you to call Signal on a Condition \n");
+        DEBUG('t', "\nConditionalLock is not acquired by you to call Signal on a Condition \n");
         (void) interrupt->SetLevel(oldLevel);
         return;
     }
 
     else if(cvWaitQueue->IsEmpty())
     {
-        DEBUG('t', " Wait Queue for Condition Variable is Empty... Returning  !!!!! \n");
+        DEBUG('t', "\nWait Queue for Condition Variable is Empty... Returning  !!!!! \n");
         (void) interrupt->SetLevel(oldLevel);
         return;
     }
     else if(!isValidCvWaitLock(conditionLock))
     {
-        DEBUG('t', "ConditionalLock passed is never meant to be used with given Condition Variable \n");
+        DEBUG('t', "\nConditionalLock passed is never meant to be used with given Condition Variable \n");
         (void) interrupt->SetLevel(oldLevel);
         return;
     }
