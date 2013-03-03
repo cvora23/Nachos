@@ -43,29 +43,41 @@ void Problem2()
 
     DEBUG('p', "Starting Manager for Problem 2 !!!!!!! \n");
 
+    char *threadName;
+
     for(int i = 0;i<NO_OF_MANAGERS;i++)
     {
-    	t = new Thread(space_conc(MANAGER_STRING,Itoa(i)));
+    	threadName = new char[50];
+        sprintf (threadName, "%s_%d", MANAGER_STRING, i);
+    	t = new Thread(threadName);
         t->Fork((VoidFunctionPtr)ManagerThread,i);
     }
     for(int i = 0;i<NO_OF_CASHIERS;i++)
     {
-    	t = new Thread(space_conc(CASHIER_STRING,Itoa(i)));
-        t->Fork((VoidFunctionPtr)CashierThread,i);
+    	threadName = new char[50];
+        sprintf (threadName, "%s_%d", CASHIER_STRING, i);
+    	t = new Thread(threadName);
+    	t->Fork((VoidFunctionPtr)CashierThread,i);
     }
     for(int i = 0;i<NO_OF_SALESMAN;i++)
     {
-    	t = new Thread(space_conc(SALESMAN_STRING,Itoa(i)));
-        t->Fork((VoidFunctionPtr)SalesmanThread,i);
+    	threadName = new char[50];
+        sprintf (threadName, "%s_%d", SALESMAN_STRING, i);
+    	t = new Thread(threadName);
+    	t->Fork((VoidFunctionPtr)SalesmanThread,i);
     }
     for(int i = 0;i<NO_OF_GOOD_LOADERS;i++)
     {
-    	t = new Thread(space_conc(GOOD_LOADERS_STRING,Itoa(i)));
-        t->Fork((VoidFunctionPtr)GoodLoaderThread,i);
+    	threadName = new char[50];
+        sprintf (threadName, "%s_%d", GOOD_LOADERS_STRING, i);
+    	t = new Thread(threadName);
+    	t->Fork((VoidFunctionPtr)GoodLoaderThread,i);
     }
     for(int i = 0;i<NO_OF_CUSTOMERS;i++)
     {
-    	t = new Thread(space_conc(CUSTOMER_STRING,Itoa(i)));
-        t->Fork((VoidFunctionPtr)CustomerThread,i);
+    	threadName = new char[50];
+        sprintf (threadName, "%s_%d", CUSTOMER_STRING, i);
+    	t = new Thread(threadName);
+    	t->Fork((VoidFunctionPtr)CustomerThread,i);
     }
 }

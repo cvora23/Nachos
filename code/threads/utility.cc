@@ -64,7 +64,7 @@ DEBUG(char flag, char *format, ...)
     }
 }
 
-char* Itoa(int n)
+char* xitoa(int n)
 {
 	char* ret = NULL;
 	int numChars = 0;
