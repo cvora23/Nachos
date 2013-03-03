@@ -9,30 +9,30 @@
 
 void CustomerThread(int ThreadId)
 {
-    DEBUG('p', "%s Started !!!!!!! \n",currentThread->name);
+    DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
 }
 
 void GoodLoaderThread(int ThreadId)
 {
-    DEBUG('p', "%s Started !!!!!!! \n",currentThread->name);
+    DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
 
 }
 
 void SalesmanThread(int ThreadId)
 {
-    DEBUG('p', "%s Started !!!!!!! \n",currentThread->name);
+    DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
 
 }
 
 void CashierThread(int ThreadId)
 {
-    DEBUG('p', "%s Started !!!!!!! \n",currentThread->name);
+    DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
 
 }
 
 void ManagerThread(int ThreadId)
 {
-    DEBUG('p', "%s Started !!!!!!! \n",currentThread->name);
+    DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
 }
 
 void Problem2()
