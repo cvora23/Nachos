@@ -1,0 +1,117 @@
+****************************************** Assignment 1 - Part 2 Documentation ******************************************
+
+Simulating Super Market.
+Each Market Component is to be simulated using different Threads.
+
+1: Cashiers - Scans Customer purchase.
+2: Customers - Buy and return items from the store.
+3: Good Loaders - Load Items in department when they are out of stocks.
+4: Managers - Tell the department salesman to start/stop working and look at total sales.
+5: Department Salesman - Guide and interact with customers before and after their purchase from a Particular Department.
+
+1: Cashiers: 
+Scans items that a Customer has to buy. 
+Pass 1 item at a time to the counter and scan them.
+When all items are scanned Cashier then tells Customer the total cost.
+Cashier gets money from Customer then tells Customer they can leave.
+If Customer do not have enough money to pay for all the items Cashier tells to Manager.
+Cashier do not leave the counter until he/she is asked by the Manager.
+They get to take the leave (ASSUMPTION: after asking Manager) until Manager tells them to get back to work.
+Whenever cashier is sent on a break he/she informs Customer in line to disperse to another line before leaving the counter.
+Cashier 1 - 5.
+
+Interactions of Cashier: 
+Cashier --------------------------- Customers
+Cashier --------------------------- Managers
+
+2: Customer:
+Priveleged or not.
+Randomly select privelged customers for your simulation.
+When Customer enters super market they need to get in line for trolley.
+After securing the torlly, they can shop in any Department (1 to 5).
+To shop in Department they need to interact with Department Salesman (there can be 3 for each Department)'
+If Department salesman are busy Customer get in line. 
+One line for each department, regardless of salesman for each department.
+Customer select items for that purchase.
+After they are done they move to Cashier.
+They are to have atleast 1 to 10 items to buy.
+You can randomly generate number and type of items.
+Once they have their items, they look for a Cashier.
+Priveleged customers are given priority over other Customers. 
+Because no one wants to stand in line longer than necessary, they must find Cashier with shortest line.
+If multiple short lines pick one at random.
+Cashier tells them their bill.
+If Customers doesn't have enough Money CAshier informs the Manager who interacts with Customer about which goods to be removed.
+Customer pays their money to Cashier and wait for receipt, then they leave.
+Number of Customers vary tremendously, there is no fixed number you are to have.
+You can decide for your various tests.
+If the Customer has to interact with the Manager, then they pay to Manager directly.
+Customer may notice some items out of stock.
+This happens whenever number of items on a shelf is 0.
+When a Customer takes item from shelf, number of items for that shelf is decremented by appropriate amount.
+You can assume that ther is only one type of item on each shelf.
+When a Customer cannot find an item in stock, the must inform Department salesman who will ask Good Loader to load the required goods.
+Customer must wait for items to be restocked.
+Once the goods are loaded Good Loader will inform the Department Salesman about it and the Salesman will notify Customer of the loaded goods.
+
+Interaction of Customer:
+Customer ----------------------------------- Department Salesman
+Customer ----------------------------------- Manager
+Customer ----------------------------------- Cashier.
+
+3: Good Loader:
+Restock shelves that have had items purchased.
+Good Loaders are woken up by Department Salesman when there are items to be restocked.
+To restock an item, the retrieve on new item from stock room at a time (stock room has infinite supply of all items sold by store)
+They will then go to proper aisle and put it on store shelves.
+The stock room is filled with items, so there is room for only one Goods Loader to be retrieving items at a time.
+Once a Goods Loader has placed an item on the shelf, they check to see if any more items need to be restocked.
+If so they go back for another item.
+It takes time for Goods Loader to walk from stock room to appropriate shelf. You are to simulate this by having a variable number of currentThread->Yield() statements executed.
+Just use a for loop with a random number for the looping variable. 
+Your loop variable should be from 20 to 40 iterations in value.
+
+Interaction of Goods Loader:
+Goods Loader ------------------------------------- Department Salesman
+
+4: Department Salesman:
+Interact with Customers who wish to stop in the particular department.
+Informed by customers if items are out stock.
+Will notify goods loader to restock the item.
+After item is restocked Goods Loader informs the Salesman about aisle number of item being restocked.
+Department salesman do not wait for items to be restocked.
+They can interact with other customers while items are being restocked.
+
+Interactions of Department Salesman:
+Department Salesman ---------------------------------- Customer
+Department Salesman ---------------------------------- Goods Loader
+
+
+5: Manager:
+Keep track of total sales for the Super Market.
+Sends Cashier on break.
+Interact with customer in case the Customer cant afford the total amount.
+Manager never goes on break.
+He keeps checking to see if there is something to do.
+Every so often Manager displays total sales of entier store up to that point.
+Whenever Manager gets call from Cashier for cancellation of item, Manager interacts customer to cancel items until customer can afford the total amount.
+Manager will regularly empty counter drawers to keep track of total sales.
+
+Interaction of Manager:
+Manager ------------------------------------- Customer
+Manager ------------------------------------- Cashier
+
+
+
+Number of threads of each type
+Manager - Only 1
+Cashiers - 1 to 5
+Department - 1 to 5
+Department Salesman - 1 to 3 per Department
+Good Loaders - 1 to 5
+Customers - Atleast 30, but simulation should run with any number of Customers.
+
+
+
+
+
