@@ -81,5 +81,6 @@ extern void DEBUG (char flag, char* format, ...);  	// Print debug message
         Abort();                                                              \
     }
 
+extern char* Itoa(int n); // Integer to character
 
 #endif // UTILITY_H
