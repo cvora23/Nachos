@@ -46,26 +46,26 @@ void Problem2()
     for(int i = 0;i<NO_OF_MANAGERS;i++)
     {
     	t = new Thread(space_conc(MANAGER_STRING,i));
-        t->Fork((VoidFunctionPtr)ManagerThread,i);
+        t->Fork((VoidFunctionPtr)ManagerThread,itoa(i));
     }
     for(int i = 0;i<NO_OF_CASHIERS;i++)
     {
     	t = new Thread(space_conc(CASHIER_STRING,i));
-        t->Fork((VoidFunctionPtr)CashierThread,i);
+        t->Fork((VoidFunctionPtr)CashierThread,itoa(i));
     }
     for(int i = 0;i<NO_OF_SALESMAN;i++)
     {
     	t = new Thread(space_conc(SALESMAN_STRING,i));
-        t->Fork((VoidFunctionPtr)SalesmanThread,i);
+        t->Fork((VoidFunctionPtr)SalesmanThread,itoa(i));
     }
     for(int i = 0;i<NO_OF_GOOD_LOADERS;i++)
     {
     	t = new Thread(space_conc(GOOD_LOADERS_STRING,i));
-        t->Fork((VoidFunctionPtr)GoodLoaderThread,i);
+        t->Fork((VoidFunctionPtr)GoodLoaderThread,itoa(i));
     }
     for(int i = 0;i<NO_OF_CUSTOMERS;i++)
     {
     	t = new Thread(space_conc(CUSTOMER_STRING,i));
-        t->Fork((VoidFunctionPtr)CustomerThread,i);
+        t->Fork((VoidFunctionPtr)CustomerThread,itoa(i));
     }
 }

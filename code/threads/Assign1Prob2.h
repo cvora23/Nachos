@@ -11,7 +11,7 @@
 #include "system.h"
 
 #define NO_OF_MANAGERS				1
-#define NO_OF_CASHIERS				1
+#define NO_OF_CASHIERS				5
 #define NO_OF_DEPARTMENT			5
 #define NO_OF_SALESMAN				(NO_OF_DEPARTMENT*3)
 #define NO_OF_GOOD_LOADERS			5
