@@ -58,7 +58,7 @@ void Problem2()
     	t = new Thread(space_conc(SALESMAN_STRING,i));
         t->Fork((VoidFunctionPtr)SalesmanThread,i);
     }
-    for(int i = 0;i<GOOD_LOADERS_STRING;i++)
+    for(int i = 0;i<NO_OF_GOOD_LOADERS;i++)
     {
     	t = new Thread(space_conc(GOOD_LOADERS_STRING,i));
         t->Fork((VoidFunctionPtr)GoodLoaderThread,i);
