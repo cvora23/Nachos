@@ -10,20 +10,38 @@
 /**
  * GLOBAL DATA STRUCTURES
  */
-ItemInfo g_ItemInfo[MAX_NO_OF_ITEMS];
+ItemInfo g_ItemInfo[NO_OF_ITEM_TYPES];
 
 CustomerInfo g_CustomerInfo[NO_OF_CUSTOMERS];
 
 /**
  * GLOBAL DATA STRUCTURES INIT FUNCTIONS
  */
-void initItemInfo()
+static void initItemInfo()
 {
-	for (int i = 0;i<MAX_NO_OF_ITEMS;i++)
+    static bool firstCall = true;
+    if(firstCall)
+    {
+		for (int i = 0;i<NO_OF_ITEM_TYPES;i++)
+		{
+			g_ItemInfo[i].Price = Random()%MAX_PRICE_PER_ITEM + 1;
+			g_ItemInfo[i].departmentNo = (int)(i/NO_OF_DEPARTMENT);
+			g_ItemInfo[i].shelfNo = i;
+			g_ItemInfo[i].noOfItems = Random()%MAX_NO_ITEMS_PER_SHELF + 1;
+		}
+		firstCall = false;
+    }
+}
+
+void printItemInfo()
+{
+	for (int i = 0;i<NO_OF_ITEM_TYPES;i++)
 	{
-		g_ItemInfo[i].Price = Random()%MAX_PRICE_PER_ITEM + 1;
-		g_ItemInfo[i].departmentNo = Random()%NO_OF_DEPARTMENT;
-		g_ItemInfo[i].shelfNo = Random()%NO_OF_SHELFS;
+		DEBUG('p',"Item id is %d \n",i);
+		DEBUG('p',"Item %d Price is %d \n",g_ItemInfo[i].Price);
+		DEBUG('p',"Item %d is in Department %d \n",g_ItemInfo[i].departmentNo);
+		DEBUG('p',"Item %d is in Shelf %d \n",g_ItemInfo[i].shelfNo);
+		DEBUG('p',"Item %d Total Stock no = %d \n",g_ItemInfo[i].noOfItems);
 	}
 }
 
@@ -93,7 +111,6 @@ void CustomerThread(int ThreadId)
     DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
     initCustomerInfo();
     initCustomerShoppingList();
-    initCustomerInfo();
     printCustomerInfo(ThreadId);
 }
 
@@ -131,6 +148,9 @@ void startSimulation()
     DEBUG('p',"Number of Customers = %d \n",NO_OF_CUSTOMERS);
     DEBUG('p',"Number of Managers = %d \n",NO_OF_MANAGERS);
     DEBUG('p',"Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
+
+    initItemInfo();
+    printItemInfo();
 
     char *threadName;
 

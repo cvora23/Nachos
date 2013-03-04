@@ -20,6 +20,7 @@
 #define MAX_NO_ITEMS_TO_BE_PURCHASED_OF_EACH_TYPE 		5
 #define MAX_AMT_PER_CUSTOMER							1000
 #define MAX_PRICE_PER_ITEM								200
+#define MAX_NO_ITEMS_PER_SHELF							100
 #define MAX_NO_OF_ITEMS									5000
 
 /**
@@ -52,9 +53,14 @@ typedef struct _ItemInfo
 	 * Department No where item is from
 	 */
 	int 	departmentNo;
+	/**
+	 * Total number of item Type in stock
+	 */
+	int		noOfItems;
 }ItemInfo;
 
 static void initItemInfo();
+void printItemInfo();
 
 typedef struct _CustomerShoppingList
 {
