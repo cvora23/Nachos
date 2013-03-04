@@ -32,7 +32,7 @@ void initCustomerInfo()
 	for(int i = 0;i<NO_OF_CUSTOMERS;i++)
 	{
 		g_CustomerInfo[i].money = Random()%MAX_AMT_PER_CUSTOMER + 1;
-		g_CustomerInfo[i].type = Random()%NON_PRIVILEGED + 1;
+		g_CustomerInfo[i].type = Random()%2;
 		g_CustomerInfo[i].noOfItems = Random()%MAX_NO_ITEMS_TO_BE_PURCHASED + 1;
 		g_CustomerInfo[i].pCustomerShoppingList = new CustomerShoppingList[g_CustomerInfo[i].noOfItems];
 	}
