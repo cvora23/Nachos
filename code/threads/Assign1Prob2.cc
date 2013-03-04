@@ -95,7 +95,7 @@ void printCustomerInfo(int customerId)
 
 void printCustomerShoppingInfo(int customerId)
 {
-	DEBUG('p',"Customer %d shopping list is as follows : ",customerId);
+	DEBUG('p',"Customer %d shopping list is as follows : \n",customerId);
 	for(int j =0;j<g_CustomerInfo[customerId].noOfItems;j++)
 	{
 		DEBUG('p',"Item No: %d\n",
