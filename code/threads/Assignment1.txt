@@ -25,19 +25,19 @@ Cashier --------------------------- Customers
 Cashier --------------------------- Managers
 
 2: Customer:
-Priveleged or not.
-Randomly select privelged customers for your simulation.
+Privileged or not.
+Randomly select privileged customers for your simulation.
 When Customer enters super market they need to get in line for trolley.
-After securing the torlly, they can shop in any Department (1 to 5).
+After securing the trolley, they can shop in any Department (1 to 5).
 To shop in Department they need to interact with Department Salesman (there can be 3 for each Department)'
 If Department salesman are busy Customer get in line. 
 One line for each department, regardless of salesman for each department.
 Customer select items for that purchase.
 After they are done they move to Cashier.
-They are to have atleast 1 to 10 items to buy.
+They are to have at least 1 to 10 items to buy.
 You can randomly generate number and type of items.
 Once they have their items, they look for a Cashier.
-Priveleged customers are given priority over other Customers. 
+Privileged customers are given priority over other Customers. 
 Because no one wants to stand in line longer than necessary, they must find Cashier with shortest line.
 If multiple short lines pick one at random.
 Cashier tells them their bill.
@@ -49,9 +49,9 @@ If the Customer has to interact with the Manager, then they pay to Manager direc
 Customer may notice some items out of stock.
 This happens whenever number of items on a shelf is 0.
 When a Customer takes item from shelf, number of items for that shelf is decremented by appropriate amount.
-You can assume that ther is only one type of item on each shelf.
+You can assume that there is only one type of item on each shelf.
 When a Customer cannot find an item in stock, the must inform Department salesman who will ask Good Loader to load the required goods.
-Customer must wait for items to be restocked.
+Customer must wait for items to be re-stocked.
 Once the goods are loaded Good Loader will inform the Department Salesman about it and the Salesman will notify Customer of the loaded goods.
 
 Interaction of Customer:

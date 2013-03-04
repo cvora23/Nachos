@@ -12,6 +12,11 @@
 #include "synch.h"
 
 /**
+ * \todo: Add Config File reader for changing the default configuration parameters.
+ * \todo: Also put proper comments as it will help in future.
+ */
+
+/**
  * STORE STOCK INFO
  */
 #define NO_OF_DEPARTMENT								5
