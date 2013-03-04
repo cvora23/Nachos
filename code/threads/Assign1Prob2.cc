@@ -99,18 +99,17 @@ void printCustomerShoppingInfo(int customerId)
 	for(int j =0;j<g_CustomerInfo[customerId].noOfItems;j++)
 	{
 		DEBUG('p',"Item No: %d\n",
-				g_CustomerInfo[j].pCustomerShoppingList[j].itemNo);
+				g_CustomerInfo[customerId].pCustomerShoppingList[j].itemNo);
 		DEBUG('p',"No of Items of Item Type:%d ===== %d\n",
-				g_CustomerInfo[j].pCustomerShoppingList[j].itemNo,
-				g_CustomerInfo[j].pCustomerShoppingList[j].noOfItems);
+				g_CustomerInfo[customerId].pCustomerShoppingList[j].itemNo,
+				g_CustomerInfo[customerId].pCustomerShoppingList[j].noOfItems);
 	}
 }
 
 void CustomerThread(int ThreadId)
 {
-    DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
-    initCustomerInfo();
-    initCustomerShoppingList();
+    DEBUG('p', "%s enters the SuperMarket !!!!!!! \n",currentThread->getName());
+
     printCustomerInfo(ThreadId);
 }
 
@@ -151,6 +150,9 @@ void startSimulation()
 
     initItemInfo();
     printItemInfo();
+
+    initCustomerInfo();
+    initCustomerShoppingList();
 
     char *threadName;
 
