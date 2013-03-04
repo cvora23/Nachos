@@ -136,7 +136,7 @@ void ManagerThread(int ThreadId)
 void startSimulation()
 {
 	Thread* t;
-	RandomInit(NULL);
+	RandomInit(time(NULL));
 
     DEBUG('p', "Entering Assign 1 Problem 2 !!!!!!! \n");
     DEBUG('p', "Starting to initialize all the Threads for Problem 2 !!!!!!! \n");
