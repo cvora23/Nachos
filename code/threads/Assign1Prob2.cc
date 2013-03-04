@@ -29,27 +29,36 @@ void initItemInfo()
 
 static void initCustomerInfo()
 {
-	DEBUG('p',"CALLED ONCE \n");
-	for(int i = 0;i<NO_OF_CUSTOMERS;i++)
-	{
-		g_CustomerInfo[i].money = Random()%MAX_AMT_PER_CUSTOMER + 1;
-		g_CustomerInfo[i].type = CustomerType(Random()%NON_PRIVILEGED + 1);
-		g_CustomerInfo[i].noOfItems = Random()%MAX_NO_ITEMS_TO_BE_PURCHASED + 1;
-		g_CustomerInfo[i].pCustomerShoppingList = new CustomerShoppingList[g_CustomerInfo[i].noOfItems];
-	}
+    static bool firstCall = true;
+    if(firstCall)
+    {
+    	DEBUG('p',"CALLED ONCE \n");
+		for(int i = 0;i<NO_OF_CUSTOMERS;i++)
+		{
+			g_CustomerInfo[i].money = Random()%MAX_AMT_PER_CUSTOMER + 1;
+			g_CustomerInfo[i].type = CustomerType(Random()%NON_PRIVILEGED + 1);
+			g_CustomerInfo[i].noOfItems = Random()%MAX_NO_ITEMS_TO_BE_PURCHASED + 1;
+			g_CustomerInfo[i].pCustomerShoppingList = new CustomerShoppingList[g_CustomerInfo[i].noOfItems];
+		}
+		firstCall = false;
+    }
 }
 
 static void initCustomerShoppingList()
 {
-	DEBUG('p',"CALLED ONCE \n");
-	for(int i = 0;i<NO_OF_CUSTOMERS;i++)
-	{
-		for(int j =0;j<g_CustomerInfo[i].noOfItems;j++)
-		{
-			g_CustomerInfo[i].pCustomerShoppingList[j].itemNo = Random()%NO_OF_ITEM_TYPES;
-			g_CustomerInfo[i].pCustomerShoppingList[j].noOfItems =
-					Random()%MAX_NO_ITEMS_TO_BE_PURCHASED_OF_EACH_TYPE + 1;
-		}
+    static bool firstCall = true;
+    if(firstCall)
+    {
+    	for(int i = 0;i<NO_OF_CUSTOMERS;i++)
+    	{
+			for(int j =0;j<g_CustomerInfo[i].noOfItems;j++)
+			{
+				g_CustomerInfo[i].pCustomerShoppingList[j].itemNo = Random()%NO_OF_ITEM_TYPES;
+				g_CustomerInfo[i].pCustomerShoppingList[j].noOfItems =
+						Random()%MAX_NO_ITEMS_TO_BE_PURCHASED_OF_EACH_TYPE + 1;
+			}
+    	}
+		firstCall = false;
 	}
 }
 
