@@ -29,6 +29,7 @@ void initItemInfo()
 
 static void initCustomerInfo()
 {
+	DEBUG('p',"CALLED ONCE \n");
 	for(int i = 0;i<NO_OF_CUSTOMERS;i++)
 	{
 		g_CustomerInfo[i].money = Random()%MAX_AMT_PER_CUSTOMER + 1;
@@ -40,6 +41,7 @@ static void initCustomerInfo()
 
 static void initCustomerShoppingList()
 {
+	DEBUG('p',"CALLED ONCE \n");
 	for(int i = 0;i<NO_OF_CUSTOMERS;i++)
 	{
 		for(int j =0;j<g_CustomerInfo[i].noOfItems;j++)
@@ -79,6 +81,9 @@ void printCustomerShoppingInfo(int customerId)
 void CustomerThread(int ThreadId)
 {
     DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
+    initCustomerInfo();
+    initCustomerShoppingList();
+    initCustomerInfo();
     printCustomerInfo(ThreadId);
 }
 
