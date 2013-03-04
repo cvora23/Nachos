@@ -36,6 +36,7 @@
 #define NO_OF_MANAGERS									1
 #define NO_OF_CASHIERS									5
 #define NO_OF_SALESMAN									(NO_OF_DEPARTMENT*3)
+#define NO_OF_SALESMAN_PER_DEPARTMENT					(NO_OF_SALESMAN/NO_OF_DEPARTMENT)
 #define NO_OF_GOOD_LOADERS								5
 #define NO_OF_CUSTOMERS									30
 

@@ -149,7 +149,6 @@ void CustomerThread(int ThreadId)
     			g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo,
     			g_itemInfo[g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo].departmentNo);
     }
-
 }
 
 void GoodLoaderThread(int ThreadId)
@@ -160,7 +159,8 @@ void GoodLoaderThread(int ThreadId)
 void SalesmanThread(int ThreadId)
 {
     DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
-    DEBUG('p',"%s will be working for Department %d \n",currentThread->getName(),int(ThreadId/NO_OF_DEPARTMENT));
+    DEBUG('p',"%s will be working for Department %d \n",
+    		currentThread->getName(),int(ThreadId/NO_OF_SALESMAN_PER_DEPARTMENT));
 }
 
 void CashierThread(int ThreadId)
