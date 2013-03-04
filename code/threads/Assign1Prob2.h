@@ -87,6 +87,7 @@ typedef struct _CustomerInfo
 static void initCustomerInfo();
 static void initCustomerShoppingList();
 void printCustomerInfo(int customerId);
+void printCustomerShoppingInfo(int customerId);
 
 void startSimulation();
 
