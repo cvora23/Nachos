@@ -72,6 +72,7 @@ void printCustomerInfo(int customerId)
 			customerId,g_CustomerInfo[customerId].money);
 	DEBUG('p',"Customer %d will purchase %d items today for shopping \n",
 			customerId,g_CustomerInfo[customerId].noOfItems);
+	printCustomerShoppingInfo(customerId);
 }
 
 void printCustomerShoppingInfo(int customerId)
