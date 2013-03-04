@@ -38,10 +38,10 @@ void printItemInfo()
 	for (int i = 0;i<NO_OF_ITEM_TYPES;i++)
 	{
 		DEBUG('p',"Item id is %d \n",i);
-		DEBUG('p',"Item %d Price is %d \n",g_ItemInfo[i].Price);
-		DEBUG('p',"Item %d is in Department %d \n",g_ItemInfo[i].departmentNo);
-		DEBUG('p',"Item %d is in Shelf %d \n",g_ItemInfo[i].shelfNo);
-		DEBUG('p',"Item %d Total Stock no = %d \n",g_ItemInfo[i].noOfItems);
+		DEBUG('p',"Item %d Price is %d \n",i,g_ItemInfo[i].Price);
+		DEBUG('p',"Item %d is in Department %d \n",i,g_ItemInfo[i].departmentNo);
+		DEBUG('p',"Item %d is in Shelf %d \n",i,g_ItemInfo[i].shelfNo);
+		DEBUG('p',"Item %d Total Stock no = %d \n",i,g_ItemInfo[i].noOfItems);
 	}
 }
 
