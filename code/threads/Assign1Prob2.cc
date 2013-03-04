@@ -160,7 +160,7 @@ void GoodLoaderThread(int ThreadId)
 void SalesmanThread(int ThreadId)
 {
     DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
-    DEBUG('p',"%s will be working for Department %d \n",currentThread->getName(),int(NO_OF_DEPARTMENT/ThreadId));
+    DEBUG('p',"%s will be working for Department %d \n",currentThread->getName(),int(ThreadId/NO_OF_DEPARTMENT));
 }
 
 void CashierThread(int ThreadId)
