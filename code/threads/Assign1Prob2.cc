@@ -15,6 +15,14 @@ ItemInfo g_ItemInfo[NO_OF_ITEM_TYPES];
 CustomerInfo g_CustomerInfo[NO_OF_CUSTOMERS];
 
 /**
+ * Locks, Condition Variables, Queue Wait Count for Customer-Trolley interaction
+ */
+int 		g_usedTrolleyCount = 0;
+int 		g_waitForTrolleyCount = 0;
+Lock* 		g_CustomerTrolleyLock = NULL;
+Condition* 	g_CustomerTrolleyCV = NULL;
+
+/**
  * GLOBAL DATA STRUCTURES INIT FUNCTIONS
  */
 static void initItemInfo()
@@ -111,6 +119,29 @@ void CustomerThread(int ThreadId)
     DEBUG('p', "%s enters the SuperMarket !!!!!!! \n",currentThread->getName());
 
     printCustomerInfo(ThreadId);
+
+    /**
+     * Starting to get in line to get a shopping trolley
+     */
+    g_CustomerTrolleyLock->Acquire();
+    DEBUG('p',"%s gets in line for a trolley\n",currentThread->getName());
+    if(g_usedTrolleyCount<MAX_NO_OF_TROLLEYS)
+    {
+    	g_usedTrolleyCount++;
+    }
+    else
+    {
+    	g_waitForTrolleyCount++;
+    	g_CustomerTrolleyCV->Wait(g_CustomerTrolleyLock);
+    	g_waitForTrolleyCount--;
+    	g_usedTrolleyCount++;
+    }
+    DEBUG('p',"%s has a trolley for shopping\n",currentThread->getName());
+    g_CustomerTrolleyLock->Release();
+
+    /**
+     * Customer will start the shopping now.
+     */
 }
 
 void GoodLoaderThread(int ThreadId)
@@ -131,6 +162,12 @@ void CashierThread(int ThreadId)
 void ManagerThread(int ThreadId)
 {
     DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
+}
+
+void initLockCvForSimulation()
+{
+	g_CustomerTrolleyLock = new Lock("CustomerTrolleyLock");
+	g_CustomerTrolleyCV =new Condition("CustomerTrolleyCV");
 }
 
 void startSimulation()

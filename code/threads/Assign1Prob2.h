@@ -22,6 +22,7 @@
 #define MAX_PRICE_PER_ITEM								200
 #define MAX_NO_ITEMS_PER_SHELF							100
 #define MAX_NO_OF_ITEMS									5000
+#define MAX_NO_OF_TROLLEYS								100
 
 /**
  * STORE MANAGEMENT INFO
@@ -95,6 +96,7 @@ static void initCustomerShoppingList();
 void printCustomerInfo(int customerId);
 void printCustomerShoppingInfo(int customerId);
 
+void initLockCvForSimulation();
 void startSimulation();
 
 #endif /* ASSIGN1PROB2_H_ */
