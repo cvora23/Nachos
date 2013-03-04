@@ -191,6 +191,8 @@ void startSimulation()
     initCustomerInfo();
     initCustomerShoppingList();
 
+    initLockCvForSimulation();
+
     char *threadName;
 
     for(int i = 0;i<NO_OF_MANAGERS;i++)
