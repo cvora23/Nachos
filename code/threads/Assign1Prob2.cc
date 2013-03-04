@@ -27,7 +27,7 @@ void initItemInfo()
 	}
 }
 
-void initCustomerInfo()
+static void initCustomerInfo()
 {
 	for(int i = 0;i<NO_OF_CUSTOMERS;i++)
 	{
@@ -38,7 +38,7 @@ void initCustomerInfo()
 	}
 }
 
-void initCustomerShoppingList()
+static void initCustomerShoppingList()
 {
 	for(int i = 0;i<NO_OF_CUSTOMERS;i++)
 	{
@@ -53,7 +53,7 @@ void initCustomerShoppingList()
 
 void printCustomerInfo(int customerId)
 {
-	DEBUG('p',"Customer ID is \n",
+	DEBUG('p',"Customer ID is %d\n",
 			customerId);
 	DEBUG('p',"Customer %d is of type %d \n",
 			customerId,g_CustomerInfo[customerId].type);
