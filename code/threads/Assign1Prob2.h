@@ -9,6 +9,7 @@
 #define ASSIGN1PROB2_H_
 
 #include "system.h"
+#include "synch.h"
 
 /**
  * STORE STOCK INFO
