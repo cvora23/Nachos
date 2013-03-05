@@ -137,8 +137,9 @@ void initSalesManInfo()
     	for(int i=0;i<NO_OF_SALESMAN;i++)
     	{
     		g_salesmanInfo[i].customerId = -1;
-    		g_salesmanInfo[i].isFree = true;
+    		g_salesmanInfo[i].status = isBusy;
     		g_salesmanInfo[i].departmentNo = (int)(i/NO_OF_SALESMAN_PER_DEPARTMENT);
+    		g_salesmanInfo[i].isComplainedAboutMissingItem = false;
     	}
 		firstCall = false;
 	}
@@ -162,7 +163,7 @@ void CustomerThread(int ThreadId)
     int currentDepartmentNoForItem;
     int salesManStartForDepartment;
     int salesManEndForDepartment;
-    bool salesManSignaledCustomer = false;
+    int mySalesMan = -1;
 
     /*************************************CUSTOMER-TROLLEY INTERACTION STARTS HERE*********************************************/
 
@@ -211,7 +212,6 @@ void CustomerThread(int ThreadId)
     	 * Customer will now start interacting with Department Salesman for the item
     	 */
 
-
     	for(int i=salesManStartForDepartment;
     			i<salesManEndForDepartment;i++)
     	{
@@ -225,20 +225,16 @@ void CustomerThread(int ThreadId)
     		 */
 
     		g_customerSalesmanLock[i]->Acquire();
-    		if(g_salesmanInfo[i].isFree == true)
+    		if(g_salesmanInfo[i].status == isFree)
     		{
-    			g_salesmanInfo[i].isFree = false;
-    			g_customerSalesmanCV[i]->Signal(g_customerSalesmanLock[i]);
-    			g_customerSalesmanCV[i]->Wait(g_customerSalesmanLock[i]);
-    			DEBUG('p',"%s is interacting with DepartmentSalesman %d from department %d",
-    					currentThread->getName(),i,currentDepartmentNoForItem);
-        		g_customerSalesmanLock[i]->Release();
-        		salesManSignaledCustomer = true;
+    			mySalesMan = i;
+    			g_salesmanInfo[i].status = isBusy;
     			break;
     		}
     		g_customerSalesmanLock[i]->Release();
     	}
-    	if(salesManSignaledCustomer == false)
+
+    	if(mySalesMan == -1)
     	{
     		/**
     		 * First Check if salesman for department is free.
@@ -246,23 +242,49 @@ void CustomerThread(int ThreadId)
        		 * 5: Wait in the line for particular department.
        		 * 6: For a particular department line, whichever Salesman is free
        		 * 	  will signal the customer
+       		 * 7: Check which Salesman signaled you and start interacting with him.
+       		 * 8: Get out the line now.
        		 *
        		 * 	  Customer will then start interacting with the Salesman
        		 */
-
-
+    		g_customerDepartmentLock[currentDepartmentNoForItem]->Acquire();
+    		g_departmentWaitQueue[currentDepartmentNoForItem]++;
+    		g_customerDepartmentCV[currentDepartmentNoForItem]->
+    		Wait(g_customerDepartmentLock[currentDepartmentNoForItem]);
+        	for(int i=salesManStartForDepartment;
+        			i<salesManEndForDepartment;i++)
+        	{
+        		/**
+        		 * \todo: ASSUMPTION HERE THAT FIRST SALESMAN WHO SIGNALED WILL BE OUR
+        		 * SALESMAN (Will Work For Now)
+        		 */
+    			g_customerSalesmanLock[i]->Acquire();
+        		if(g_salesmanInfo[i].status == salesmanSignalToCustomer)
+        		{
+        			mySalesMan = i;
+        			g_salesmanInfo[i].status = isBusy;
+        			break;
+        		}
+        		g_customerSalesmanLock[i]->Release();
+        	}
+        	g_customerDepartmentLock[currentDepartmentNoForItem]->Release();
     	}
 
+    	g_customerSalesmanCV[mySalesMan]->Signal(g_customerSalesmanLock[mySalesMan]);
+    	g_customerSalesmanCV[mySalesMan]->Wait(g_customerSalesmanLock[mySalesMan]);
+    	g_customerSalesmanCV[mySalesMan]->Signal(g_customerSalesmanLock[mySalesMan]);
+
+    	g_customerSalesmanLock[mySalesMan]->Release();
+		DEBUG('p',"%s is interacting with DepartmentSalesman %d from department %d",
+				currentThread->getName(),mySalesMan,currentDepartmentNoForItem);
+
+		/**
+		 * Customer started interaction with Department Salesman and will now
+		 * start shopping from his shopping list.
+		 */
 
         /*************************************CUSTOMER-SALESMAN INTERACTION ENDS HERE*********************************************/
-
-
     }
-}
-
-void GoodLoaderThread(int ThreadId)
-{
-    DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
 }
 
 void SalesmanThread(int ThreadId)
@@ -270,13 +292,83 @@ void SalesmanThread(int ThreadId)
     DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
     DEBUG('p',"%s will be working for Department %d \n",
     		currentThread->getName(),g_salesmanInfo[ThreadId].departmentNo);
+    int myDepartmentNo = g_salesmanInfo[ThreadId].departmentNo;
+
     while(1)
     {
-    	g_customerSalesmanLock[g_salesmanInfo[ThreadId].departmentNo]->Acquire();
-    	g_customerSalesmanCV[g_salesmanInfo[ThreadId].departmentNo]->
-    	Wait(g_customerSalesmanLock[g_salesmanInfo[ThreadId].departmentNo]);
+    	/**
+    	 * Check to see if there is some one in department line
+    	 * If YES:
+    	 * 1:	Signal to that customer
+    	 */
+    	g_customerDepartmentLock[myDepartmentNo]->Acquire();
+
+    	if(g_departmentWaitQueue[myDepartmentNo]>0)
+    	{
+    		g_departmentWaitQueue[myDepartmentNo]--;
+    		/**
+    		 * Very Important to acquire the g_customerSalesmanLock before signaling the
+    		 * customer waiting on  g_customerDepartmentCV with g_customerDepartmentLock because:
+    		 * In case we signal on  g_customerDepartmentCV with g_customerDepartmentLock and release
+    		 * the g_customerDepartmentLock there is a chance of CS and customer acquiring the
+    		 * g_customerSalesmanLock and then salesman and customer waiting for signals from each other
+    		 * in other words LiveLock Situation
+    		 */
+    		g_customerSalesmanLock[ThreadId]->Acquire();
+    		g_salesmanInfo[ThreadId].status = salesmanSignalToCustomer;
+
+    		g_customerDepartmentCV[myDepartmentNo]->Signal(g_customerDepartmentLock[myDepartmentNo]);
+    		g_customerDepartmentLock[myDepartmentNo]->Release();
+
+    		g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
+    		g_customerSalesmanCV[ThreadId]->Signal(g_customerSalesmanLock[ThreadId]);
+    		g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
+    	}
+        else
+        {
+        	g_customerDepartmentLock[myDepartmentNo]->Release();
+        }
+
+    	g_customerDepartmentLock[myDepartmentNo]->Acquire();
+
+    	if(g_departmentWaitQueue[myDepartmentNo] == 0)
+    	{
+    		g_customerSalesmanLock[ThreadId]->Acquire();
+    		g_salesmanInfo[ThreadId].status = isFree;
+
+    		g_customerDepartmentLock[myDepartmentNo]->Release();
+
+    		g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
+
+    		if(g_salesmanInfo[ThreadId].isComplainedAboutMissingItem == false)
+    		{
+    			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomer;
+    			g_customerSalesmanCV[ThreadId]->Signal(g_customerSalesmanLock[ThreadId]);
+    			g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
+        		g_customerSalesmanLock[ThreadId]->Release();
+    		}
+    		else
+    		{
+    			/**
+    			 * Nothing for now
+    			 */
+    		}
+    	}
+    	else
+    	{
+    		g_customerDepartmentLock[myDepartmentNo]->Release();
+    	}
     }
+
+
+
 }
+
+void GoodLoaderThread(int ThreadId)
+{
+    DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
+}
+
 
 void CashierThread(int ThreadId)
 {

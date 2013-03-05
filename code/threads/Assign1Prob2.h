@@ -119,13 +119,19 @@ typedef struct _CustomerInfo
 static void initCustomerInfo();
 void printCustomerInfo(int customerId);
 
+typedef enum _SalesManStatus
+{
+	isFree = 0,
+	isBusy,
+	salesmanSignalToCustomer
+}SalesManStatus;
 
 typedef struct _SalesManInfo
 {
 	/**
-	 * If the Salesman is free or busy handling customer
+	 * If the Salesman is free or busy handling customer or just signaled a Customer
 	 */
-	bool isFree;
+	SalesManStatus status;
 	/**
 	 * Department Salesman is working for
 	 */
@@ -135,8 +141,9 @@ typedef struct _SalesManInfo
 	 */
 	int customerId;
 	/**
-	 * signaled or not signaled by any Customer for now
+	 * complained about a missing item from stock
 	 */
+	bool isComplainedAboutMissingItem;
 }SalesManInfo;
 
 static void initSalesManInfo();
