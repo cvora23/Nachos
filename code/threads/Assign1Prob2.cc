@@ -213,8 +213,8 @@ void CustomerThread(int ThreadId)
     	 * Customer will now start interacting with Department Salesman for the item
     	 */
 
-    	for(int i=salesManStartForDepartment;
-    			i<salesManEndForDepartment;i++)
+    	for(int salesmanIndex=salesManStartForDepartment;
+    			salesmanIndex<salesManEndForDepartment;salesmanIndex++)
     	{
     		/**
     		 * First Check if salesman for department is free.
@@ -225,15 +225,15 @@ void CustomerThread(int ThreadId)
     		 * 4: Customer will then start Interacting with Salesman
     		 */
 
-    		g_customerSalesmanLock[i]->Acquire();
-    		if(g_salesmanInfo[i].status == isFree)
+    		g_customerSalesmanLock[salesmanIndex]->Acquire();
+    		if(g_salesmanInfo[salesmanIndex].status == isFree)
     		{
-    			mySalesMan = i;
-    			g_salesmanInfo[i].status = isBusy;
-    			g_salesmanInfo[i].customerId = ThreadId;
+    			mySalesMan = salesmanIndex;
+    			g_salesmanInfo[salesmanIndex].status = isBusy;
+    			g_salesmanInfo[salesmanIndex].customerId = ThreadId;
     			break;
     		}
-    		g_customerSalesmanLock[i]->Release();
+    		g_customerSalesmanLock[salesmanIndex]->Release();
     	}
 
     	if(mySalesMan == -1)
@@ -256,21 +256,21 @@ void CustomerThread(int ThreadId)
     		g_customerDepartmentCV[currentDepartmentNoForItem]->
     		Wait(g_customerDepartmentLock[currentDepartmentNoForItem]);
 
-        	for(int i=salesManStartForDepartment;
-        			i<salesManEndForDepartment;i++)
+        	for(int salesmanIndex=salesManStartForDepartment;
+        			salesmanIndex<salesManEndForDepartment;salesmanIndex++)
         	{
         		/**
         		 * \todo: ASSUMPTION HERE THAT FIRST SALESMAN WHO SIGNALED WILL BE OUR
         		 * SALESMAN (Will Work For Now)
         		 */
-    			g_customerSalesmanLock[i]->Acquire();
-        		if(g_salesmanInfo[i].status == salesmanSignalToCustomer)
+    			g_customerSalesmanLock[salesmanIndex]->Acquire();
+        		if(g_salesmanInfo[salesmanIndex].status == salesmanSignalToCustomer)
         		{
-        			mySalesMan = i;
-        			g_salesmanInfo[i].status = isBusy;
+        			mySalesMan = salesmanIndex;
+        			g_salesmanInfo[salesmanIndex].status = isBusy;
         			break;
         		}
-        		g_customerSalesmanLock[i]->Release();
+        		g_customerSalesmanLock[salesmanIndex]->Release();
         	}
         	g_customerDepartmentLock[currentDepartmentNoForItem]->Release();
     	}
