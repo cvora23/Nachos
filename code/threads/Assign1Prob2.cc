@@ -154,7 +154,7 @@ void CustomerThread(int ThreadId)
 {
     DEBUG('p', "%s enters the SuperMarket !!!!!!! \n",currentThread->getName());
 
-    printCustomerInfo(ThreadId);
+    //printCustomerInfo(ThreadId);
 
     /**
      * Local Variable for Customer Thread.
@@ -450,7 +450,7 @@ void startSimulation()
     DEBUG('p',"Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
 
     initItemInfo();
-    printItemInfo();
+    //printItemInfo();
 
     initCustomerInfo();
     initCustomerShoppingList();
