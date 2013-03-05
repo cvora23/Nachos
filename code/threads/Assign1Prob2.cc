@@ -14,13 +14,28 @@ ItemInfo g_itemInfo[NO_OF_ITEM_TYPES];
 
 CustomerInfo g_customerInfo[NO_OF_CUSTOMERS];
 
+SalesManInfo g_salesmanInfo[NO_OF_SALESMAN];
+
 /**
  * Locks, Condition Variables, Queue Wait Count for Customer-Trolley interaction
  */
-int 		g_usedTrolleyCount = 0;
-int 		g_waitForTrolleyCount = 0;
-Lock* 		g_customerTrolleyLock = NULL;
-Condition* 	g_customerTrolleyCV = NULL;
+int 		g_usedTrolleyCount;
+int 		g_waitForTrolleyCount;
+Lock* 		g_customerTrolleyLock;
+Condition* 	g_customerTrolleyCV;
+
+/**
+ * Locks, Condition Variables for Customer-Salesman interaction
+ */
+Lock*		g_customerSalesmanLock[NO_OF_SALESMAN];
+Condition*  g_customerSalesmanCV[NO_OF_SALESMAN];
+
+/**
+ * Locks,Condition Variables and Queue Length for Customer-Department Interaction
+ */
+Lock*		g_customerDepartmentLock[NO_OF_DEPARTMENT];
+Condition*	g_customerDepartmentCV[NO_OF_DEPARTMENT];
+int			g_departmentWaitQueue[NO_OF_DEPARTMENT];
 
 /**
  * GLOBAL DATA STRUCTURES INIT FUNCTIONS
@@ -33,7 +48,7 @@ static void initItemInfo()
 		for (int i = 0;i<NO_OF_ITEM_TYPES;i++)
 		{
 			g_itemInfo[i].Price = Random()%MAX_PRICE_PER_ITEM + 1;
-			g_itemInfo[i].departmentNo = (int)(i/NO_OF_DEPARTMENT);
+			g_itemInfo[i].departmentNo = (int)(i/NO_OF_ITEMS_PER_DEPARTMENT);
 			g_itemInfo[i].shelfNo = i;
 			g_itemInfo[i].noOfItems = Random()%MAX_NO_ITEMS_PER_SHELF + 1;
 		}
@@ -98,10 +113,10 @@ void printCustomerInfo(int customerId)
 			customerId,g_customerInfo[customerId].money);
 	DEBUG('p',"Customer %d will purchase %d items today for shopping \n",
 			customerId,g_customerInfo[customerId].noOfItems);
-	printCustomerShoppingInfo(customerId);
+	printCustomerShoppingList(customerId);
 }
 
-void printCustomerShoppingInfo(int customerId)
+void printCustomerShoppingList(int customerId)
 {
 	DEBUG('p',"Customer %d shopping list is as follows : \n",customerId);
 	for(int j =0;j<g_customerInfo[customerId].noOfItems;j++)
@@ -114,11 +129,42 @@ void printCustomerShoppingInfo(int customerId)
 	}
 }
 
+void initSalesManInfo()
+{
+    static bool firstCall = true;
+    if(firstCall)
+    {
+    	for(int i=0;i<NO_OF_SALESMAN;i++)
+    	{
+    		g_salesmanInfo[i].customerId = -1;
+    		g_salesmanInfo[i].isFree = true;
+    		g_salesmanInfo[i].departmentNo = (int)(i/NO_OF_SALESMAN_PER_DEPARTMENT);
+    	}
+		firstCall = false;
+	}
+}
+
+void printSalesManInfo(int salesManId)
+{
+
+}
+
 void CustomerThread(int ThreadId)
 {
     DEBUG('p', "%s enters the SuperMarket !!!!!!! \n",currentThread->getName());
 
     printCustomerInfo(ThreadId);
+
+    /**
+     * Local Variable for Customer Thread.
+     */
+    int currentItemNoFromShoppingList;
+    int currentDepartmentNoForItem;
+    int salesManStartForDepartment;
+    int salesManEndForDepartment;
+    bool salesManSignaledCustomer = false;
+
+    /*************************************CUSTOMER-TROLLEY INTERACTION STARTS HERE*********************************************/
 
     /**
      * Starting to get in line to get a shopping trolley
@@ -139,15 +185,78 @@ void CustomerThread(int ThreadId)
     DEBUG('p',"%s has a trolley for shopping\n",currentThread->getName());
     g_customerTrolleyLock->Release();
 
+    /*************************************CUSTOMER-TROLLEY INTERACTION ENDS HERE*********************************************/
+
+    /*************************************CUSTOMER-SALESMAN INTERACTION STARTS HERE*********************************************/
+
+
     /**
      * Customer will start the shopping now.
      */
     for(int i=0;i<g_customerInfo[ThreadId].noOfItems;i++)
     {
+    	/**
+    	 * Customer will now find Department for particular item no
+    	 */
     	DEBUG('p',"%s wants to shop Item %d in Department %d \n",
     			currentThread->getName(),
     			g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo,
     			g_itemInfo[g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo].departmentNo);
+    	currentItemNoFromShoppingList = g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo;
+    	currentDepartmentNoForItem =
+    			g_itemInfo[g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo].departmentNo;
+    	salesManStartForDepartment = currentDepartmentNoForItem*NO_OF_SALESMAN_PER_DEPARTMENT;
+    	salesManEndForDepartment = salesManStartForDepartment + NO_OF_SALESMAN_PER_DEPARTMENT;
+    	/**
+    	 * Customer will now start interacting with Department Salesman for the item
+    	 */
+
+
+    	for(int i=salesManStartForDepartment;
+    			i<salesManEndForDepartment;i++)
+    	{
+    		/**
+    		 * First Check if salesman for department is free.
+    		 * IF YES:
+    		 * 1: Change his status to Busy
+    		 * 2: Signal Him Assuming He is Waiting
+    		 * 3: Wait For a Greeting From Him
+    		 * 4: Customer will then start Interacting with Salesman
+    		 */
+
+    		g_customerSalesmanLock[i]->Acquire();
+    		if(g_salesmanInfo[i].isFree == true)
+    		{
+    			g_salesmanInfo[i].isFree = false;
+    			g_customerSalesmanCV[i]->Signal(g_customerSalesmanLock[i]);
+    			g_customerSalesmanCV[i]->Wait(g_customerSalesmanLock[i]);
+    			DEBUG('p',"%s is interacting with DepartmentSalesman %d from department %d",
+    					currentThread->getName(),i,currentDepartmentNoForItem);
+        		g_customerSalesmanLock[i]->Release();
+        		salesManSignaledCustomer = true;
+    			break;
+    		}
+    		g_customerSalesmanLock[i]->Release();
+    	}
+    	if(salesManSignaledCustomer == false)
+    	{
+    		/**
+    		 * First Check if salesman for department is free.
+    		 * IF NO:
+       		 * 5: Wait in the line for particular department.
+       		 * 6: For a particular department line, whichever Salesman is free
+       		 * 	  will signal the customer
+       		 *
+       		 * 	  Customer will then start interacting with the Salesman
+       		 */
+
+
+    	}
+
+
+        /*************************************CUSTOMER-SALESMAN INTERACTION ENDS HERE*********************************************/
+
+
     }
 }
 
@@ -160,7 +269,13 @@ void SalesmanThread(int ThreadId)
 {
     DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
     DEBUG('p',"%s will be working for Department %d \n",
-    		currentThread->getName(),int(ThreadId/NO_OF_SALESMAN_PER_DEPARTMENT));
+    		currentThread->getName(),g_salesmanInfo[ThreadId].departmentNo);
+    while(1)
+    {
+    	g_customerSalesmanLock[g_salesmanInfo[ThreadId].departmentNo]->Acquire();
+    	g_customerSalesmanCV[g_salesmanInfo[ThreadId].departmentNo]->
+    	Wait(g_customerSalesmanLock[g_salesmanInfo[ThreadId].departmentNo]);
+    }
 }
 
 void CashierThread(int ThreadId)
@@ -175,8 +290,39 @@ void ManagerThread(int ThreadId)
 
 void initLockCvForSimulation()
 {
-	g_customerTrolleyLock = new Lock("CustomerTrolleyLock");
-	g_customerTrolleyCV =new Condition("CustomerTrolleyCV");
+	g_usedTrolleyCount = 0;
+	g_waitForTrolleyCount = 0;
+
+	g_customerTrolleyLock = new Lock((char*)CUSTOMERTROLLEYLOCK_STRING);
+	g_customerTrolleyCV =new Condition((char*)CUSTOMERTROLLEYCV_STRING);
+
+	char* lockName;
+	char* cvName;
+
+	for(int i=0;i<NO_OF_SALESMAN;i++)
+	{
+		lockName = new char[50];
+        sprintf (lockName, "%s_%d", CUSTOMERSALESMANLOCK_STRING, i);
+        g_customerSalesmanLock[i] = new Lock(lockName);
+
+        cvName = new char[50];
+        sprintf (cvName, "%s_%d", CUSTOMERSALESMANCV_STRING, i);
+        g_customerSalesmanCV[i] = new Condition(cvName);
+	}
+
+	for(int i=0;i<NO_OF_DEPARTMENT;i++)
+	{
+		lockName = new char[50];
+        sprintf (lockName, "%s_%d", CUSTOMERDEPARTMENTLOCK_STRING, i);
+        g_customerDepartmentLock[i] = new Lock(lockName);
+
+        cvName = new char[50];
+        sprintf (cvName, "%s_%d", CUSTOMERDEPARTMENTCV_STRING, i);
+        g_customerDepartmentCV[i] = new Condition(cvName);
+
+        g_departmentWaitQueue[i] = 0;
+	}
+
 }
 
 void startSimulation()
@@ -199,6 +345,8 @@ void startSimulation()
 
     initCustomerInfo();
     initCustomerShoppingList();
+
+    initSalesManInfo();
 
     initLockCvForSimulation();
 

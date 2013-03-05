@@ -22,6 +22,7 @@
 #define NO_OF_DEPARTMENT								5
 #define NO_OF_SHELFS									(NO_OF_DEPARTMENT*3)
 #define NO_OF_ITEM_TYPES								NO_OF_SHELFS
+#define NO_OF_ITEMS_PER_DEPARTMENT						(NO_OF_ITEM_TYPES/NO_OF_DEPARTMENT)
 #define MAX_NO_ITEMS_TO_BE_PURCHASED					10
 #define MAX_NO_ITEMS_TO_BE_PURCHASED_OF_EACH_TYPE 		5
 #define MAX_AMT_PER_CUSTOMER							1000
@@ -46,6 +47,14 @@
 #define SALESMAN_STRING									(const char*)"SALESMAN"
 #define GOOD_LOADERS_STRING								(const char*)"GOOD LOADER"
 #define CUSTOMER_STRING									(const char*)"CUSTOMER"
+
+
+#define CUSTOMERTROLLEYLOCK_STRING						(const char*)"CustomerTrolleyLock"
+#define CUSTOMERTROLLEYCV_STRING						(const char*)"CustomerTrolleyCV"
+#define CUSTOMERSALESMANLOCK_STRING						(const char*)"CustomerSalesmanLock"
+#define CUSTOMERSALESMANCV_STRING						(const char*)"CustomerSalesmanCV"
+#define CUSTOMERDEPARTMENTLOCK_STRING					(const char*)"CustomerDepartmentLock"
+#define CUSTOMERDEPARTMENTCV_STRING						(const char*)"CustomerDepartmentCV"
 
 typedef struct _ItemInfo
 {
@@ -72,9 +81,18 @@ void printItemInfo();
 
 typedef struct _CustomerShoppingList
 {
+	/**
+	 * Item No to shop
+	 */
 	int 	 itemNo;
+	/**
+	 * No (Quantity) of items of that Item No above to shop
+	 */
 	int		 noOfItems;
 }CustomerShoppingList;
+
+static void initCustomerShoppingList();
+void printCustomerShoppingList(int customerId);
 
 typedef enum _CustomerType{PRIVILEGED = 0,NON_PRIVILEGED}CustomerType;
 
@@ -99,9 +117,30 @@ typedef struct _CustomerInfo
 }CustomerInfo;
 
 static void initCustomerInfo();
-static void initCustomerShoppingList();
 void printCustomerInfo(int customerId);
-void printCustomerShoppingInfo(int customerId);
+
+
+typedef struct _SalesManInfo
+{
+	/**
+	 * If the Salesman is free or busy handling customer
+	 */
+	bool isFree;
+	/**
+	 * Department Salesman is working for
+	 */
+	int	 departmentNo;
+	/**
+	 * Customer Salesman is handling or will be handling in future
+	 */
+	int customerId;
+	/**
+	 * signaled or not signaled by any Customer for now
+	 */
+}SalesManInfo;
+
+static void initSalesManInfo();
+void printSalesManInfo(int salesManId);
 
 void initLockCvForSimulation();
 void startSimulation();
