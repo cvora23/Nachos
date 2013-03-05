@@ -203,6 +203,7 @@ void CustomerThread(int ThreadId)
     			currentThread->getName(),
     			g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo,
     			g_itemInfo[g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo].departmentNo);
+
     	currentItemNoFromShoppingList = g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo;
     	currentDepartmentNoForItem =
     			g_itemInfo[g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo].departmentNo;
@@ -229,6 +230,7 @@ void CustomerThread(int ThreadId)
     		{
     			mySalesMan = i;
     			g_salesmanInfo[i].status = isBusy;
+    			g_salesmanInfo[i].customerId = ThreadId;
     			break;
     		}
     		g_customerSalesmanLock[i]->Release();
@@ -249,8 +251,11 @@ void CustomerThread(int ThreadId)
        		 */
     		g_customerDepartmentLock[currentDepartmentNoForItem]->Acquire();
     		g_departmentWaitQueue[currentDepartmentNoForItem]++;
+    		DEBUG('p',"%s gets in line for the Department %d \n",currentThread->getName(),
+    				currentDepartmentNoForItem);
     		g_customerDepartmentCV[currentDepartmentNoForItem]->
     		Wait(g_customerDepartmentLock[currentDepartmentNoForItem]);
+
         	for(int i=salesManStartForDepartment;
         			i<salesManEndForDepartment;i++)
         	{
@@ -275,6 +280,7 @@ void CustomerThread(int ThreadId)
     	g_customerSalesmanCV[mySalesMan]->Signal(g_customerSalesmanLock[mySalesMan]);
 
     	g_customerSalesmanLock[mySalesMan]->Release();
+
 		DEBUG('p',"%s is interacting with DepartmentSalesman %d from department %d",
 				currentThread->getName(),mySalesMan,currentDepartmentNoForItem);
 
@@ -292,6 +298,7 @@ void SalesmanThread(int ThreadId)
     DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
     DEBUG('p',"%s will be working for Department %d \n",
     		currentThread->getName(),g_salesmanInfo[ThreadId].departmentNo);
+
     int myDepartmentNo = g_salesmanInfo[ThreadId].departmentNo;
 
     while(1)
@@ -322,7 +329,13 @@ void SalesmanThread(int ThreadId)
 
     		g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
     		g_customerSalesmanCV[ThreadId]->Signal(g_customerSalesmanLock[ThreadId]);
+
+    		DEBUG('p',"%s welcomes Customer %d to Department %d",
+    				currentThread->getName(),g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
+
     		g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
+    		g_customerSalesmanLock[ThreadId]->Release();
+
     	}
         else
         {
@@ -344,6 +357,10 @@ void SalesmanThread(int ThreadId)
     		{
     			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomer;
     			g_customerSalesmanCV[ThreadId]->Signal(g_customerSalesmanLock[ThreadId]);
+
+        		DEBUG('p',"%s welcomes Customer %d to Department %d",
+        				currentThread->getName(),g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
+
     			g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
         		g_customerSalesmanLock[ThreadId]->Release();
     		}
