@@ -105,7 +105,7 @@ static void initCustomerShoppingList()
 
 void printCustomerInfo()
 {
-	for(int customerId=0;customerId<NO_OF_CUSTOMER;customerId++)
+	for(int customerId=0;customerId<NO_OF_CUSTOMERS;customerId++)
 	{
 		DEBUG('p',"Customer ID is %d\n",
 				customerId);
