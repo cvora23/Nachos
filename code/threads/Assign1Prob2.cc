@@ -6,7 +6,7 @@
  */
 
 #include "Assign1Prob2.h"
-
+#include <stdio.h>
 /**
  * GLOBAL DATA STRUCTURES
  */
@@ -145,6 +145,10 @@ void printCustomerShoppingListToFile(int customerId)
 					g_customerInfo[customerId].pCustomerShoppingList[j].noOfItems);
 		}
 		fclose(file);
+	}
+	else
+	{
+		DEBUG('p',"File Open Error \n");
 	}
 }
 
