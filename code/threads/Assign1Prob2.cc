@@ -133,16 +133,19 @@ void printCustomerShoppingListToFile(int customerId)
 {
 	FILE *file;
 	file = fopen("customerShoppingList.txt","+a");
-	fprintf(file,"Customer %d shopping list is as follows : \n",customerId);
-	for(int j =0;j<g_customerInfo[customerId].noOfItems;j++)
+	if(file != NULL)
 	{
-		fprintf(file,"Item No: %d\n",
-				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo);
-		fprintf(file,"No of Items of Item Type:%d ===== %d\n",
-				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo,
-				g_customerInfo[customerId].pCustomerShoppingList[j].noOfItems);
+		fprintf(file,"Customer %d shopping list is as follows : \n",customerId);
+		for(int j =0;j<g_customerInfo[customerId].noOfItems;j++)
+		{
+			fprintf(file,"Item No: %d\n",
+					g_customerInfo[customerId].pCustomerShoppingList[j].itemNo);
+			fprintf(file,"No of Items of Item Type:%d ===== %d\n",
+					g_customerInfo[customerId].pCustomerShoppingList[j].itemNo,
+					g_customerInfo[customerId].pCustomerShoppingList[j].noOfItems);
+		}
+		fclose(file);
 	}
-	fclose(file);
 }
 
 void initSalesManInfo()
