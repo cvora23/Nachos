@@ -73,7 +73,6 @@ static void initCustomerInfo()
     static bool firstCall = true;
     if(firstCall)
     {
-    	DEBUG('p',"CALLED ONCE \n");
 		for(int i = 0;i<NO_OF_CUSTOMERS;i++)
 		{
 			g_customerInfo[i].money = Random()%MAX_AMT_PER_CUSTOMER + 1;
