@@ -117,7 +117,7 @@ typedef struct _CustomerInfo
 }CustomerInfo;
 
 static void initCustomerInfo();
-void printCustomerInfo(int customerId);
+void printCustomerInfo();
 
 typedef enum _SalesManStatus
 {

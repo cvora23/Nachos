@@ -103,17 +103,20 @@ static void initCustomerShoppingList()
 	}
 }
 
-void printCustomerInfo(int customerId)
+void printCustomerInfo()
 {
-	DEBUG('p',"Customer ID is %d\n",
-			customerId);
-	DEBUG('p',"Customer %d is of type %d \n",
-			customerId,g_customerInfo[customerId].type);
-	DEBUG('p',"Customer %d can spend %d amount on shopping \n",
-			customerId,g_customerInfo[customerId].money);
-	DEBUG('p',"Customer %d will purchase %d items today for shopping \n",
-			customerId,g_customerInfo[customerId].noOfItems);
-	printCustomerShoppingList(customerId);
+	for(int customerId=0;customerId<NO_OF_CUSTOMER;customerId++)
+	{
+		DEBUG('p',"Customer ID is %d\n",
+				customerId);
+		DEBUG('p',"Customer %d is of type %d \n",
+				customerId,g_customerInfo[customerId].type);
+		DEBUG('p',"Customer %d can spend %d amount on shopping \n",
+				customerId,g_customerInfo[customerId].money);
+		DEBUG('p',"Customer %d will purchase %d items today for shopping \n",
+				customerId,g_customerInfo[customerId].noOfItems);
+		printCustomerShoppingList(customerId);
+	}
 }
 
 void printCustomerShoppingList(int customerId)
@@ -153,8 +156,6 @@ void printSalesManInfo(int salesManId)
 void CustomerThread(int ThreadId)
 {
     DEBUG('p', "%s enters the SuperMarket !!!!!!! \n",currentThread->getName());
-
-    printCustomerInfo(ThreadId);
 
     /**
      * Local Variable for Customer Thread.
@@ -454,6 +455,8 @@ void startSimulation()
 
     initCustomerInfo();
     initCustomerShoppingList();
+
+    printCustomerInfo();
 
     initSalesManInfo();
 
