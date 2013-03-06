@@ -118,37 +118,14 @@ void printCustomerInfo(int customerId)
 
 void printCustomerShoppingList(int customerId)
 {
-	DEBUG('p',"Customer %d shopping list is as follows : \n",customerId);
+	DEBUG('l',"Customer %d shopping list is as follows : \n",customerId);
 	for(int j =0;j<g_customerInfo[customerId].noOfItems;j++)
 	{
-		DEBUG('p',"Item No: %d\n",
+		DEBUG('l',"Item No: %d\n",
 				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo);
-		DEBUG('p',"No of Items of Item Type:%d ===== %d\n",
+		DEBUG('l',"No of Items of Item Type:%d ===== %d\n",
 				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo,
 				g_customerInfo[customerId].pCustomerShoppingList[j].noOfItems);
-	}
-}
-
-void printCustomerShoppingListToFile(int customerId)
-{
-	FILE *file;
-	file = fopen("customerShoppingList.txt","+a");
-	if(file != NULL)
-	{
-		fprintf(file,"Customer %d shopping list is as follows : \n",customerId);
-		for(int j =0;j<g_customerInfo[customerId].noOfItems;j++)
-		{
-			fprintf(file,"Item No: %d\n",
-					g_customerInfo[customerId].pCustomerShoppingList[j].itemNo);
-			fprintf(file,"No of Items of Item Type:%d ===== %d\n",
-					g_customerInfo[customerId].pCustomerShoppingList[j].itemNo,
-					g_customerInfo[customerId].pCustomerShoppingList[j].noOfItems);
-		}
-		fclose(file);
-	}
-	else
-	{
-		DEBUG('p',"File Open Error \n");
 	}
 }
 
@@ -177,8 +154,8 @@ void CustomerThread(int ThreadId)
 {
     DEBUG('p', "%s enters the SuperMarket !!!!!!! \n",currentThread->getName());
 
-    //printCustomerInfo(ThreadId);
-    printCustomerShoppingListToFile(ThreadId);
+    printCustomerInfo(ThreadId);
+
     /**
      * Local Variable for Customer Thread.
      */
@@ -473,7 +450,7 @@ void startSimulation()
     DEBUG('p',"Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
 
     initItemInfo();
-    //printItemInfo();
+    printItemInfo();
 
     initCustomerInfo();
     initCustomerShoppingList();
