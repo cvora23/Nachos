@@ -93,6 +93,7 @@ typedef struct _CustomerShoppingList
 
 static void initCustomerShoppingList();
 void printCustomerShoppingList(int customerId);
+void printCustomerShoppingListToFile(int customerId);
 
 typedef enum _CustomerType{PRIVILEGED = 0,NON_PRIVILEGED}CustomerType;
 

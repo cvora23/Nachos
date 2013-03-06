@@ -129,6 +129,22 @@ void printCustomerShoppingList(int customerId)
 	}
 }
 
+void printCustomerShoppingListToFile(int customerId)
+{
+	FILE *file;
+	file = fopen("customerShoppingList.txt","+a");
+	fprintf(file,"Customer %d shopping list is as follows : \n",customerId);
+	for(int j =0;j<g_customerInfo[customerId].noOfItems;j++)
+	{
+		fprintf(file,"Item No: %d\n",
+				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo);
+		fprintf(file,"No of Items of Item Type:%d ===== %d\n",
+				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo,
+				g_customerInfo[customerId].pCustomerShoppingList[j].noOfItems);
+	}
+	fclose(file);
+}
+
 void initSalesManInfo()
 {
     static bool firstCall = true;
@@ -155,7 +171,7 @@ void CustomerThread(int ThreadId)
     DEBUG('p', "%s enters the SuperMarket !!!!!!! \n",currentThread->getName());
 
     //printCustomerInfo(ThreadId);
-
+    printCustomerShoppingListToFile(ThreadId);
     /**
      * Local Variable for Customer Thread.
      */
