@@ -28,8 +28,10 @@
 #define MAX_AMT_PER_CUSTOMER							1000
 #define MAX_PRICE_PER_ITEM								200
 #define MAX_NO_ITEMS_PER_SHELF							100
-#define MAX_NO_OF_ITEMS									5000
 #define MAX_NO_OF_TROLLEYS								100
+#define NO_OF_GOODLOADER_WAIT_QUEUE						1
+#define MIN_GOODS_LOADER_WALKINGTIME					20
+#define MAX_GOODS_LOADER_WALKINGTIME					40
 
 /**
  * STORE MANAGEMENT INFO
@@ -39,7 +41,7 @@
 #define NO_OF_SALESMAN									(NO_OF_DEPARTMENT*3)
 #define NO_OF_SALESMAN_PER_DEPARTMENT					(NO_OF_SALESMAN/NO_OF_DEPARTMENT)
 #define NO_OF_GOOD_LOADERS								5
-#define NO_OF_CUSTOMERS									5
+#define NO_OF_CUSTOMERS									30
 
 #define MANAGER_STRING									(const char*)"MANAGER"
 #define CASHIER_STRING									(const char*)"CASHIER"
@@ -48,13 +50,20 @@
 #define GOOD_LOADERS_STRING								(const char*)"GOOD LOADER"
 #define CUSTOMER_STRING									(const char*)"CUSTOMER"
 
-
 #define CUSTOMERTROLLEYLOCK_STRING						(const char*)"CustomerTrolleyLock"
 #define CUSTOMERTROLLEYCV_STRING						(const char*)"CustomerTrolleyCV"
 #define CUSTOMERSALESMANLOCK_STRING						(const char*)"CustomerSalesmanLock"
 #define CUSTOMERSALESMANCV_STRING						(const char*)"CustomerSalesmanCV"
 #define CUSTOMERDEPARTMENTLOCK_STRING					(const char*)"CustomerDepartmentLock"
 #define CUSTOMERDEPARTMENTCV_STRING						(const char*)"CustomerDepartmentCV"
+#define SHELFACCESSLOCK_STRING							(const char*)"ShelfAccessLock"
+#define CUSTOMERDEPARTMENTCOMPLAINLOCK_STRING			(const char*)"CustomerDepartmentComplainLock"
+#define CUSTOMERDEPARTMENTCOMPLAINCV_STRING				(const char*)"CustomerDepartmentComplainCV"
+#define SALESMANGOODLOADERLOCK_STRING					(const char*)"SalesmanGoodLoaderLock"
+#define SALESMANGOODLOADERCV_STRING						(const char*)"SalesmanGoodLoderCV"
+#define GOODLOADERWAITQUEUELOCK_STRING					(const char*)"GoodLoaderWaitQueueLock"
+#define GOODLOADERWAITQUEUECV_STRING					(const char*)"GoodLoaderWaitQueueCV"
+
 
 typedef struct _ItemInfo
 {
@@ -121,8 +130,8 @@ void printCustomerInfo();
 
 typedef enum _SalesManStatus
 {
-	isFree = 0,
-	isBusy,
+	salesmanIsFree = 0,
+	salesmanIsBusy,
 	salesmanSignalToCustomer
 }SalesManStatus;
 
@@ -141,13 +150,39 @@ typedef struct _SalesManInfo
 	 */
 	int customerId;
 	/**
-	 * complained about a missing item from stock
+	 * item to be re stocked
 	 */
-	bool isComplainedAboutMissingItem;
+	int itemToRestock;
 }SalesManInfo;
 
 static void initSalesManInfo();
 void printSalesManInfo(int salesManId);
+
+typedef enum _GoodLoaderStatus
+{
+	goodLoaderIsFree = 0,
+	goodLoaderIsBusy,
+	goodLoaderSignalToSalesman
+}GoodLoaderStatus;
+
+typedef struct _GoodLoaderInfo
+{
+	/**
+	 * If the Good Loader is free or busy handling salesman
+	 */
+	GoodLoaderStatus status;
+	/**
+	 * Salesman Good Loader is handling or will be handling in future.
+	 */
+	int salesmanId;
+	/**
+	 * item to be re stocked
+	 */
+	int itemToRestock;
+}GoodLoaderInfo;
+
+static void initGoodLoaderInfo();
+void printGoodLoaderInfo(int goodLoaderInfo);
 
 void initLockCvForSimulation();
 void startSimulation();
