@@ -343,8 +343,7 @@ void CustomerThread(int ThreadId)
 
 		if(g_itemInfo[currentItemNoFromShoppingList].noOfItems>=currentItemNoCountFromShoppingList)
 		{
-			g_itemInfo[currentItemNoFromShoppingList].noOfItems =
-					g_itemInfo[currentItemNoFromShoppingList].noOfItems-currentItemNoCountFromShoppingList;
+			g_itemInfo[currentItemNoFromShoppingList].noOfItems -= currentItemNoCountFromShoppingList;
 
 			DEBUG('p',"%s has found item %d and placed %d in the trolley \n",currentThread->getName(),
 					currentItemNoFromShoppingList,currentItemNoCountFromShoppingList);
@@ -438,8 +437,6 @@ void CustomerThread(int ThreadId)
 	    			currentThread->getName(),currentItemNoFromShoppingList,mySalesMan);
 
 	    	g_customerSalesmanLock[mySalesMan]->Release();
-
-			g_shelfAccessLock[currentItemNoFromShoppingList]->Release();
 
 		}
 
@@ -750,6 +747,11 @@ void GoodLoaderThread(int ThreadId)
 
     		g_salesmanGoodsLoaderCV[ThreadId]->Signal(g_salesmanGoodsLoaderLock[ThreadId]);
 
+    		DEBUG('p',"%s has re stocked %d in Department %d \n",
+    				currentThread->getName(),
+    				g_goodLoaderInfo[ThreadId].itemToRestock,
+    				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo);
+
     		g_salesmanGoodsLoaderLock[ThreadId]->Release();
     	}
     	else
@@ -799,6 +801,11 @@ void GoodLoaderThread(int ThreadId)
     				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo);
 
     		g_salesmanGoodsLoaderLock[ThreadId]->Release();
+    	}
+
+    	else
+    	{
+    		g_goodLoaderWaitLock[0]->Release();
     	}
     }
 }
