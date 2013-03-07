@@ -426,12 +426,12 @@ void CustomerThread(int ThreadId)
 	    	g_customerSalesmanCV[mySalesMan]->Signal(g_customerSalesmanLock[mySalesMan]);
 	    	g_customerSalesmanCV[mySalesMan]->Wait(g_customerSalesmanLock[mySalesMan]);
 
-	    	g_salesmanInfo[mySalesMan].itemToRestock = -1;
-
 			g_itemInfo[currentItemNoFromShoppingList].noOfItems =
 					g_itemInfo[currentItemNoFromShoppingList].noOfItems-currentItemNoCountFromShoppingList;
 
 	    	g_customerSalesmanCV[mySalesMan]->Signal(g_customerSalesmanLock[mySalesMan]);
+
+	    	g_salesmanInfo[mySalesMan].itemToRestock = -1;
 
 	    	DEBUG('p',"%s has received assistance about re stocking of item %d from Department Salesman %d \n",
 	    			currentThread->getName(),currentItemNoFromShoppingList,mySalesMan);
@@ -740,11 +740,12 @@ void GoodLoaderThread(int ThreadId)
     		/**
     		 * Walking time from re stocking room to shelf
     		 */
+#if 0
     		for(int i=0;i<goodsLoaderWalkingTime;i++)
     		{
     			currentThread->Yield();
     		}
-
+#endif
     		g_salesmanGoodsLoaderCV[ThreadId]->Signal(g_salesmanGoodsLoaderLock[ThreadId]);
 
     		DEBUG('p',"%s has re stocked %d in Department %d \n",
@@ -788,10 +789,12 @@ void GoodLoaderThread(int ThreadId)
     		/**
     		 * Walking time from re stocking room to shelf
     		 */
+#if 0
     		for(int i=0;i<goodsLoaderWalkingTime;i++)
     		{
     			currentThread->Yield();
     		}
+#endif
 
     		g_salesmanGoodsLoaderCV[ThreadId]->Signal(g_salesmanGoodsLoaderLock[ThreadId]);
 
