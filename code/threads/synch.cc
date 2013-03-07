@@ -155,11 +155,15 @@ void Lock::Acquire()
     {
     	mState = BUSY;
     	currentLockOwner = currentThread;
+    	DEBUG('t',"LOCK ACQUIRE: LOCK %s IS FREE SO LOCK OWNER IS %s \n",name,currentThread->getName());
     }
     else
     {
     	lockWaitQueue->Append((void *)currentThread);
     	currentThread->Sleep();
+    	Thread* currentLockOwnerThread = (Thread*)currentLockOwner;
+    	DEBUG('t',"LOCK ACQUIRE: LOCK %s IS ALREADY OWNED BY %s, SO %s IS WAITING FOR LOCK TO BE RELEASED\n",
+    			name,currentLockOwnerThread->getName(),currentThread->getName());
     }
 
     (void) interrupt->SetLevel(oldLevel);
@@ -188,6 +192,9 @@ void Lock::Release()
     	if(firstWaitingThreadForLock != NULL)
     	{
         	mState = BUSY;
+        	Thread* currentLockOwnerThread = (Thread*)currentLockOwner;
+        	DEBUG('t',"LOCK RELEASE: LOCK %s IS RELEASED FROM %s TO %s\n",
+        			name,currentLockOwnerThread->getName(),firstWaitingThreadForLock->getName());
 			currentLockOwner = firstWaitingThreadForLock;
 			scheduler->ReadyToRun(firstWaitingThreadForLock);
     	}
@@ -196,6 +203,8 @@ void Lock::Release()
     {
     	mState = FREE;
     	currentLockOwner = NULL;
+    	DEBUG('t',"LOCK RELEASE: LOCK %s RELEASED TO NO ONE AS LOCK WAIT QUEUE IS EMPTY\n",
+    			name);
     }
     (void) interrupt->SetLevel(oldLevel);
 }
@@ -259,6 +268,7 @@ void Condition::Wait(Lock* conditionLock)
     }
     else if(cvWaitLock == NULL)
     {
+    	DEBUG('t',"CONDITION WAIT: CONDITION %s ASSOCIATED LOCK IS NOW %s\n",name,conditionLock->getName());
     	cvWaitLock = conditionLock;
     }
     else if(!(conditionLock->isHeldByCurrentThread()))
@@ -276,7 +286,11 @@ void Condition::Wait(Lock* conditionLock)
 
     conditionLock->Release();
 	cvWaitQueue->Append((void *)currentThread);
+	DEBUG('t',"CONDITION WAIT: CONDITION %s THREAD %s WOULD BE WAITING FOR SOME CONDITION TO OCCUR\n",
+			name,currentThread->getName());
 	currentThread->Sleep();
+	DEBUG('t',"CONDITION WAIT: CONDITION %s THREAD %s GOT UP AS CONDITION OCCURED\n",
+			name,currentThread->getName());
 	conditionLock->Acquire();
     (void) interrupt->SetLevel(oldLevel);
 }
@@ -316,6 +330,8 @@ void Condition::Signal(Lock* conditionLock)
     }
 
     Thread* firstWaitingThreadForCV = (Thread*)cvWaitQueue->Remove();
+    DEBUG('t',"CONDITION SIGNAL: CONDITON %s AS THREAD %s IS WAITING FOR CONDITION SIGNALING IT\n",
+    		name,firstWaitingThreadForCV->getName());
 	scheduler->ReadyToRun(firstWaitingThreadForCV);
 
 	if(cvWaitQueue->IsEmpty())
