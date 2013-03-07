@@ -317,6 +317,7 @@ void CustomerThread(int ThreadId)
         		{
         			mySalesMan = salesmanIndex;
         			g_salesmanInfo[salesmanIndex].status = salesmanIsBusy;
+        			g_salesmanInfo[salesmanIndex].customerId = ThreadId;
         			break;
         		}
         		g_customerSalesmanLock[salesmanIndex]->Release();
