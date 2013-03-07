@@ -351,6 +351,7 @@ void CustomerThread(int ThreadId)
 		}
 		else
 		{
+			g_shelfAccessLock[currentItemNoFromShoppingList]->Release();
 			mySalesMan = -1;
 
 	    	for(int salesmanIndex=salesManStartForDepartment;
