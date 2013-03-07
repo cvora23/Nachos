@@ -261,6 +261,7 @@ void CustomerThread(int ThreadId)
     	/**
     	 * Customer will now start interacting with Department Salesman for the item
     	 */
+    	mySalesMan = -1;
 
     	for(int salesmanIndex=salesManStartForDepartment;
     			salesmanIndex<salesManEndForDepartment;salesmanIndex++)
