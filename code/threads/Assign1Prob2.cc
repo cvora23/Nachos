@@ -524,7 +524,7 @@ void SalesmanThread(int ThreadId)
 
     		g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
 
-    		DEBUG('p',"%s is informed by %d that item %d is out of stock \n",
+    		DEBUG('p',"%s is informed by Customer %d that item %d is out of stock \n",
     				currentThread->getName(),
     				g_salesmanInfo[ThreadId].customerId,
     				g_salesmanInfo[ThreadId].itemToRestock);
