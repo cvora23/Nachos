@@ -244,7 +244,7 @@ void CustomerThread(int ThreadId)
     	/**
     	 * Customer will now find Department for particular item no
     	 */
-    	DEBUG('p',"%s wants to shop Item %d in Department %d \n",
+    	DEBUG('p',"%s wants to shop Item %d in DEPARTMENT_%d \n",
     			currentThread->getName(),
     			g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo,
     			g_itemInfo[g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo].departmentNo);
@@ -300,7 +300,7 @@ void CustomerThread(int ThreadId)
        		 */
     		g_customerDepartmentLock[currentDepartmentNoForItem]->Acquire();
     		g_departmentWaitQueue[currentDepartmentNoForItem]++;
-    		DEBUG('p',"%s gets in line for the Department %d \n",currentThread->getName(),
+    		DEBUG('p',"%s gets in line for the DEPARTMENT_%d \n",currentThread->getName(),
     				currentDepartmentNoForItem);
     		g_customerDepartmentCV[currentDepartmentNoForItem]->
     		Wait(g_customerDepartmentLock[currentDepartmentNoForItem]);
@@ -331,7 +331,7 @@ void CustomerThread(int ThreadId)
 
     	g_customerSalesmanLock[mySalesMan]->Release();
 
-		DEBUG('p',"%s is interacting with DepartmentSalesman %d from department %d \n",
+		DEBUG('p',"%s is interacting with SALESMAN_%d from DEPARTMENT_%d \n",
 				currentThread->getName(),mySalesMan,currentDepartmentNoForItem);
 
 		/**
@@ -345,7 +345,7 @@ void CustomerThread(int ThreadId)
 		{
 			g_itemInfo[currentItemNoFromShoppingList].noOfItems -= currentItemNoCountFromShoppingList;
 
-			DEBUG('p',"%s has found item %d and placed %d in the trolley \n",currentThread->getName(),
+			DEBUG('p',"%s has found ITEM_%d and placed ITEM_%d in the trolley \n",currentThread->getName(),
 					currentItemNoFromShoppingList,currentItemNoCountFromShoppingList);
 			g_shelfAccessLock[currentItemNoFromShoppingList]->Release();
 		}
@@ -366,7 +366,7 @@ void CustomerThread(int ThreadId)
 	    		 * 4: Customer will then start Interacting with Salesman
 	    		 */
 
-	    		DEBUG('p',"%s is not able to find %d and is searching for DepartmentSalesman %d \n",
+	    		DEBUG('p',"%s is not able to find ITEM_%d and is searching for SALESMAN_%d \n",
 	    				currentThread->getName(),currentItemNoFromShoppingList,salesmanIndex);
 
 	    		g_customerSalesmanLock[salesmanIndex]->Acquire();
@@ -420,7 +420,7 @@ void CustomerThread(int ThreadId)
 	        	g_customerDepartmentComplainLock[currentDepartmentNoForItem]->Release();
 	    	}
 
-	    	DEBUG('p',"%s is asking for assistance from Department Salesman %d \n",
+	    	DEBUG('p',"%s is asking for assistance from SALESMAN_%d \n",
 	    			currentThread->getName(),mySalesMan);
 
 	    	g_customerSalesmanCV[mySalesMan]->Signal(g_customerSalesmanLock[mySalesMan]);
@@ -433,14 +433,14 @@ void CustomerThread(int ThreadId)
 
 	    	g_salesmanInfo[mySalesMan].itemToRestock = -1;
 
-	    	DEBUG('p',"%s has received assistance about re stocking of item %d from Department Salesman %d \n",
+	    	DEBUG('p',"%s has received assistance about re stocking of ITEM_%d from SALESMAN_%d \n",
 	    			currentThread->getName(),currentItemNoFromShoppingList,mySalesMan);
 
 	    	g_customerSalesmanLock[mySalesMan]->Release();
 
 		}
 
-		DEBUG('p',"%s has finished shopping in Department %d \n",
+		DEBUG('p',"%s has finished shopping in  DEPARTMENT_%d \n",
 				currentThread->getName(),currentDepartmentNoForItem);
         /*************************************CUSTOMER-SALESMAN INTERACTION ENDS HERE*********************************************/
     }
@@ -455,7 +455,7 @@ void CustomerThread(int ThreadId)
 void SalesmanThread(int ThreadId)
 {
     DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
-    DEBUG('p',"%s will be working for Department %d \n",
+    DEBUG('p',"%s will be working for DEPARTMENT_%d \n",
     		currentThread->getName(),g_salesmanInfo[ThreadId].departmentNo);
 
     int myDepartmentNo = g_salesmanInfo[ThreadId].departmentNo;
@@ -490,7 +490,7 @@ void SalesmanThread(int ThreadId)
     		g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
     		g_customerSalesmanCV[ThreadId]->Signal(g_customerSalesmanLock[ThreadId]);
 
-    		DEBUG('p',"%s welcomes Customer %d to Department %d \n",
+    		DEBUG('p',"%s welcomes CUSTOMER_%d to DEPARTMENT_%d \n",
     				currentThread->getName(),g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
 
     		g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
@@ -522,7 +522,7 @@ void SalesmanThread(int ThreadId)
 
     		g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
 
-    		DEBUG('p',"%s is informed by Customer %d that item %d is out of stock \n",
+    		DEBUG('p',"%s is informed by CUSTOMER_%d that ITEM_%d is out of stock \n",
     				currentThread->getName(),
     				g_salesmanInfo[ThreadId].customerId,
     				g_salesmanInfo[ThreadId].itemToRestock);
@@ -568,12 +568,12 @@ void SalesmanThread(int ThreadId)
     		g_goodLoaderInfo[myGoodsLoader].itemToRestock = g_salesmanInfo[ThreadId].itemToRestock;
     		g_salesmanGoodsLoaderCV[myGoodsLoader]->Signal(g_salesmanGoodsLoaderLock[myGoodsLoader]);
 
-    		DEBUG('p',"%s informs GoodLoader %d that item %d is out of stock \n",
+    		DEBUG('p',"%s informs GOOD LOADER_%d that ITEM_%d is out of stock \n",
     				currentThread->getName(),myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
 
     		g_salesmanGoodsLoaderCV[myGoodsLoader]->Wait(g_salesmanGoodsLoaderLock[myGoodsLoader]);
 
-    		DEBUG('p',"%s is informed by the GoodLoader %d that item %d is re stocked \n",
+    		DEBUG('p',"%s is informed by the GOOD LOADER_%d that ITEM_%d is re stocked \n",
     				currentThread->getName(),myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
 
     		g_salesmanGoodsLoaderLock[myGoodsLoader]->Release();
@@ -582,7 +582,7 @@ void SalesmanThread(int ThreadId)
 
     		g_customerSalesmanCV[ThreadId]->Signal(g_customerSalesmanLock[ThreadId]);
 
-    		DEBUG('p',"%s informs the Customer %d that item %d is re stocked \n",
+    		DEBUG('p',"%s informs the CUSTOMER_%d that ITEM_%d is re stocked \n",
     				currentThread->getName(),g_salesmanInfo[ThreadId].customerId,
     				g_salesmanInfo[ThreadId].itemToRestock);
 
@@ -616,7 +616,7 @@ void SalesmanThread(int ThreadId)
     			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomer;
     			g_customerSalesmanCV[ThreadId]->Signal(g_customerSalesmanLock[ThreadId]);
 
-        		DEBUG('p',"%s welcomes Customer %d to Department %d \n",
+        		DEBUG('p',"%s welcomes CUSTOMER_%d to DEPARTMENT_%d \n",
         				currentThread->getName(),g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
 
     			g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
@@ -665,19 +665,19 @@ void SalesmanThread(int ThreadId)
         		g_goodLoaderInfo[myGoodsLoader].itemToRestock = g_salesmanInfo[ThreadId].itemToRestock;
         		g_salesmanGoodsLoaderCV[myGoodsLoader]->Signal(g_salesmanGoodsLoaderLock[myGoodsLoader]);
 
-        		DEBUG('p',"%s informs GoodLoader %d that item %d is out of stock \n",
+        		DEBUG('p',"%s informs GOOD LOADER_%d that ITEM_%d is out of stock \n",
         				currentThread->getName(),myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
 
         		g_salesmanGoodsLoaderCV[myGoodsLoader]->Wait(g_salesmanGoodsLoaderLock[myGoodsLoader]);
 
-        		DEBUG('p',"%s is informed by the GoodLoader %d that item %d is re stocked \n",
+        		DEBUG('p',"%s is informed by the GOOD LOADER_%d that ITEM_%d is re stocked \n",
         				currentThread->getName(),myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
 
         		g_salesmanGoodsLoaderLock[myGoodsLoader]->Release();
 
         		g_customerSalesmanCV[ThreadId]->Signal(g_customerSalesmanLock[ThreadId]);
 
-        		DEBUG('p',"%s informs the Customer %d that item %d is re stocked \n",
+        		DEBUG('p',"%s informs the CUSTOMER_%d that ITEM_%d is re stocked \n",
         				currentThread->getName(),g_salesmanInfo[ThreadId].customerId,
         				g_salesmanInfo[ThreadId].itemToRestock);
 
@@ -722,7 +722,7 @@ void GoodLoaderThread(int ThreadId)
 
     		g_salesmanGoodsLoaderCV[ThreadId]->Wait(g_salesmanGoodsLoaderLock[ThreadId]);
 
-    		DEBUG('p',"%s is informed by DepartmentSalesman %d of Department %d to re stock %d \n",
+    		DEBUG('p',"%s is informed by SALESMAN_%d of DEPARTMENT_%d to re stock ITEM_%d \n",
     				currentThread->getName(),g_goodLoaderInfo[ThreadId].salesmanId,
     				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo,
     				g_goodLoaderInfo[ThreadId].itemToRestock);
@@ -748,7 +748,7 @@ void GoodLoaderThread(int ThreadId)
 #endif
     		g_salesmanGoodsLoaderCV[ThreadId]->Signal(g_salesmanGoodsLoaderLock[ThreadId]);
 
-    		DEBUG('p',"%s has re stocked %d in Department %d \n",
+    		DEBUG('p',"%s has re stocked ITEM_%d in DEPARTMENT_%d \n",
     				currentThread->getName(),
     				g_goodLoaderInfo[ThreadId].itemToRestock,
     				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo);
@@ -771,7 +771,7 @@ void GoodLoaderThread(int ThreadId)
 
     		g_salesmanGoodsLoaderCV[ThreadId]->Wait(g_salesmanGoodsLoaderLock[ThreadId]);
 
-    		DEBUG('p',"%s is informed by DepartmentSalesman %d of Department %d to re stock %d \n",
+    		DEBUG('p',"%s is informed by SALESMAN_%d of DEPARTMENT_%d to re stock ITEM_%d \n",
     				currentThread->getName(),g_goodLoaderInfo[ThreadId].salesmanId,
     				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo,
     				g_goodLoaderInfo[ThreadId].itemToRestock);
@@ -798,7 +798,7 @@ void GoodLoaderThread(int ThreadId)
 
     		g_salesmanGoodsLoaderCV[ThreadId]->Signal(g_salesmanGoodsLoaderLock[ThreadId]);
 
-    		DEBUG('p',"%s has re stocked %d in Department %d \n",
+    		DEBUG('p',"%s has re stocked ITEM_%d in DEPARTMENT_%d \n",
     				currentThread->getName(),
     				g_goodLoaderInfo[ThreadId].itemToRestock,
     				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo);
