@@ -244,7 +244,7 @@ void CustomerThread(int ThreadId)
     	/**
     	 * Customer will now find Department for particular item no
     	 */
-    	DEBUG('p',"%s wants to shop Item %d in DEPARTMENT_%d \n",
+    	DEBUG('p',"%s wants to shop ITEM_%d in DEPARTMENT_%d \n",
     			currentThread->getName(),
     			g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo,
     			g_itemInfo[g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo].departmentNo);
@@ -433,7 +433,7 @@ void CustomerThread(int ThreadId)
 	    	g_customerSalesmanCV[mySalesMan]->Signal(g_customerSalesmanLock[mySalesMan]);
 
 	    	g_salesmanInfo[mySalesMan].itemToRestock = -1;
-
+	    	g_salesmanInfo[mySalesMan].customerId = -1;
 	    	DEBUG('p',"%s has received assistance about re stocking of ITEM_%d from SALESMAN_%d \n",
 	    			currentThread->getName(),currentItemNoFromShoppingList,mySalesMan);
 
@@ -590,6 +590,7 @@ void SalesmanThread(int ThreadId)
     		g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
 
     		myGoodsLoader = -1;
+    		g_salesmanInfo[ThreadId].itemToRestock = -1;
 
     		g_customerSalesmanLock[ThreadId]->Release();
     	}
