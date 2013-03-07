@@ -3,7 +3,19 @@
     NOTE: *******************************************************************************
     NEVER PULL FROM THE SERVER FOR NACHOS PROJECT ATLEAST !!!!!!!!!!!!!!!
     NOTE: *******************************************************************************
+            
+    If you are using aludra.usc.edu, run the following set of commands to install git on your account:
+
+    Installing Git:
+    cp ~/.cshrc ~/.cshrc.backup
+    echo "" >> ~/.cshrc
+    echo "# Git Setup" >> ~/.cshrc
+    echo "source /usr/usc/git/default/setup.csh" >> ~/.cshrc
+    source ~/.cshrc
     
+    git --version
+    which should give you the current version of git installed on your system.    
+
     On Aludra server make sure you have nachos-csci402 directory which is extracted version of nachos-f2011.tgz.
 
     mkdir git
