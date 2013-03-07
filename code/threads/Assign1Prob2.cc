@@ -88,7 +88,7 @@ void printItemInfo()
 		DEBUG('p',"Item %d Price is %d \n",i,g_itemInfo[i].Price);
 		DEBUG('p',"Item %d is in Department %d \n",i,g_itemInfo[i].departmentNo);
 		DEBUG('p',"Item %d is in Shelf %d \n",i,g_itemInfo[i].shelfNo);
-		DEBUG('l',"Item %d Total Stock no = %d \n",i,g_itemInfo[i].noOfItems);
+		DEBUG('p',"Item %d Total Stock no = %d \n",i,g_itemInfo[i].noOfItems);
 	}
 }
 
@@ -144,12 +144,12 @@ void printCustomerInfo()
 
 void printCustomerShoppingList(int customerId)
 {
-	DEBUG('l',"Customer %d shopping list is as follows : \n",customerId);
+	DEBUG('p',"Customer %d shopping list is as follows : \n",customerId);
 	for(int j =0;j<g_customerInfo[customerId].noOfItems;j++)
 	{
-		DEBUG('l',"Item No: %d\n",
+		DEBUG('p',"Item No: %d\n",
 				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo);
-		DEBUG('l',"No of Items of Item Type:%d ===== %d\n",
+		DEBUG('p',"No of Items of Item Type:%d ===== %d\n",
 				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo,
 				g_customerInfo[customerId].pCustomerShoppingList[j].noOfItems);
 	}
@@ -345,7 +345,7 @@ void CustomerThread(int ThreadId)
 			g_itemInfo[currentItemNoFromShoppingList].noOfItems =
 					g_itemInfo[currentItemNoFromShoppingList].noOfItems-currentItemNoCountFromShoppingList;
 
-			DEBUG('l',"%s has found item %d and placed %d in the trolley \n",currentThread->getName(),
+			DEBUG('p',"%s has found item %d and placed %d in the trolley \n",currentThread->getName(),
 					currentItemNoFromShoppingList,currentItemNoCountFromShoppingList);
 			g_shelfAccessLock[currentItemNoFromShoppingList]->Release();
 		}
@@ -366,7 +366,7 @@ void CustomerThread(int ThreadId)
 	    		 * 4: Customer will then start Interacting with Salesman
 	    		 */
 
-	    		DEBUG('l',"%s is not able to find %d and is searching for DepartmentSalesman %d \n",
+	    		DEBUG('p',"%s is not able to find %d and is searching for DepartmentSalesman %d \n",
 	    				currentThread->getName(),currentItemNoFromShoppingList,salesmanIndex);
 
 	    		g_customerSalesmanLock[salesmanIndex]->Acquire();
@@ -420,7 +420,7 @@ void CustomerThread(int ThreadId)
 	        	g_customerDepartmentComplainLock[currentDepartmentNoForItem]->Release();
 	    	}
 
-	    	DEBUG('l',"%s is asking for assistance from Department Salesman %d \n",
+	    	DEBUG('p',"%s is asking for assistance from Department Salesman %d \n",
 	    			currentThread->getName(),mySalesMan);
 
 	    	g_customerSalesmanCV[mySalesMan]->Signal(g_customerSalesmanLock[mySalesMan]);
@@ -442,7 +442,7 @@ void CustomerThread(int ThreadId)
 
 		}
 
-		DEBUG('l',"%s has finished shopping in Department %d \n",
+		DEBUG('p',"%s has finished shopping in Department %d \n",
 				currentThread->getName(),currentDepartmentNoForItem);
         /*************************************CUSTOMER-SALESMAN INTERACTION ENDS HERE*********************************************/
     }
