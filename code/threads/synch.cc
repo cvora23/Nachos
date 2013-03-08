@@ -159,11 +159,11 @@ void Lock::Acquire()
     }
     else
     {
-    	lockWaitQueue->Append((void *)currentThread);
-    	currentThread->Sleep();
     	Thread* currentLockOwnerThread = (Thread*)currentLockOwner;
     	DEBUG('t',"LOCK ACQUIRE: LOCK %s IS ALREADY OWNED BY %s, SO %s IS WAITING FOR LOCK TO BE RELEASED\n",
     			name,currentLockOwnerThread->getName(),currentThread->getName());
+    	lockWaitQueue->Append((void *)currentThread);
+    	currentThread->Sleep();
     }
 
     (void) interrupt->SetLevel(oldLevel);
@@ -284,8 +284,8 @@ void Condition::Wait(Lock* conditionLock)
         return;
     }
 
-    conditionLock->Release();
 	cvWaitQueue->Append((void *)currentThread);
+    conditionLock->Release();
 	DEBUG('t',"CONDITION WAIT: CONDITION %s THREAD %s WOULD BE WAITING FOR SOME CONDITION TO OCCUR\n",
 			name,currentThread->getName());
 	currentThread->Sleep();
