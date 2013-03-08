@@ -6,7 +6,7 @@ set DIRECTORY = /home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs
     echo "path exists"
     else
     echo "path does not exist"
-fi
+    endif
 #            mkdir $DIRECTORY
 #    else
 #            script -f -q $DIRECTORY/$$.log
