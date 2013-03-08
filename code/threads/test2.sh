@@ -1,7 +1,7 @@
 #!/bin/tcsh
 
 STR="Hello World"
-echo $STR
+echo ${STR}
 
 
 #if[ -f $usb_path ]
