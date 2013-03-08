@@ -1,10 +1,10 @@
-#!/bin/tcsh
+#!/bin/bash
 
-directory_path=/home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs
+usb_path="/media/disk/"
 
-if[ -d $directory_path ]
+if[ -f $usb_path ]
 then
-    echo "DIRECTORY EXISTS"
+    echo "path exists"
 else
-    echo "DIRECTORY DOES NOT EXIST"
+    echo "path does not exist"
 fi
