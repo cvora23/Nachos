@@ -631,9 +631,10 @@ void SalesmanThread(int ThreadId)
 
     		g_customerSalesmanCV[ThreadId]->Wait(g_customerSalesmanLock[ThreadId]);
 
+			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomer;
+
     		if(g_salesmanInfo[ThreadId].itemToRestock == -1)
     		{
-    			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomer;
     			g_customerSalesmanCV[ThreadId]->Signal(g_customerSalesmanLock[ThreadId]);
 
         		DEBUG('p',"%s welcomes CUSTOMER_%d to DEPARTMENT_%d \n",
