@@ -687,7 +687,7 @@ void SalesmanThread(int ThreadId)
     	{
 
     		DEBUG('p',"%s is RELAXING AS DEPARTMENT_%d WAIT QUEUE and DEPARTMENT_%d COMPLAIN WAIT QUEUE both are empty"
-    				"SET STATUS TO FREE\n ",currentThread->getName());
+    				"SET STATUS TO FREE\n ",currentThread->getName(),myDepartmentNo,myDepartmentNo);
 
     		g_customerSalesmanLock[ThreadId]->Acquire();
 
@@ -841,7 +841,7 @@ void GoodLoaderThread(int ThreadId)
 
     	if(g_goodLoaderWaitQueue[0]>0)
     	{
-    		DEBUG('p',"GOOD LOADER WAIT QUEUE IS NOT EMPTY...RE-STOCK OF SOME ITEM %s\n",currentThread->getName());
+    		DEBUG('p',"%s GOOD LOADER WAIT QUEUE IS NOT EMPTY...RE-STOCK OF SOME ITEM \n",currentThread->getName());
 
     		g_goodLoaderWaitQueue[0]--;
 
@@ -899,7 +899,7 @@ void GoodLoaderThread(int ThreadId)
 
     	if(g_goodLoaderWaitQueue[0] == 0)
     	{
-    		DEBUG('p',"GOOD LOADER WAIT QUEUE IS NOT EMPTY...RELAX %s\n",currentThread->getName());
+    		DEBUG('p',"%s GOOD LOADER WAIT QUEUE IS EMPTY...RELAX \n",currentThread->getName());
 
 
     		g_salesmanGoodsLoaderLock[ThreadId]->Acquire();
