@@ -1,7 +1,7 @@
 #!/bin/tcsh
 
-usb_path="/media/disk/"
-echo $usb_path
+STR="/media/disk/"
+echo $STR
 
 
 #if[ -f $usb_path ]
