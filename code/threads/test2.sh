@@ -1,6 +1,6 @@
 #!/bin/tcsh
 
-STR="/media/disk/"
+STR="Hello World"
 echo $STR
 
 
