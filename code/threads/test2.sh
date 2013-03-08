@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/tcsh
 
 usb_path="/media/disk/"
 
