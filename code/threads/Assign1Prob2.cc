@@ -875,12 +875,14 @@ void GoodLoaderThread(int ThreadId)
     		/**
     		 * Walking time from re stocking room to shelf
     		 */
-#if 0
+
     		for(int i=0;i<goodsLoaderWalkingTime;i++)
     		{
     			currentThread->Yield();
+    			DEBUG('p',"%s is walking from RE-STOCK room to shelf to RE-STOCK ITEM_%d\n",currentThread->getName(),
+    					g_goodLoaderInfo[ThreadId].itemToRestock);
     		}
-#endif
+
     		g_salesmanGoodsLoaderCV[ThreadId]->Signal(g_salesmanGoodsLoaderLock[ThreadId]);
 
     		DEBUG('p',"%s has re stocked ITEM_%d in DEPARTMENT_%d \n",
@@ -927,12 +929,13 @@ void GoodLoaderThread(int ThreadId)
     		/**
     		 * Walking time from re stocking room to shelf
     		 */
-#if 0
+
     		for(int i=0;i<goodsLoaderWalkingTime;i++)
     		{
     			currentThread->Yield();
+    			DEBUG('p',"%s is walking from RE-STOCK room to shelf to RE-STOCK ITEM_%d\n",currentThread->getName(),
+    					g_goodLoaderInfo[ThreadId].itemToRestock);
     		}
-#endif
 
     		g_salesmanGoodsLoaderCV[ThreadId]->Signal(g_salesmanGoodsLoaderLock[ThreadId]);
 
