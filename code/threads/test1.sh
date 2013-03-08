@@ -2,7 +2,6 @@
 
     if [ ! -d /home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs ]; then
         mkdir /home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs
-    fi
     script -f -q /home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs/$$.log
 
 
