@@ -1,6 +1,6 @@
 #!/bin/tcsh
 
-STR="Hello World"
+set STR = "Hello World"
 echo ${STR}
 
 
