@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/tcsh
 gdb nachos <<GDB_INPUT
 pwd
 run nachos -P2 -d p
