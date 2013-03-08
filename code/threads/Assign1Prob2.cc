@@ -324,7 +324,7 @@ void CustomerThread(int ThreadId)
         		 * SALESMAN (Will Work For Now)
         		 */
     			g_customerSalesmanLock[salesmanIndex]->Acquire();
-        		if(g_salesmanInfo[salesmanIndex].status == salesmanSignalToCustomer)
+        		if(g_salesmanInfo[salesmanIndex].status == salesmanSignalToCustomerFromDeptWaitQueue)
         		{
         			mySalesMan = salesmanIndex;
         			DEBUG('p',"%s assumes that SALESMAN_%d Signaled him regarding enquiry of ITEM_%d\n",
@@ -433,7 +433,7 @@ void CustomerThread(int ThreadId)
 	        		 * SALESMAN (Will Work For Now)
 	        		 */
 	    			g_customerSalesmanLock[salesmanIndex]->Acquire();
-	        		if(g_salesmanInfo[salesmanIndex].status == salesmanSignalToCustomer)
+	        		if(g_salesmanInfo[salesmanIndex].status == salesmanSignalToCustomerFromDeptComplainWaitQueue)
 	        		{
 		    			mySalesMan = salesmanIndex;
 	        			DEBUG('p',"%s assumes that SALESMAN_%d Signaled him regarding inquiry of RESTOCK ITEM_%d\n",
@@ -516,7 +516,7 @@ void SalesmanThread(int ThreadId)
     		 */
     		g_customerSalesmanLock[ThreadId]->Acquire();
 
-    		g_salesmanInfo[ThreadId].status = salesmanSignalToCustomer;
+    		g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptWaitQueue;
 
     		g_customerDepartmentCV[myDepartmentNo]->Signal(g_customerDepartmentLock[myDepartmentNo]);
 
@@ -572,7 +572,7 @@ void SalesmanThread(int ThreadId)
     		 */
     		g_customerSalesmanLock[ThreadId]->Acquire();
 
-    		g_salesmanInfo[ThreadId].status = salesmanSignalToCustomer;
+    		g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptComplainWaitQueue;
 
     		g_customerDepartmentComplainCV[myDepartmentNo]->Signal(g_customerDepartmentComplainLock[myDepartmentNo]);
 
@@ -702,12 +702,14 @@ void SalesmanThread(int ThreadId)
     		DEBUG('p',"%s GOT INITIAL RESPONSE from CUSTOMER_%d in NO WAIT QUEUE\n",
     				currentThread->getName(),g_salesmanInfo[ThreadId].customerId);
 
-			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomer;
+
 
     		if(g_salesmanInfo[ThreadId].itemToRestock == -1)
     		{
     			DEBUG('p',"%s is checking if INITIAL RESPONSE is not regarding RE-STOCK of Item in NO WAIT QUEUE\n",
     					currentThread->getName());
+
+    			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptWaitQueue;
 
     			g_customerSalesmanCV[ThreadId]->Signal(g_customerSalesmanLock[ThreadId]);
 
@@ -731,6 +733,7 @@ void SalesmanThread(int ThreadId)
     			 */
     			DEBUG('p',"%s is IF INITIAL RESPONSE is regarding RE-STOCK of Item in NO WAIT QUEUE\n",currentThread->getName());
 
+    			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptComplainWaitQueue;
 
         		for(int goodLoaderIndex=0;goodLoaderIndex<NO_OF_GOOD_LOADERS;goodLoaderIndex++)
         		{

@@ -132,7 +132,8 @@ typedef enum _SalesManStatus
 {
 	salesmanIsFree = 0,
 	salesmanIsBusy,
-	salesmanSignalToCustomer
+	salesmanSignalToCustomerFromDeptWaitQueue,
+	salesmanSignalToCustomerFromDeptComplainWaitQueue
 }SalesManStatus;
 
 typedef struct _SalesManInfo
@@ -141,6 +142,9 @@ typedef struct _SalesManInfo
 	 * If the Salesman is free or busy handling customer or just signaled a Customer
 	 */
 	SalesManStatus status;
+	/**
+	 *
+	 */
 	/**
 	 * Department Salesman is working for
 	 */
