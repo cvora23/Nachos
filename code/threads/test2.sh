@@ -1,9 +1,10 @@
 #!/bin/tcsh
 
-dirVar="/home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs"
+directory_path="/home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs"
 
-if [ "$(ls -A $dirVar)" ]; then
-  echo "$dirVar not empty"
+if[-d $directory_path ]
+then
+    echo "DIRECTORY EXISTS"
 else
-  echo "$dirVar is empty"
+    echo "DIRECTORY DOES NOT EXIST"
 fi
