@@ -1,11 +1,10 @@
 #!/bin/tcsh
 
-set DIRECTORY = "/home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs"
+set DIRECTORY = /home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs
 
-    if[ -d $DIRECTORY ] 
-then
+    if ( -d "$DIRECTORY" ) then
     echo "path exists"
-else
+    else
     echo "path does not exist"
 fi
 #            mkdir $DIRECTORY
