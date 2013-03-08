@@ -2,7 +2,7 @@
 
 set DIRECTORY = "/home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs"
 
-    if [ -d $DIRECTORY ]; 
+    if [ -d $DIRECTORY ] 
 then
     echo "path exists"
 else
