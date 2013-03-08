@@ -330,15 +330,14 @@ void Condition::Signal(Lock* conditionLock)
     }
 
     Thread* firstWaitingThreadForCV = (Thread*)cvWaitQueue->Remove();
-    DEBUG('t',"CONDITION SIGNAL: CONDITON %s AS THREAD %s IS WAITING FOR CONDITION SIGNALING IT\n",
-    		name,firstWaitingThreadForCV->getName());
+    DEBUG('t',"CONDITION SIGNAL: CONDITON %s %s SIGNALING THREAD %s WHO IS WAITING WAITING FOR CONDITION\n",
+    		name,currentThread->getName(),firstWaitingThreadForCV->getName());
 	scheduler->ReadyToRun(firstWaitingThreadForCV);
 
 	if(cvWaitQueue->IsEmpty())
 	{
 		cvWaitLock = NULL;
 	}
-
     (void) interrupt->SetLevel(oldLevel);
 }
 
