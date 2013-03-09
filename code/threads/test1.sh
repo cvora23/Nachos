@@ -14,6 +14,7 @@ set DIRECTORY = /home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs
       pwd
       run nachos -P2 -d p
       quit
-      GDB_INPUT
       set logging off
+      GDB_INPUT
+      exit
       
