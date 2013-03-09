@@ -7,7 +7,7 @@ set DIRECTORY = /home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs
         mkdir $DIRECTORY
     endif
     
-      script /home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs/$$.log
+#      script /home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs/$$.log
       gdb nachos <<GDB_INPUT
       set logging on
       set logging file /home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs/$$.log
