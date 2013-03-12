@@ -734,6 +734,8 @@ void CustomerThread(int ThreadId)
 
     /*************************************CUSTOMER - MANAGER INTERACTION ENDS HERE *******************************************/
 
+    DEBUG('p',"%s left the shopping mall !!!!! \n",currentThread->getName());
+
     g_customerTrolleyLock->Acquire();
     g_usedTrolleyCount--;
     if(g_waitForTrolleyCount>0)
@@ -1274,7 +1276,7 @@ void CashierThread(int ThreadId)
           	currentItemNoCountFromShoppingList = g_customerInfo[ThreadId].pCustomerShoppingList[i].noOfItems;
           	currentItemNoPriceFromShoppingList = g_itemInfo[currentItemNoFromShoppingList].Price;
           	totalBill +=  currentItemNoPriceFromShoppingList * currentItemNoCountFromShoppingList ;
-          	DEBUG('p',"%s got ITEM_%d from trolly\n",currentThread->getName(),currentItemNoFromShoppingList);
+          	DEBUG('p',"%s got ITEM_%d from trolley\n",currentThread->getName(),currentItemNoFromShoppingList);
     	}
 
     	g_cashierInfo[ThreadId].bill = totalBill;
