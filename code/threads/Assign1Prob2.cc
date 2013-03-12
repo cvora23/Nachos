@@ -1281,7 +1281,7 @@ void CashierThread(int ThreadId)
 
     	g_customerCashierCV[ThreadId]->Signal(g_customerCashierLock[ThreadId]);
 
-    	DEBUG('p',"%s tells CUSTOMER_%d total cost is $ %d\n",currentThread->getName(),totalBill);
+    	DEBUG('p',"%s tells CUSTOMER_%d total cost is $ %d\n",currentThread->getName(),myCustomer,totalBill);
 
     	g_customerCashierCV[ThreadId]->Wait(g_customerCashierLock[ThreadId]);
 
