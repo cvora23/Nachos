@@ -96,6 +96,19 @@ main(int argc, char **argv)
 {
     int argCount;			// the number of arguments 
 					// for a particular command
+    FILE * pFile;
+    pFile = fopen ("myfile.txt","a+");
+    if (pFile!=NULL)
+    {
+      fputs ("fopen example",pFile);
+      fclose (pFile);
+    }
+    else
+    {
+    	DEBUG('p',"File Open Failed\n");
+    }
+
+#if 0
 
     DEBUG('t', "Entering main");
     (void) Initialize(argc, argv);
@@ -224,5 +237,7 @@ main(int argc, char **argv)
 				// to those threads by saying that the
 				// "main" thread is finished, preventing
 				// it from returning.
+
+#endif
     return(0);			// Not reached...
 }
