@@ -10,13 +10,17 @@
 /**
  * GLOBAL DATA STRUCTURES
  */
-ItemInfo g_itemInfo[NO_OF_ITEM_TYPES];
+ItemInfo 		g_itemInfo[NO_OF_ITEM_TYPES];
 
-CustomerInfo g_customerInfo[NO_OF_CUSTOMERS];
+CustomerInfo 	g_customerInfo[NO_OF_CUSTOMERS];
 
-SalesManInfo g_salesmanInfo[NO_OF_SALESMAN];
+SalesManInfo 	g_salesmanInfo[NO_OF_SALESMAN];
 
-GoodLoaderInfo g_goodLoaderInfo[NO_OF_GOOD_LOADERS];
+GoodLoaderInfo 	g_goodLoaderInfo[NO_OF_GOOD_LOADERS];
+
+CashierInfo		g_cashierInfo[NO_OF_CASHIERS];
+
+ManagerInfo		g_managerInfo;
 
 /**
  * Locks, Condition Variables, Queue Wait Count for Customer-Trolley interaction
@@ -62,6 +66,43 @@ Condition*	g_goodLoaderWaitCV[NO_OF_GOODLOADER_WAIT_QUEUE];
 int			g_goodLoaderWaitQueue[NO_OF_GOODLOADER_WAIT_QUEUE];
 
 /**
+ * Locks,Condition Variables and Queue Length for Customer - Cashier Interaction
+ */
+Lock*		g_cashierLineLock[NO_OF_CASHIERS];
+Condition*	g_cashierLineCV[NO_OF_CASHIERS];
+int			g_cashierWaitQueue[NO_OF_CASHIERS];
+
+Lock*		g_cashierPrivilegedLineLock[NO_OF_CASHIERS];
+Condition*  g_cashierPrivilegedLineCV[NO_OF_CASHIERS];
+int			g_cashierPrivilegedWaitQueue[NO_OF_CASHIERS];
+
+Lock*		g_customerCashierLock[NO_OF_CASHIERS];
+Condition*	g_customerCashierCV[NO_OF_CASHIERS];
+
+/**
+ * Locks, Condition Variables and Queue Length for Manager - Cashier  Cash Collection Interaction
+ */
+Lock*		g_managerCashierCashLock[NO_OF_CASHIERS];
+
+/**
+ * Locks, Condition Variables and Queue Length for Manager Interaction
+ */
+
+Lock*		g_managerCashierLock;
+Condition*	g_managerCashierCV;
+int			g_managerWaitQueueLength;
+
+Lock*		g_managerCashierInteractionLock;
+Condition*	g_managerCashierInteractionCV;
+
+/**
+ * Locks, Condition Variables for Manager - Customer Interaction
+ */
+Lock*		g_managerCustomerInteractionLock;
+Condition*	g_managerCustomerInteractionCV;
+
+
+/**
  * GLOBAL DATA STRUCTURES INIT FUNCTIONS
  */
 static void initItemInfo()
@@ -103,6 +144,8 @@ static void initCustomerInfo()
 			g_customerInfo[i].type = CustomerType(Random()%2);
 			g_customerInfo[i].noOfItems = Random()%MAX_NO_ITEMS_TO_BE_PURCHASED + 1;
 			g_customerInfo[i].pCustomerShoppingList = new CustomerShoppingList[g_customerInfo[i].noOfItems];
+			g_customerInfo[i].hasEnoughMoneyForShopping = false;
+			g_customerInfo[i].isDoneShopping = false;
 		}
 		firstCall = false;
     }
@@ -191,7 +234,49 @@ static void initGoodLoaderInfo()
 	}
 }
 
-void printGoodLoaderInfo(int goodLoaderInfo)
+void printGoodLoaderInfo(int goodLoaderId)
+{
+
+}
+
+static void initCashierInfo()
+{
+    static bool firstCall = true;
+    if(firstCall)
+    {
+    	for(int i=0;i<NO_OF_CASHIERS;i++)
+    	{
+    		g_cashierInfo[i].status = cashierIsBusy;
+    		g_cashierInfo[i].customerId = -1;
+    		g_cashierInfo[i].bill = -1;
+    		g_cashierInfo[i].totalSalesMoney = 0;
+    	}
+		firstCall = false;
+	}
+}
+
+void printCashierInfo(int cashierId)
+{
+
+}
+
+static void initManagerInfo()
+{
+    static bool firstCall = true;
+    if(firstCall)
+    {
+    	for(int i=0;i<NO_OF_MANAGERS;i++)
+    	{
+    		g_managerInfo.cashierId = -1;
+    		g_managerInfo.customerId = -1;
+    		g_managerInfo.totalRevenue = 0;
+    		g_managerInfo.customerBill = 0;
+    	}
+		firstCall = false;
+	}
+}
+
+void printManagerInfo(int managerId)
 {
 
 }
@@ -209,6 +294,10 @@ void CustomerThread(int ThreadId)
     int salesManStartForDepartment;
     int salesManEndForDepartment;
     int mySalesMan = -1;
+    int myBill = 0;
+    int myCashier = -1;
+    int minCashierLineLength = MAX_CASHIER_LINE_LENGTH;
+	int currentItemNoCountToRemoveFromTrolley = 0;
 
     /*************************************CUSTOMER-TROLLEY INTERACTION STARTS HERE*********************************************/
 
@@ -479,6 +568,180 @@ void CustomerThread(int ThreadId)
     DEBUG('p',"%s is looking for the Cashier \n",currentThread->getName());
 
     /*******************************************CUSTOMER-CASHIER INTERACTION STARTS HERE*******************************************/
+
+    /**
+     * Finding the Cashier which is least busy.
+     */
+    for(int i=0;i<NO_OF_CASHIERS;i++)
+    {
+    	if(g_customerInfo[ThreadId].type == PRIVILEGED)
+    	{
+    		g_cashierPrivilegedLineLock[i]->Acquire();
+    		if(g_cashierPrivilegedWaitQueue[i]<minCashierLineLength)
+    		{
+    			minCashierLineLength = g_cashierPrivilegedWaitQueue[i];
+    			myCashier = i;
+    		}
+    		g_cashierPrivilegedLineLock[i]->Release();
+    	}
+    	else
+    	{
+    		g_cashierLineLock[i]->Acquire();
+    		if(g_cashierPrivilegedWaitQueue[i]<minCashierLineLength)
+    		{
+    			minCashierLineLength = g_cashierWaitQueue[i];
+    			myCashier = i;
+    		}
+    		g_cashierLineLock[i]->Release();
+    	}
+    }
+
+	if(g_customerInfo[ThreadId].type == PRIVILEGED)
+	{
+		DEBUG('p',"%s chose CASHIER_%d with Privileged Line of length %d \n",
+				currentThread->getName(),myCashier,minCashierLineLength);
+	}
+	else
+	{
+		DEBUG('p',"%s chose CASHIER_%d with Line of length %d \n",
+				currentThread->getName(),myCashier,minCashierLineLength);
+	}
+
+    g_customerCashierLock[myCashier]->Acquire();
+    if(g_cashierInfo[myCashier].status == cashierIsFree)
+    {
+    	g_cashierInfo[myCashier].status = cashierIsBusy;
+    	g_cashierInfo[myCashier].customerId = ThreadId;
+    }
+    else
+    {
+    	if(g_customerInfo[ThreadId].type == PRIVILEGED)
+    	{
+    		g_cashierPrivilegedLineLock[myCashier]->Acquire();
+    	    g_customerCashierLock[myCashier]->Release();
+    	    g_cashierPrivilegedWaitQueue[myCashier]++;
+    	    g_cashierPrivilegedLineCV[myCashier]->Wait(g_cashierPrivilegedLineLock[myCashier]);
+    	}
+    	else
+    	{
+    		g_cashierLineLock[myCashier]->Acquire();
+    	    g_customerCashierLock[myCashier]->Release();
+    	    g_cashierWaitQueue[myCashier]++;
+    	    g_cashierLineCV[myCashier]->Wait(g_cashierLineLock[myCashier]);
+    	}
+
+    	g_customerCashierLock[myCashier]->Acquire();
+    	g_cashierInfo[myCashier].status = cashierIsBusy;
+    	g_cashierInfo[myCashier].customerId = ThreadId;
+
+    	if(g_customerInfo[ThreadId].type == PRIVILEGED)
+    	{
+    		g_cashierPrivilegedLineLock[myCashier]->Release();
+    	}
+    	else
+    	{
+    		g_cashierLineLock[myCashier]->Release();
+    	}
+    }
+
+    /**
+     * Item Processing between Customer and Cashier.
+     * Waits for the bill from Cashier
+     */
+    g_customerCashierCV[myCashier]->Signal(g_customerCashierLock[myCashier]);
+
+    g_customerCashierCV[myCashier]->Wait(g_customerCashierLock[myCashier]);
+
+    myBill = g_cashierInfo[myCashier].bill;
+
+    if(myBill <= g_customerInfo[ThreadId].money)
+    {
+    	g_customerInfo[ThreadId].hasEnoughMoneyForShopping = true;
+    	DEBUG('p',"%s pays %d amount to CASHIER_%d and is waiting for the receipt\n",
+    			currentThread->getName(),myBill,myCashier);
+    }
+    else
+    {
+    	g_customerInfo[ThreadId].hasEnoughMoneyForShopping = false;
+    	DEBUG('p',"%s cannot pay %d\n",
+    			currentThread->getName(),myBill);
+    }
+
+    g_customerCashierCV[myCashier]->Signal(g_customerCashierLock[myCashier]);
+
+    g_customerCashierCV[myCashier]->Wait(g_customerCashierLock[myCashier]);
+
+    if(g_customerInfo[ThreadId].hasEnoughMoneyForShopping == true)
+    {
+    	DEBUG('p',"%s got receipt from CASHIER_%d and is now leaving\n",
+    			currentThread->getName(),myCashier);
+    }
+
+	DEBUG('p',"%s signaled CASHIER_%d that I am leaving\n",
+			currentThread->getName(),myCashier);
+
+    g_customerCashierCV[myCashier]->Signal(g_customerCashierLock[myCashier]);
+
+    g_managerCustomerInteractionLock->Acquire();
+
+    g_customerCashierLock[myCashier]->Release();
+
+    /*************************************CUSTOMER - CASHIER INTERACTION ENDS HERE*********************************************/
+
+    /*************************************CUSTOMER - MANAGER INTERACTION STARTS HERE *******************************************/
+
+    if(g_customerInfo[ThreadId].hasEnoughMoneyForShopping == false)
+    {
+    	DEBUG('p',"%s is waiting for MANAGER for negotiations\n",currentThread->getName());
+    	g_managerInfo.customerBill = myBill;
+    	g_managerInfo.customerId = ThreadId;
+
+    	g_managerCustomerInteractionCV->Signal(g_managerCustomerInteractionLock);
+
+    	g_managerCustomerInteractionCV->Wait(g_managerCustomerInteractionLock);
+
+    	/**
+    	 * Start Removing Items from the Trolley
+    	 */
+    	while(myBill<=g_customerInfo[ThreadId].hasEnoughMoneyForShopping)
+    	{
+    		g_managerCustomerInteractionCV->Signal(g_managerCustomerInteractionLock);
+    		DEBUG('p',"%s tells MANAGER to remove ITEM_%d from trolley\n",
+    				currentThread->getName(),
+    				g_customerInfo[ThreadId].pCustomerShoppingList[currentItemNoCountToRemoveFromTrolley].itemNo);
+        	g_managerCustomerInteractionCV->Wait(g_managerCustomerInteractionLock);
+        	myBill = g_managerInfo.customerBill;
+        	currentItemNoCountToRemoveFromTrolley++;
+    	}
+
+    	g_customerInfo[ThreadId].isDoneShopping = true;
+
+    	DEBUG('p',"%s pays $ %d MANAGER after removing items and is waiting for receipt from MANAGER\n",
+    			currentThread->getName(),myBill);
+
+		g_managerCustomerInteractionCV->Signal(g_managerCustomerInteractionLock);
+    	g_managerCustomerInteractionCV->Wait(g_managerCustomerInteractionLock);
+
+    	DEBUG('p',"%s got receipt from MANAGER and is now leaving\n",currentThread->getName());
+
+    	g_managerCustomerInteractionLock->Release();
+    }
+
+    else
+    {
+    	g_managerCustomerInteractionLock->Release();
+    }
+
+    /*************************************CUSTOMER - MANAGER INTERACTION ENDS HERE *******************************************/
+
+    g_customerTrolleyLock->Acquire();
+    g_usedTrolleyCount--;
+    if(g_waitForTrolleyCount>0)
+    {
+    	g_customerTrolleyCV->Signal(g_customerTrolleyLock);
+    }
+    g_customerTrolleyLock->Release();
+
 }
 
 void SalesmanThread(int ThreadId)
@@ -903,6 +1166,7 @@ void GoodLoaderThread(int ThreadId)
     	{
     		DEBUG('p',"%s GOOD LOADER WAIT QUEUE IS EMPTY...RELAX \n",currentThread->getName());
 
+    		DEBUG('p',"%s is waiting for orders to Re stock\n",currentThread->getName());
 
     		g_salesmanGoodsLoaderLock[ThreadId]->Acquire();
     		g_goodLoaderInfo[ThreadId].status = goodLoaderIsFree;
@@ -958,11 +1222,216 @@ void GoodLoaderThread(int ThreadId)
 void CashierThread(int ThreadId)
 {
     DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
+	int myCustomer = -1;
+	int totalBill = 0;
+    int currentItemNoFromShoppingList;
+    int currentItemNoCountFromShoppingList;
+    int currentItemNoPriceFromShoppingList;
+    while(1)
+    {
+    	myCustomer = -1;
+    	totalBill = 0;
+        currentItemNoFromShoppingList = 0;
+        currentItemNoCountFromShoppingList = 0;
+        currentItemNoPriceFromShoppingList = 0;
+
+    	g_cashierPrivilegedLineLock[ThreadId]->Acquire();
+    	if(g_cashierPrivilegedWaitQueue[ThreadId]>0)
+    	{
+    		g_cashierPrivilegedWaitQueue[ThreadId]--;
+    		g_cashierInfo[ThreadId].status = cashierSignalToCustomer;
+    		g_cashierPrivilegedLineCV[ThreadId]->Signal(g_cashierPrivilegedLineLock[ThreadId]);
+    		g_customerCashierLock[ThreadId]->Acquire();
+    		g_cashierPrivilegedLineLock[ThreadId]->Release();
+    	}
+    	else
+    	{
+    		g_cashierPrivilegedLineLock[ThreadId]->Release();
+
+    		g_cashierLineLock[ThreadId]->Acquire();
+
+    		if(g_cashierWaitQueue[ThreadId]>0)
+    		{
+    			g_cashierWaitQueue[ThreadId]--;
+        		g_cashierInfo[ThreadId].status = cashierSignalToCustomer;
+        		g_cashierLineCV[ThreadId]->Signal(g_cashierLineLock[ThreadId]);
+        		g_customerCashierLock[ThreadId]->Acquire();
+    		}
+    		else
+    		{
+    			g_customerCashierLock[ThreadId]->Acquire();
+    			g_cashierInfo[ThreadId].status = cashierIsFree;
+    		}
+    		g_cashierLineLock[ThreadId]->Release();
+    	}
+
+    	g_customerCashierCV[ThreadId]->Wait(g_customerCashierLock[ThreadId]);
+    	myCustomer = g_cashierInfo[ThreadId].customerId;
+
+    	for(int i=0;i<g_customerInfo[myCustomer].noOfItems;i++)
+    	{
+        	currentItemNoFromShoppingList = g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo;
+          	currentItemNoCountFromShoppingList = g_customerInfo[ThreadId].pCustomerShoppingList[i].noOfItems;
+          	currentItemNoPriceFromShoppingList = g_itemInfo[currentItemNoFromShoppingList].Price;
+          	totalBill +=  currentItemNoPriceFromShoppingList * currentItemNoCountFromShoppingList ;
+          	DEBUG('p',"%s got ITEM_%d from trolly\n",currentThread->getName(),currentItemNoFromShoppingList);
+    	}
+
+    	g_cashierInfo[ThreadId].bill = totalBill;
+
+    	g_customerCashierCV[ThreadId]->Signal(g_customerCashierLock[ThreadId]);
+
+    	DEBUG('p',"%s tells CUSTOMER_%d total cost is $ %d\n",currentThread->getName(),totalBill);
+
+    	g_customerCashierCV[ThreadId]->Wait(g_customerCashierLock[ThreadId]);
+
+    	if(g_customerInfo[myCustomer].hasEnoughMoneyForShopping == false)
+    	{
+    		/**
+    		 * REPORT CUSTOMER DOES NOT HAVE ENOUGH MONEY TO MANAGER
+    		 */
+    		g_managerCashierLock->Acquire();
+
+    		g_managerWaitQueueLength++;
+
+    		g_managerCashierCV->Wait(g_managerCashierLock);
+
+    		g_managerInfo.cashierId = ThreadId;
+
+    		g_managerCashierInteractionLock->Acquire();
+
+    		g_managerCashierLock->Release();
+
+    		g_managerCashierInteractionCV->Signal(g_managerCashierInteractionLock);
+
+    		DEBUG('p',"%s informs Manager that CUSTOMER_%d does not have enough money\n",
+    				currentThread->getName(),myCustomer);
+
+    		g_managerCashierInteractionCV->Wait(g_managerCashierInteractionLock);
+
+
+        	g_customerCashierCV[ThreadId]->Signal(g_customerCashierLock[ThreadId]);
+
+        	DEBUG('p',"%s asks CUSTOMER_%d to wait for Manager\n",currentThread->getName(),myCustomer);
+
+        	g_customerCashierCV[ThreadId]->Wait(g_customerCashierLock[ThreadId]);
+
+    	}
+    	else
+    	{
+    		g_managerCashierCashLock[ThreadId]->Acquire();
+    		g_cashierInfo[ThreadId].totalSalesMoney += totalBill;
+    		g_managerCashierCashLock[ThreadId]->Release();
+
+    		DEBUG('p',"%s got money $ %d from CUSTOMER_%d\n",currentThread->getName(),totalBill,myCustomer);
+
+        	g_customerCashierCV[ThreadId]->Signal(g_customerCashierLock[ThreadId]);
+
+        	DEBUG('p',"%s gave the receipt to CUSTOMER_%d and tells him to leave\n",
+        			currentThread->getName(),myCustomer);
+
+        	g_customerCashierCV[ThreadId]->Wait(g_customerCashierLock[ThreadId]);
+    	}
+
+    	g_customerCashierLock[ThreadId]->Release();
+
+    }
 }
 
 void ManagerThread(int ThreadId)
 {
     DEBUG('p', "%s Started !!!!!!! \n",currentThread->getName());
+    int managerSales = 0;
+
+    int itemRemoveCounter = 0;
+	int currentItemNoToRemove = 0;
+	int currentItemNoToRemoveCount = 0;
+	int currentItemNoToRemovePrice = 0;
+
+    while(1)
+    {
+
+    	itemRemoveCounter = 0;
+
+    	for(int i=0;i<NO_OF_CASHIERS;i++)
+    	{
+    		g_managerCashierCashLock[i]->Acquire();
+    		g_managerInfo.totalRevenue += g_cashierInfo[i].totalSalesMoney;
+    		g_cashierInfo[i].totalSalesMoney = 0;
+    		g_managerCashierCashLock[i]->Release();
+    	}
+
+    	g_managerInfo.totalRevenue += managerSales;
+    	managerSales = 0;
+    	DEBUG('p',"Total Sale of the entire store until now is $ %d \n",g_managerInfo.totalRevenue);
+
+    	g_managerCashierLock->Acquire();
+    	if(g_managerWaitQueueLength == 0)
+    	{
+    		g_managerCashierLock->Release();
+    	}
+    	else
+    	{
+    		g_managerCashierCV->Signal(g_managerCashierLock);
+
+    		g_managerWaitQueueLength--;
+
+    		g_managerCashierInteractionLock->Acquire();
+
+    		g_managerCashierLock->Release();
+
+    		g_managerCashierInteractionCV->Wait(g_managerCashierInteractionLock);
+
+    		DEBUG('p',"%s got a call from CASHIER_%d\n",currentThread->getName(),g_managerInfo.cashierId);
+
+    		g_managerCashierInteractionCV->Signal(g_managerCashierInteractionLock);
+
+    		g_managerCustomerInteractionLock->Acquire();
+
+    		g_managerCashierInteractionLock->Release();
+
+    		g_managerCustomerInteractionCV->Wait(g_managerCustomerInteractionLock);
+
+    		g_managerCustomerInteractionCV->Signal(g_managerCustomerInteractionLock);
+
+    		g_managerCustomerInteractionCV->Wait(g_managerCustomerInteractionLock);
+
+    		while(g_customerInfo[g_managerInfo.customerId].isDoneShopping != true)
+    		{
+    			currentItemNoToRemove =
+    					g_customerInfo[g_managerInfo.customerId].pCustomerShoppingList[itemRemoveCounter].itemNo;
+
+    			currentItemNoToRemovePrice = g_itemInfo[currentItemNoToRemove].Price;
+
+    			currentItemNoToRemoveCount =
+    					g_customerInfo[g_managerInfo.customerId].pCustomerShoppingList[itemRemoveCounter].noOfItems;
+
+    			DEBUG('p',"%s removes ITEM_%d from trolley of CUSTOMER_%d\n",
+    					currentThread->getName(),currentItemNoToRemove);
+
+    			g_managerInfo.customerBill -= currentItemNoToRemovePrice * currentItemNoToRemoveCount;
+
+        		g_managerCustomerInteractionCV->Signal(g_managerCustomerInteractionLock);
+
+        		g_managerCustomerInteractionCV->Wait(g_managerCustomerInteractionLock);
+    		}
+
+    		managerSales += g_managerInfo.customerBill;
+
+    		g_managerCustomerInteractionCV->Signal(g_managerCustomerInteractionLock);
+
+    		DEBUG('p',"%s gives receipt to CUSTOMER_%d \n",currentThread->getName(),g_managerInfo.customerId);
+
+    		g_managerCustomerInteractionLock->Release();
+
+    		DEBUG('p',"%s has total sale of $ %d\n",currentThread->getName(),managerSales);
+    	}
+
+    	for(int i=0;i<MANAGER_RANDOM_SLEEP_TIME;i++)
+    	{
+    		currentThread->Yield();
+    	}
+    }
 }
 
 void initLockCvForSimulation()
@@ -1043,6 +1512,74 @@ void initLockCvForSimulation()
 
         g_goodLoaderWaitQueue[i] = 0;
 	}
+
+	for(int i=0;i<NO_OF_CASHIERS;i++)
+	{
+		lockName = new char[50];
+        sprintf (lockName, "%s_%d", CASHIERLINELOCK_STRING, i);
+        g_cashierLineLock[i] = new Lock(lockName);
+
+        cvName = new char[50];
+        sprintf (cvName, "%s_%d", CASHIERLINECV_STRING, i);
+        g_cashierLineCV[i] = new Condition(cvName);
+
+        g_cashierWaitQueue[i] = 0;
+
+		lockName = new char[50];
+        sprintf (lockName, "%s_%d", CASHIERPRIVILEGEDLINELOCK_STRING, i);
+        g_cashierPrivilegedLineLock[i] = new Lock(lockName);
+
+        cvName = new char[50];
+        sprintf (cvName, "%s_%d", CASHIERPRIVILEGEDLINECV_STRING, i);
+        g_cashierPrivilegedLineCV[i] = new Condition(cvName);
+
+        g_cashierPrivilegedWaitQueue[i] = 0;
+
+		lockName = new char[50];
+        sprintf (lockName, "%s_%d", CUSTOMERCASHIERLOCK_STRING, i);
+        g_customerCashierLock[i] = new Lock(lockName);
+
+        cvName = new char[50];
+        sprintf (cvName, "%s_%d", CUSTOMERCASHIERCV_STRING, i);
+        g_customerCashierCV[i] = new Condition(cvName);
+	}
+
+	for(int i=0;i<NO_OF_CASHIERS;i++)
+	{
+		lockName = new char[50];
+        sprintf (lockName, "%s_%d", MANAGERCASHIERCASHLOCK_STRING, i);
+        g_managerCashierCashLock[i] = new Lock(lockName);
+	}
+
+	for(int i=0;i<NO_OF_MANAGERS;i++)
+	{
+		lockName = new char[50];
+        sprintf (lockName, "%s_%d", MANAGERCASHIERLOCK_STRING, i);
+        g_managerCashierLock = new Lock(lockName);
+
+        cvName = new char[50];
+        sprintf (cvName, "%s_%d", MANAGERCASHIERCV_STRING, i);
+        g_managerCashierCV = new Condition(cvName);
+
+		lockName = new char[50];
+        sprintf (lockName, "%s_%d", MANAGERCASHIERINTERACTIONLOCK_STRING, i);
+        g_managerCashierInteractionLock = new Lock(lockName);
+
+        cvName = new char[50];
+        sprintf (cvName, "%s_%d", MANAGERCASHIERINTERACTIONCV_STRING, i);
+        g_managerCashierInteractionCV = new Condition(cvName);
+	}
+
+	for(int i=0;i<NO_OF_MANAGERS;i++)
+	{
+		lockName = new char[50];
+        sprintf (lockName, "%s_%d", MANAGERCUSTOMERINTERACTIONLOCK_STRING, i);
+        g_managerCustomerInteractionLock = new Lock(lockName);
+
+        cvName = new char[50];
+        sprintf (cvName, "%s_%d", MANAGERCUSTOMERINTERACTIONCV_STRING, i);
+        g_managerCustomerInteractionCV = new Condition(cvName);
+	}
 }
 
 void startSimulation()
@@ -1071,6 +1608,10 @@ void startSimulation()
     initSalesManInfo();
 
     initGoodLoaderInfo();
+
+    initCashierInfo();
+
+    initManagerInfo();
 
     initLockCvForSimulation();
 
