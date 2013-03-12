@@ -1311,6 +1311,7 @@ void CashierThread(int ThreadId)
 
     		g_managerCashierInteractionCV->Wait(g_managerCashierInteractionLock);
 
+    		g_managerCashierInteractionLock->Release();
 
         	g_customerCashierCV[ThreadId]->Signal(g_customerCashierLock[ThreadId]);
 
