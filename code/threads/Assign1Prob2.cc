@@ -1272,8 +1272,8 @@ void CashierThread(int ThreadId)
 
     	for(int i=0;i<g_customerInfo[myCustomer].noOfItems;i++)
     	{
-        	currentItemNoFromShoppingList = g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo;
-          	currentItemNoCountFromShoppingList = g_customerInfo[ThreadId].pCustomerShoppingList[i].noOfItems;
+        	currentItemNoFromShoppingList = g_customerInfo[myCustomer].pCustomerShoppingList[i].itemNo;
+          	currentItemNoCountFromShoppingList = g_customerInfo[myCustomer].pCustomerShoppingList[i].noOfItems;
           	currentItemNoPriceFromShoppingList = g_itemInfo[currentItemNoFromShoppingList].Price;
           	totalBill +=  currentItemNoPriceFromShoppingList * currentItemNoCountFromShoppingList ;
           	DEBUG('p',"%s got ITEM_%d from trolley\n",currentThread->getName(),currentItemNoFromShoppingList);
