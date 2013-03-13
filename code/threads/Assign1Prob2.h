@@ -10,6 +10,7 @@
 
 #include "system.h"
 #include "synch.h"
+#include "ini.h"
 
 /**
  * \todo: Add Config File reader for changing the default configuration parameters.
