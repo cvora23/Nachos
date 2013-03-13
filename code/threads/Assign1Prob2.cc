@@ -1623,7 +1623,7 @@ static int handler(void* user, const char* section, const char* name,
     }
     else if(MATCH("CUSTOMER","type"))
     {
-    	g_customerInfo[customerId].type = atoi(value);
+    	g_customerInfo[customerId].type = (CustomerType)atoi(value);
     }
     else if(MATCH("CUSTOMER","money"))
     {
