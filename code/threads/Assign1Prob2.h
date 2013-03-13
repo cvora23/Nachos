@@ -264,6 +264,8 @@ static void initManagerInfo();
 void printManagerInfo(int managerId);
 
 void initLockCvForSimulation();
-void startSimulation();
+int startConfiguration(const char* configFileName);
+void printConfiguration();
+void startSimulation(const char* configFileName);
 
 #endif /* ASSIGN1PROB2_H_ */

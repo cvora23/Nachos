@@ -1585,7 +1585,60 @@ void initLockCvForSimulation()
 	}
 }
 
-void startSimulation()
+static int handler(void* user, const char* section, const char* name,
+                   const char* value)
+{
+	/**
+	 * Handling Item Configuration
+	 */
+
+    #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
+	int currentItemNo;
+
+    if (MATCH("ITEM", "itemNo"))
+    {
+    	currentItemNo = atoi(value);
+    }
+    else if (MATCH("ITEM", "price"))
+    {
+        g_itemInfo[currentItemNo].Price = atoi(value);
+    }
+    else if (MATCH("ITEM", "shelfNo"))
+    {
+        g_itemInfo[currentItemNo].shelfNo = atoi(value);
+    }
+    else if(MATCH("ITEM","departmentNo"))
+    {
+    	g_itemInfo[currentItemNo].departmentNo = atoi(value);
+    }
+    else if(MATCH("ITEM","noOfItems"))
+    {
+    	g_itemInfo[currentItemNo].noOfItems = atoi(value);
+    }
+    else
+    {
+        return 0;  /* unknown section/name, error */
+    }
+    return 1;
+}
+
+void printConfiguration()
+{
+	printItemInfo();
+}
+
+int startConfiguration(const char* configFileName)
+{
+	int retVal = 1;
+    if (ini_parse(configFileName, handler, NULL) < 0)
+    {
+    	DEBUG('p',"Can't load 'test.ini'\n");
+        printf("Can't load 'test.ini'\n");
+    }
+    return retVal;
+}
+
+void startSimulation(const char* configFileName)
 {
 	Thread* t;
 	RandomInit(time(NULL));
@@ -1600,6 +1653,13 @@ void startSimulation()
     DEBUG('p',"Number of Managers = %d \n",NO_OF_MANAGERS);
     DEBUG('p',"Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
 
+    /**
+     * Start the configuration Process
+     */
+    startConfiguration(configFileName);
+    printConfiguration();
+
+#if 0
     initItemInfo();
     printItemInfo();
 
@@ -1655,9 +1715,11 @@ void startSimulation()
     	t = new Thread(threadName);
     	t->Fork((VoidFunctionPtr)CustomerThread,i);
     }
+#endif
+
 }
 
-void Problem2()
+void Problem2(const char* configFileName)
 {
-	startSimulation();
+	startSimulation(configFileName);
 }

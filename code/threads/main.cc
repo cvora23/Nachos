@@ -73,7 +73,7 @@ extern void TestSuite5();
 extern void TestSuite6();
 extern void TestSuite7();
 extern void TestSuite8();
-extern void Problem2();
+extern void Problem2(const char* configFileName);
 #endif
 
 
@@ -157,7 +157,7 @@ main(int argc, char **argv)
 	if (!strcmp(*(argv), "-P2"))
 	{
 		//run the test suite provided for Assignment 1 - Part 1
-		Problem2();
+		Problem2(argv[1]);
 	}
 #endif
     }
