@@ -1593,7 +1593,7 @@ static int handler(void* user, const char* section, const char* name,
 	 */
 
     #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
-	int currentItemNo;
+	static int currentItemNo;
 
     if (MATCH("ITEM", "itemNo"))
     {
