@@ -479,7 +479,7 @@ Lock BufferLock("BufferLock");
 /**
  * Counter to keep track of number of bytes added to Buffer
  */
-int count;
+int count = 0;
 /**
  * put function to add characters to protected buffer
  */
