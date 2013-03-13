@@ -190,7 +190,7 @@ void printCustomerShoppingList(int customerId)
 	DEBUG('p',"Customer %d shopping list is as follows : \n",customerId);
 	for(int j =0;j<g_customerInfo[customerId].noOfItems;j++)
 	{
-		DEBUG('p',"Item No: %d\n",
+		DEBUG('p',"Item Type: %d\n",
 				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo);
 		DEBUG('p',"No of Items of Item Type:%d ===== %d\n",
 				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo,
