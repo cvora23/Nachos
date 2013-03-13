@@ -479,14 +479,14 @@ Lock BufferLock("BufferLock");
 /**
  * Counter to keep track of number of bytes added to Buffer
  */
-int count = 0;
+int bufcount;
 /**
  * put function to add characters to protected buffer
  */
 void put(char c)
 {
 	BufferLock.Acquire();
-	count++;
+	bufcount++;
 	buffer[head] = c;
 	head++;
 	if(head == BUFSIZE)
@@ -502,7 +502,7 @@ char get()
 {
 	char c;
 	BufferLock.Acquire();
-	count--;
+	bufcount--;
 	c = buffer[tail];
 	tail++;
 	if(tail == BUFSIZE)
@@ -535,7 +535,7 @@ void Consumer()
 {
     DEBUG('t', "Consumer Started !!!!! \n");
     char bufPtr;
-    while(count != 0)
+    while(bufcount != 0)
     {
     	bufPtr = get();
     	DEBUG('t',"%c",bufPtr);
