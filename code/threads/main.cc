@@ -157,7 +157,7 @@ main(int argc, char **argv)
 	if (!strcmp(*(argv), "-P2"))
 	{
 		//run the test suite provided for Assignment 1 - Part 1
-		Problem2(argv[2]);
+		Problem2(argv[1]);
 	}
 #endif
     }
