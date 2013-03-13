@@ -125,10 +125,10 @@ void printItemInfo()
 {
 	for (int i = 0;i<NO_OF_ITEM_TYPES;i++)
 	{
-		DEBUG('p',"Item id is %d \n",i);
-		DEBUG('p',"Item %d Price is %d \n",i,g_itemInfo[i].Price);
-		DEBUG('p',"Item %d is in Department %d \n",i,g_itemInfo[i].departmentNo);
-		DEBUG('p',"Item %d is in Shelf %d \n",i,g_itemInfo[i].shelfNo);
+		DEBUG('p',"Item id is = %d \n",i);
+		DEBUG('p',"Item %d Price is = %d \n",i,g_itemInfo[i].Price);
+		DEBUG('p',"Item %d is in Department = %d \n",i,g_itemInfo[i].departmentNo);
+		DEBUG('p',"Item %d is in Shelf = %d \n",i,g_itemInfo[i].shelfNo);
 		DEBUG('p',"Item %d Total Stock no = %d \n",i,g_itemInfo[i].noOfItems);
 	}
 }
@@ -1594,6 +1594,8 @@ static int handler(void* user, const char* section, const char* name,
 
     #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
 	static int currentItemNo;
+	static int customerId;
+	static int currentCustomerShoppingListCount = 0;
 
     if (MATCH("ITEM", "itemNo"))
     {
@@ -1615,6 +1617,46 @@ static int handler(void* user, const char* section, const char* name,
     {
     	g_itemInfo[currentItemNo].noOfItems = atoi(value);
     }
+    else if(MATCH("CUSTOMER","id"))
+    {
+    	customerId = atoi(value);
+    }
+    else if(MATCH("CUSTOMER","type"))
+    {
+    	g_customerInfo[customerId].type = atoi(value);
+    }
+    else if(MATCH("CUSTOMER","money"))
+    {
+    	g_customerInfo[customerId].money = atoi(value);
+    }
+    else if(MATCH("CUSTOMER","hasEnoughMoneyForShopping"))
+    {
+    	g_customerInfo[customerId].hasEnoughMoneyForShopping = atoi(value);
+    }
+    else if(MATCH("CUSTOMER","isDoneShopping"))
+    {
+    	g_customerInfo[customerId].isDoneShopping = atoi(value);
+    }
+    else if(MATCH("CUSTOMER","noOfItemsToShop"))
+    {
+    	g_customerInfo[customerId].noOfItems = atoi(value);
+		g_customerInfo[customerId].pCustomerShoppingList =
+				new CustomerShoppingList[g_customerInfo[customerId].noOfItems];
+
+    }
+    else if(MATCH("SHOPPING LIST","itemToShop"))
+    {
+    	g_customerInfo[customerId].pCustomerShoppingList[currentCustomerShoppingListCount].itemNo = atoi(value);
+    }
+    else if(MATCH("SHOPPING LIST","Quantity"))
+    {
+    	g_customerInfo[customerId].pCustomerShoppingList[currentCustomerShoppingListCount].noOfItems = atoi(value);
+    	currentCustomerShoppingListCount++;
+    }
+    else if(MATCH("SHOPPING LIST","END"))
+    {
+    	currentCustomerShoppingListCount = 0;
+    }
     else
     {
         return 0;  /* unknown section/name, error */
@@ -1625,6 +1667,7 @@ static int handler(void* user, const char* section, const char* name,
 void printConfiguration()
 {
 	printItemInfo();
+	printCustomerInfo();
 }
 
 int startConfiguration(const char* configFileName)
