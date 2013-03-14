@@ -74,6 +74,7 @@ extern void TestSuite6();
 extern void TestSuite7();
 extern void TestSuite8();
 extern void Problem2(const char* configFileName);
+
 #endif
 
 
@@ -102,119 +103,137 @@ main(int argc, char **argv)
     (void) Initialize(argc, argv);
     for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount)
     {
-    	argCount = 1;
-#ifdef THREADS
-	if (!strcmp(*(argv), "-S"))
-	{
-		//run the initial thread ping pong test for Context Switch
-	    ThreadTest();
-	}
-	if (!strcmp(*(argv), "-T"))
-	{
-		//run the test suite provided for Assignment 1 - Part 1
-		TestSuite();
-	}
-	if (!strcmp(*(argv), "-T1"))
-	{
-		//run the test suite provided for Assignment 1 - Part 1
-		TestSuite1();
-	}
-	if (!strcmp(*(argv), "-T2"))
-	{
-		//run the test suite provided for Assignment 1 - Part 1
-		TestSuite2();
-	}
-	if (!strcmp(*(argv), "-T3"))
-	{
-		//run the test suite provided for Assignment 1 - Part 1
-		TestSuite3();
-	}
-	if (!strcmp(*(argv), "-T4"))
-	{
-		//run the test suite provided for Assignment 1 - Part 1
-		TestSuite4();
-	}
-	if (!strcmp(*(argv), "-T5"))
-	{
-		//run the test suite provided for Assignment 1 - Part 1
-		TestSuite5();
-	}
-	if (!strcmp(*(argv), "-T6"))
-	{
-		//run the test suite provided for Assignment 1 - Part 1
-		TestSuite6();
-	}
-	if (!strcmp(*(argv), "-T7"))
-	{
-		//run the test suite provided for Assignment 1 - Part 1
-		TestSuite7();
-	}
-	if (!strcmp(*(argv), "-T8"))
-	{
-		//run the test suite provided for Assignment 1 - Part 1
-		TestSuite8();
-	}
-	if (!strcmp(*(argv), "-P2"))
-	{
-		//run the test suite provided for Assignment 1 - Part 1
-		Problem2(argv[1]);
-	}
-#endif
-    }
-    for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount)
-    {
-    	argCount = 1;
-        if (!strcmp(*argv, "-z"))               // print copyright
-            printf (copyright);
-#ifdef USER_PROGRAM
-        if (!strcmp(*argv, "-x")) {        	// run a user program
-	    ASSERT(argc > 1);
-            StartProcess(*(argv + 1));
-            argCount = 2;
-        } else if (!strcmp(*argv, "-c")) {      // test the console
-	    if (argc == 1)
-	        ConsoleTest(NULL, NULL);
-	    else {
-		ASSERT(argc > 2);
-	        ConsoleTest(*(argv + 1), *(argv + 2));
-	        argCount = 3;
-	    }
-	    interrupt->Halt();		// once we start the console, then 
-					// Nachos will loop forever waiting 
+			argCount = 1;
+		#ifdef THREADS
+		if (!strcmp(*(argv), "-S"))
+		{
+			//run the initial thread ping pong test for Context Switch
+			ThreadTest();
+		}
+		if (!strcmp(*(argv), "-T"))
+		{
+			//run the test suite provided for Assignment 1 - Part 1
+			TestSuite();
+		}
+		if (!strcmp(*(argv), "-T1"))
+		{
+			//run the test suite provided for Assignment 1 - Part 1
+			TestSuite1();
+		}
+		if (!strcmp(*(argv), "-T2"))
+		{
+			//run the test suite provided for Assignment 1 - Part 1
+			TestSuite2();
+		}
+		if (!strcmp(*(argv), "-T3"))
+		{
+			//run the test suite provided for Assignment 1 - Part 1
+			TestSuite3();
+		}
+		if (!strcmp(*(argv), "-T4"))
+		{
+			//run the test suite provided for Assignment 1 - Part 1
+			TestSuite4();
+		}
+		if (!strcmp(*(argv), "-T5"))
+		{
+			//run the test suite provided for Assignment 1 - Part 1
+			TestSuite5();
+		}
+		if (!strcmp(*(argv), "-T6"))
+		{
+			//run the test suite provided for Assignment 1 - Part 1
+			TestSuite6();
+		}
+		if (!strcmp(*(argv), "-T7"))
+		{
+			//run the test suite provided for Assignment 1 - Part 1
+			TestSuite7();
+		}
+		if (!strcmp(*(argv), "-T8"))
+		{
+			//run the test suite provided for Assignment 1 - Part 1
+			TestSuite8();
+		}
+		if (!strcmp(*(argv), "-P2"))
+		{
+			//run the test suite provided for Assignment 1 - Part 1
+			Problem2(argv[1]);
+		}
+		#endif
+		if (!strcmp(*argv, "-z"))               // print copyright
+			printf (copyright);
+		#ifdef USER_PROGRAM
+		if (!strcmp(*argv, "-x"))
+		{        	// run a user program
+			ASSERT(argc > 1);
+			StartProcess(*(argv + 1));
+			argCount = 2;
+		}
+		else if (!strcmp(*argv, "-c"))
+		{      // test the console
+			if (argc == 1)
+			ConsoleTest(NULL, NULL);
+
+			else
+			{
+				ASSERT(argc > 2);
+				ConsoleTest(*(argv + 1), *(argv + 2));
+				argCount = 3;
+			}
+			interrupt->Halt();		// once we start the console, then
+					// Nachos will loop forever waiting
 					// for console input
-	}
-#endif // USER_PROGRAM
-#ifdef FILESYS
-	if (!strcmp(*argv, "-cp")) { 		// copy from UNIX to Nachos
-	    ASSERT(argc > 2);
-	    Copy(*(argv + 1), *(argv + 2));
-	    argCount = 3;
-	} else if (!strcmp(*argv, "-p")) {	// print a Nachos file
-	    ASSERT(argc > 1);
-	    Print(*(argv + 1));
-	    argCount = 2;
-	} else if (!strcmp(*argv, "-r")) {	// remove Nachos file
-	    ASSERT(argc > 1);
-	    fileSystem->Remove(*(argv + 1));
-	    argCount = 2;
-	} else if (!strcmp(*argv, "-l")) {	// list Nachos directory
-            fileSystem->List();
-	} else if (!strcmp(*argv, "-D")) {	// print entire filesystem
-            fileSystem->Print();
-	} else if (!strcmp(*argv, "-t")) {	// performance test
-            PerformanceTest();
-	}
-#endif // FILESYS
-#ifdef NETWORK
-        if (!strcmp(*argv, "-o")) {
-	    ASSERT(argc > 1);
-            Delay(2); 				// delay for 2 seconds
-						// to give the user time to 
+		}
+		#endif // USER_PROGRAM
+		#ifdef FILESYS
+		if (!strcmp(*argv, "-cp"))
+		{
+			// copy from UNIX to Nachos
+			ASSERT(argc > 2);
+			Copy(*(argv + 1), *(argv + 2));
+			argCount = 3;
+		}
+		else if (!strcmp(*argv, "-p"))
+		{
+			// print a Nachos file
+			ASSERT(argc > 1);
+			Print(*(argv + 1));
+			argCount = 2;
+		}
+		else if (!strcmp(*argv, "-r"))
+		{
+			// remove Nachos file
+			ASSERT(argc > 1);
+			fileSystem->Remove(*(argv + 1));
+			argCount = 2;
+		}
+		else if (!strcmp(*argv, "-l"))
+		{
+			// list Nachos directory
+			fileSystem->List();
+		} else if (!strcmp(*argv, "-D"))
+		{
+			// print entire filesystem
+			fileSystem->Print();
+		}
+		else if (!strcmp(*argv, "-t"))
+		{
+			// performance test
+			PerformanceTest();
+		}
+		#endif // FILESYS
+		#ifdef NETWORK
+		if (!strcmp(*argv, "-o"))
+		{
+			ASSERT(argc > 1);
+			Delay(2); 				// delay for 2 seconds
+						// to give the user time to
 						// start up another nachos
-            MailTest(atoi(*(argv + 1)));
-            argCount = 2;
-        }
-#endif // NETWORK
+			MailTest(atoi(*(argv + 1)));
+			argCount = 2;
+		}
+		#endif // NETWORK
     }
 
     currentThread->Finish();	// NOTE: if the procedure "main" 
