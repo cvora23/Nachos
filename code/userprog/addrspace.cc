@@ -222,7 +222,7 @@ AddrSpace::InitRegisters()
    // allocated the stack; but subtract off a bit, to make sure we don't
    // accidentally reference off the end!
     machine->WriteRegister(StackReg, numPages * PageSize - 16);
-    DEBUG('a', "Initializing stack register to %x\n", numPages * PageSize - 16);
+    DEBUG('a', "Initializing stack register to 0x%x\n", numPages * PageSize - 16);
 }
 
 //----------------------------------------------------------------------
