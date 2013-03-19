@@ -26,7 +26,7 @@
 # of liability and disclaimer of warranty provisions.
 
 #CFLAGS = -g -Wall -Wno-unused -Wshadow -fwritable-strings $(INCPATH) $(DEFINES) $(HOST) -DCHANGED
-CFLAGS = -g -Wall -Wno-unused -Wshadow $(INCPATH) $(DEFINES) $(HOST) -DCHANGED -DNO_OF_MANAGERS 
+CFLAGS = -g -Wall -Wno-unused -Wshadow $(INCPATH) $(DEFINES) $(HOST) -DCHANGED -DNOOFMANAGERS 
 LDFLAGS =
 
 # These definitions may change as the software is updated.
