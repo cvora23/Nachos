@@ -20,9 +20,9 @@
 /**
  * STORE STOCK INFO
  */
-//#ifndef NO_OF_DEPARTMENT
-//#define NO_OF_DEPARTMENT								5
-//#endif
+#ifndef NO_OF_DEPARTMENT
+#define NO_OF_DEPARTMENT								5
+#endif
 
 #define NO_OF_SHELFS									(NO_OF_DEPARTMENT*3)
 #define NO_OF_ITEM_TYPES								NO_OF_SHELFS
@@ -43,24 +43,24 @@
  * STORE MANAGEMENT INFO
  */
 
-//#ifndef NO_OF_MANAGERS
-//#define NO_OF_MANAGERS									1
-//#endif
+#ifndef NO_OF_MANAGERS
+#define NO_OF_MANAGERS									1
+#endif
 
-//#ifndef NO_OF_CASHIERS
-//#define NO_OF_CASHIERS									5
-//#endif
+#ifndef NO_OF_CASHIERS
+#define NO_OF_CASHIERS									5
+#endif
 
 #define NO_OF_SALESMAN									(NO_OF_DEPARTMENT*3)
 #define NO_OF_SALESMAN_PER_DEPARTMENT					(NO_OF_SALESMAN/NO_OF_DEPARTMENT)
 
-//#ifndef NO_OF_GOOD_LOADERS
-//#define NO_OF_GOOD_LOADERS								5
-//#endif
+#ifndef NO_OF_GOOD_LOADERS
+#define NO_OF_GOOD_LOADERS								5
+#endif
 
-//#ifndef NO_OF_CUSTOMERS
-//#define NO_OF_CUSTOMERS									30
-//#endif
+#ifndef NO_OF_CUSTOMERS
+#define NO_OF_CUSTOMERS									30
+#endif
 
 #define MANAGER_STRING									(const char*)"MANAGER"
 #define CASHIER_STRING									(const char*)"CASHIER"
