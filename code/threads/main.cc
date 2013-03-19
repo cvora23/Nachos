@@ -157,7 +157,10 @@ main(int argc, char **argv)
 		}
 		if (!strcmp(*(argv), "-P2"))
 		{
-			//run the test suite provided for Assignment 1 - Part 1
+			//run the test suite provided for Assignment 1 - Part 2
+			// Argument 1 is the configuration file passed for Assignment
+			// helping to configure different dynamic items of the
+			// project
 			Problem2(argv[1]);
 		}
 		#endif
