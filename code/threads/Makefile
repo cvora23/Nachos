@@ -7,8 +7,7 @@
 # All rights reserved.  See copyright.h for copyright notice and limitation 
 # of liability and disclaimer of warranty provisions.
 
-DEFINES = -DTHREADS -DNO_OF_MANAGERS=1 -DNO_OF_CASHIERS=15 -DNO_OF_DEPARTMENT=15 \
-			-DNO_OF_GOOD_LOADERS=15 -DNO_OF_CUSTOMERS=30
+DEFINES = -DTHREADS 
 INCPATH = -I../threads -I../machine
 HFILES = $(THREAD_H)
 CFILES = $(THREAD_C)
