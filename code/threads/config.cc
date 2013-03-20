@@ -6,7 +6,7 @@
  */
 
 #include "config.h"
-#include "Assign1Prob2.h"
+
 
 void createConfigFileForItem()
 {

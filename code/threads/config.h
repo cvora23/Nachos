@@ -8,6 +8,10 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
+#include "defines.h"
+#include "global.h"
+#include "ini.h"
+
 void createConfigFileForItem();
 void createConfigFileForCustomer();
 
