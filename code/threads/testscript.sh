@@ -1,9 +1,12 @@
 #!/bin/tcsh
 
 #CREATING TERMINAL LOG DIRECTORY
-    if (! -d ./terminal-logs ); then
-        mkdir ./terminal-logs
-    fi
+
+set logDir = ./terminal-logs
+
+    if (! -d $logDir) then
+        mkdir $logDir
+   endif
     
 #GETTING ALL THE COMMAND LINE ARGUMENTS
 set nachosOption = $1
