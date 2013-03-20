@@ -17,7 +17,7 @@ echo "$currentDateTime"
 
 #CREATING A NEW GDB SESSION LOG FILE
 #set logFile = "$testFile"."$(date +"%F_%T")".log
-set logFile = "Hello"."World".txt
+set logFile = $testFile.$currentDateTime.log
 
 echo "$logFile"
 
