@@ -12,7 +12,10 @@ echo "$enableDebugging"
 echo "$debugOptions"
 
 #CREATING A NEW GDB SESSION LOG FILE
-set logFile = "$testFile"."$(date +"%F_%T")".log
+#set logFile = "$testFile"."$(date +"%F_%T")".log
+set logFile = "Hello"."World".txt
+
+echo "$logFile"
 
 #STARTING GDB SESSION
 #gdb nachos <<GDB_INPUT
