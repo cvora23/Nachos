@@ -32,7 +32,7 @@ echo "$logFile"
 #STARTING GDB SESSION
 gdb nachos <<GDB_INPUT
 pwd
-run nachos -$nachosOption $testFile $enableDebugging $debugOptions >$logDir/$logFile
+run nachos -$nachosOption $testFile -$enableDebugging $debugOptions >$logDir/$logFile
 
 #ENDING GDB SESSION 
 quit
