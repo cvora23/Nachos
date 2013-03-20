@@ -8,7 +8,9 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
-/*************************************GLOBAL DATA STRUCTS DECLARATION**********************************************/
+/**
+ * extern tells the compiler this variable is declared elsewhere
+ */
 
 /**
  * GLOBAL DATA STRUCTURES
