@@ -6,7 +6,7 @@
  */
 
 #include "Assign1Prob2.h"
-
+#include "global.h"
 
 /**
  * GLOBAL DATA STRUCTURES INIT FUNCTIONS
