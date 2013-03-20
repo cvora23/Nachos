@@ -1677,6 +1677,7 @@ int startConfiguration(const char* configFileName)
     {
     	DEBUG('p',"Can't load 'test.ini'\n");
         printf("Can't load 'test.ini'\n");
+        retVal = 0;
     }
     return retVal;
 }
@@ -1684,6 +1685,7 @@ int startConfiguration(const char* configFileName)
 void startSimulation(const char* configFileName)
 {
 	Thread* t;
+	int configRetVal;
 	RandomInit(time(NULL));
 
     DEBUG('p', "Entering Assign 1 Problem 2 !!!!!!! \n");
@@ -1699,17 +1701,16 @@ void startSimulation(const char* configFileName)
     /**
      * Start the configuration Process
      */
-    startConfiguration(configFileName);
+    configRetVal = startConfiguration(configFileName);
+
+    if(configRetVal == 0)
+    {
+    	initItemInfo();
+    	initCustomerInfo();
+    	initCustomerShoppingList();
+    }
+
     printConfiguration();
-
-#if 0
-    initItemInfo();
-    printItemInfo();
-
-    initCustomerInfo();
-    initCustomerShoppingList();
-
-    printCustomerInfo();
 
     initSalesManInfo();
 
@@ -1758,7 +1759,6 @@ void startSimulation(const char* configFileName)
     	t = new Thread(threadName);
     	t->Fork((VoidFunctionPtr)CustomerThread,i);
     }
-#endif
 
 }
 
