@@ -5,7 +5,8 @@ set nachosOption = $1
 set testFile = $2
 set enableDebugging = $3
 set debugOptions = $4
-set currentDateTime = $(date +"%F_%T")
+#set currentDateTime = 'date +”%y%m%d”'
+set currentDateTime = $(date)
 
 echo "$nachosOption"
 echo "$testFile"
