@@ -7,7 +7,7 @@ set enableDebugging = $3
 set debugOptions = $4
 
 #CREATING A NEW GDB SESSION LOG FILE
-logFile=$testFile.$(date +"%F_%T").log
+set logFile= $testFile.$(date +"%F_%T").log
 
 #STARTING GDB SESSION
 gdb nachos <<GDB_INPUT
