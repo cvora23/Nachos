@@ -22,10 +22,10 @@ set logFile = $testFile.$currentDateTime.log
 echo "$logFile"
 
 #STARTING GDB SESSION
-#gdb nachos <<GDB_INPUT
-#pwd
-#run nachos -$nachosOption $testFile $enableDebugging $debugOptions >$logFile
+gdb nachos <<GDB_INPUT
+pwd
+run nachos -$nachosOption $testFile $enableDebugging $debugOptions >$logFile
 
 #ENDING GDB SESSION 
-#quit
-#GDB_INPUT
+quit
+GDB_INPUT
