@@ -49,6 +49,7 @@ THREAD_H =../threads/copyright.h\
 	../threads/utility.h\
 	../threads/Assign1Prob2.h\
 	../threads/ini.h\
+	../threads/config.h\
 	../machine/interrupt.h\
 	../machine/sysdep.h\
 	../machine/stats.h\
@@ -65,6 +66,7 @@ THREAD_C =../threads/main.cc\
 	../threads/threadtest.cc\
 	../threads/Assign1Prob2.cc\
 	../threads/ini.c\
+	../threads/config.cc\
 	../machine/interrupt.cc\
 	../machine/sysdep.cc\
 	../machine/stats.cc\
@@ -73,7 +75,7 @@ THREAD_C =../threads/main.cc\
 THREAD_S = ../threads/switch.s
 
 THREAD_O =main.o list.o scheduler.o synch.o synchlist.o system.o thread.o \
-	utility.o threadtest.o interrupt.o stats.o sysdep.o timer.o Assign1Prob2.o ini.o
+	utility.o threadtest.o interrupt.o stats.o sysdep.o timer.o Assign1Prob2.o ini.o config.o
 
 USERPROG_H = ../userprog/addrspace.h\
 	../userprog/bitmap.h\

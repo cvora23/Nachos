@@ -6,101 +6,6 @@
  */
 
 #include "Assign1Prob2.h"
-#include <stdio.h>
-/**
- * GLOBAL DATA STRUCTURES
- */
-ItemInfo 		g_itemInfo[NO_OF_ITEM_TYPES];
-
-CustomerInfo 	g_customerInfo[NO_OF_CUSTOMERS];
-
-SalesManInfo 	g_salesmanInfo[NO_OF_SALESMAN];
-
-GoodLoaderInfo 	g_goodLoaderInfo[NO_OF_GOOD_LOADERS];
-
-CashierInfo		g_cashierInfo[NO_OF_CASHIERS];
-
-ManagerInfo		g_managerInfo;
-
-/**
- * Locks, Condition Variables, Queue Wait Count for Customer-Trolley interaction
- */
-int 		g_usedTrolleyCount;
-int 		g_waitForTrolleyCount;
-Lock* 		g_customerTrolleyLock;
-Condition* 	g_customerTrolleyCV;
-
-/**
- * Locks, Condition Variables for Customer-Salesman interaction
- */
-Lock*		g_customerSalesmanLock[NO_OF_SALESMAN];
-Condition*  g_customerSalesmanCV[NO_OF_SALESMAN];
-
-/**
- * Locks,Condition Variables and Queue Length for Customer-Department Interaction
- */
-Lock*		g_customerDepartmentLock[NO_OF_DEPARTMENT];
-Condition*	g_customerDepartmentCV[NO_OF_DEPARTMENT];
-int			g_departmentWaitQueue[NO_OF_DEPARTMENT];
-
-/**
- * Locks for accessing items on the shelf
- */
-Lock*		g_shelfAccessLock[NO_OF_SHELFS];
-
-/**
- * Locks,Condition Variables and Queue Length for Customer-Department Interaction
- */
-Lock*		g_customerDepartmentComplainLock[NO_OF_DEPARTMENT];
-Condition*	g_customerDepartmentComplainCV[NO_OF_DEPARTMENT];
-int			g_departmentComplainWaitQueue[NO_OF_DEPARTMENT];
-
-/**
- * Locks,Condition Variables and Queue Length for Salesman - GoodsLoader Interaction
- */
-Lock*		g_salesmanGoodsLoaderLock[NO_OF_GOOD_LOADERS];
-Condition*  g_salesmanGoodsLoaderCV[NO_OF_GOOD_LOADERS];
-
-Lock*		g_goodLoaderWaitLock[NO_OF_GOODLOADER_WAIT_QUEUE];
-Condition*	g_goodLoaderWaitCV[NO_OF_GOODLOADER_WAIT_QUEUE];
-int			g_goodLoaderWaitQueue[NO_OF_GOODLOADER_WAIT_QUEUE];
-
-/**
- * Locks,Condition Variables and Queue Length for Customer - Cashier Interaction
- */
-Lock*		g_cashierLineLock[NO_OF_CASHIERS];
-Condition*	g_cashierLineCV[NO_OF_CASHIERS];
-int			g_cashierWaitQueue[NO_OF_CASHIERS];
-
-Lock*		g_cashierPrivilegedLineLock[NO_OF_CASHIERS];
-Condition*  g_cashierPrivilegedLineCV[NO_OF_CASHIERS];
-int			g_cashierPrivilegedWaitQueue[NO_OF_CASHIERS];
-
-Lock*		g_customerCashierLock[NO_OF_CASHIERS];
-Condition*	g_customerCashierCV[NO_OF_CASHIERS];
-
-/**
- * Locks, Condition Variables and Queue Length for Manager - Cashier  Cash Collection Interaction
- */
-Lock*		g_managerCashierCashLock[NO_OF_CASHIERS];
-
-/**
- * Locks, Condition Variables and Queue Length for Manager Interaction
- */
-
-Lock*		g_managerCashierLock;
-Condition*	g_managerCashierCV;
-int			g_managerWaitQueueLength;
-
-Lock*		g_managerCashierInteractionLock;
-Condition*	g_managerCashierInteractionCV;
-
-/**
- * Locks, Condition Variables for Manager - Customer Interaction
- */
-Lock*		g_managerCustomerInteractionLock;
-Condition*	g_managerCustomerInteractionCV;
-
 
 /**
  * GLOBAL DATA STRUCTURES INIT FUNCTIONS
@@ -1585,102 +1490,6 @@ void initLockCvForSimulation()
 	}
 }
 
-static int handler(void* user, const char* section, const char* name,
-                   const char* value)
-{
-	/**
-	 * Handling Item Configuration
-	 */
-
-    #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
-	static int currentItemNo;
-	static int customerId;
-	static int currentCustomerShoppingListCount = 0;
-
-    if (MATCH("ITEM", "itemNo"))
-    {
-    	currentItemNo = atoi(value);
-    }
-    else if (MATCH("ITEM", "price"))
-    {
-        g_itemInfo[currentItemNo].Price = atoi(value);
-    }
-    else if (MATCH("ITEM", "shelfNo"))
-    {
-        g_itemInfo[currentItemNo].shelfNo = atoi(value);
-    }
-    else if(MATCH("ITEM","departmentNo"))
-    {
-    	g_itemInfo[currentItemNo].departmentNo = atoi(value);
-    }
-    else if(MATCH("ITEM","noOfItems"))
-    {
-    	g_itemInfo[currentItemNo].noOfItems = atoi(value);
-    }
-    else if(MATCH("CUSTOMER","id"))
-    {
-    	customerId = atoi(value);
-    }
-    else if(MATCH("CUSTOMER","type"))
-    {
-    	g_customerInfo[customerId].type = (CustomerType)atoi(value);
-    }
-    else if(MATCH("CUSTOMER","money"))
-    {
-    	g_customerInfo[customerId].money = atoi(value);
-    }
-    else if(MATCH("CUSTOMER","hasEnoughMoneyForShopping"))
-    {
-    	g_customerInfo[customerId].hasEnoughMoneyForShopping = atoi(value);
-    }
-    else if(MATCH("CUSTOMER","isDoneShopping"))
-    {
-    	g_customerInfo[customerId].isDoneShopping = atoi(value);
-    }
-    else if(MATCH("CUSTOMER","noOfItemsToShop"))
-    {
-    	g_customerInfo[customerId].noOfItems = atoi(value);
-		g_customerInfo[customerId].pCustomerShoppingList =
-				new CustomerShoppingList[g_customerInfo[customerId].noOfItems];
-
-    }
-    else if(MATCH("SHOPPING LIST","itemToShop"))
-    {
-    	g_customerInfo[customerId].pCustomerShoppingList[currentCustomerShoppingListCount].itemNo = atoi(value);
-    }
-    else if(MATCH("SHOPPING LIST","Quantity"))
-    {
-    	g_customerInfo[customerId].pCustomerShoppingList[currentCustomerShoppingListCount].noOfItems = atoi(value);
-    	currentCustomerShoppingListCount++;
-    }
-    else if(MATCH("SHOPPING LIST","END"))
-    {
-    	currentCustomerShoppingListCount = 0;
-    }
-    else
-    {
-        return 0;  /* unknown section/name, error */
-    }
-    return 1;
-}
-
-void printConfiguration()
-{
-	printItemInfo();
-	printCustomerInfo();
-}
-
-int startConfiguration(const char* configFileName)
-{
-	int retVal = 1;
-    if (ini_parse(configFileName, handler, NULL) < 0)
-    {
-    	DEBUG('p',"Can't load 'test.ini'\n");
-        retVal = 0;
-    }
-    return retVal;
-}
-
 void startSimulation(const char* configFileName)
 {
 	Thread* t;
@@ -1697,6 +1506,19 @@ void startSimulation(const char* configFileName)
     DEBUG('p',"Number of Managers = %d \n",NO_OF_MANAGERS);
     DEBUG('p',"Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
 
+
+    /**
+     * Create configuration file for ITEM
+     */
+    createConfigFileForItem();
+
+    /**
+     * Create configuration file for CUSTOMER
+     */
+    createConfigFileForCustomer();
+
+
+#if 0
     /**
      * Start the configuration Process
      */
@@ -1721,7 +1543,6 @@ void startSimulation(const char* configFileName)
 
     initLockCvForSimulation();
 
-#if 0
     char *threadName;
 
     for(int i = 0;i<NO_OF_MANAGERS;i++)
