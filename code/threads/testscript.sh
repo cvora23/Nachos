@@ -1,7 +1,7 @@
 #!/bin/tcsh
 
 #CREATING TERMINAL LOG DIRECTORY
-    if [ ! -d ./terminal-logs ]; then
+    if (! -d ./terminal-logs ); then
         mkdir ./terminal-logs
     fi
     
