@@ -33,7 +33,12 @@ set logFile = "currentTest".$currentDateTime.log
 #STARTING GDB SESSION
 gdb nachos <<GDB_INPUT
 pwd
-run nachos -$nachosOption $testOption -$enableDebugging $debugOptions >$logDir/$logFile
+
+#Following commands writes the output only to the file and not to the screen (stdout)
+#run nachos -$nachosOption $testOption -$enableDebugging $debugOptions >$logDir/$logFile
+
+#Following commands writes the output only to the file and screen (stdout)
+run nachos -$nachosOption $testOption -$enableDebugging $debugOptions | tee $logDir/$logFile
 
 #ENDING GDB SESSION 
 quit
