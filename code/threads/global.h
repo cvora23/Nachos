@@ -8,6 +8,8 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
+#include "synch.h"
+
 typedef struct _ItemInfo
 {
 	/**

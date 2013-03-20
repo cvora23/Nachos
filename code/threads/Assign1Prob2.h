@@ -10,7 +10,6 @@
 
 #include <stdio.h>
 #include "system.h"
-#include "synch.h"
 #include "config.h"
 #include "ini.h"
 #include "defines.h"
