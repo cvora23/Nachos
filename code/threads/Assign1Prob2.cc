@@ -1676,7 +1676,6 @@ int startConfiguration(const char* configFileName)
     if (ini_parse(configFileName, handler, NULL) < 0)
     {
     	DEBUG('p',"Can't load 'test.ini'\n");
-        printf("Can't load 'test.ini'\n");
         retVal = 0;
     }
     return retVal;
