@@ -13,11 +13,6 @@
 #include "ini.h"
 
 /**
- * \todo: Add Config File reader for changing the default configuration parameters.
- * \todo: Also put proper comments as it will help in future.
- */
-
-/**
  * STORE STOCK INFO
  */
 #ifndef NO_OF_DEPARTMENT
@@ -281,8 +276,10 @@ static void initManagerInfo();
 void printManagerInfo(int managerId);
 
 void initLockCvForSimulation();
+
 int startConfiguration(const char* configFileName);
 void printConfiguration();
+
 void startSimulation(const char* configFileName);
 
 #endif /* ASSIGN1PROB2_H_ */
