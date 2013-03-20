@@ -145,6 +145,47 @@ static int handler(void* user, const char* section, const char* name,
     return 1;
 }
 
+void printItemInfo()
+{
+	for (int i = 0;i<NO_OF_ITEM_TYPES;i++)
+	{
+		DEBUG('p',"Item id is = %d \n",i);
+		DEBUG('p',"Item %d Price is = %d \n",i,g_itemInfo[i].Price);
+		DEBUG('p',"Item %d is in Department = %d \n",i,g_itemInfo[i].departmentNo);
+		DEBUG('p',"Item %d is in Shelf = %d \n",i,g_itemInfo[i].shelfNo);
+		DEBUG('p',"Item %d Total Stock no = %d \n",i,g_itemInfo[i].noOfItems);
+	}
+}
+
+void printCustomerInfo()
+{
+	for(int customerId=0;customerId<NO_OF_CUSTOMERS;customerId++)
+	{
+		DEBUG('p',"Customer ID is %d\n",
+				customerId);
+		DEBUG('p',"Customer %d is of type %d \n",
+				customerId,g_customerInfo[customerId].type);
+		DEBUG('p',"Customer %d can spend %d amount on shopping \n",
+				customerId,g_customerInfo[customerId].money);
+		DEBUG('p',"Customer %d will purchase %d items today for shopping \n",
+				customerId,g_customerInfo[customerId].noOfItems);
+		printCustomerShoppingList(customerId);
+	}
+}
+
+void printCustomerShoppingList(int customerId)
+{
+	DEBUG('p',"Customer %d shopping list is as follows : \n",customerId);
+	for(int j =0;j<g_customerInfo[customerId].noOfItems;j++)
+	{
+		DEBUG('p',"Item Type: %d\n",
+				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo);
+		DEBUG('p',"No of Items of Item Type:%d ===== %d\n",
+				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo,
+				g_customerInfo[customerId].pCustomerShoppingList[j].noOfItems);
+	}
+}
+
 void printConfiguration()
 {
 	printItemInfo();
