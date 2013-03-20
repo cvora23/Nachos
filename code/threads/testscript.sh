@@ -13,7 +13,7 @@ echo "$testFile"
 echo "$enableDebugging"
 echo "$debugOptions"
 echo "$currentDateTime"
---END OF COMMENT BLOCK
+--COMMENTS BLOCK--
 
 #CREATING A NEW GDB SESSION LOG FILE
 #set logFile = "$testFile"."$(date +"%F_%T")".log
