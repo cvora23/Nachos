@@ -1721,6 +1721,7 @@ void startSimulation(const char* configFileName)
 
     initLockCvForSimulation();
 
+#if 0
     char *threadName;
 
     for(int i = 0;i<NO_OF_MANAGERS;i++)
@@ -1758,6 +1759,7 @@ void startSimulation(const char* configFileName)
     	t = new Thread(threadName);
     	t->Fork((VoidFunctionPtr)CustomerThread,i);
     }
+#endif
 
 }
 
