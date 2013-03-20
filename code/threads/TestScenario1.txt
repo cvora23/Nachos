@@ -1,0 +1,8 @@
+TEST SCENARIO 1:
+
+-DNO_OF_MANAGERS=1 -DNO_OF_CASHIERS=5 -DNO_OF_DEPARTMENT=5 -DNO_OF_GOOD_LOADERS=5 -DNO_OF_CUSTOMERS=30
+
+test1.ini
+
+run:
+gdb --args ./nachos -P2 test1.ini -d pt
