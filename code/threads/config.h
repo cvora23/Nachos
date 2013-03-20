@@ -16,6 +16,10 @@ void createConfigFileForItem();
 void createConfigFileForCustomer();
 
 int startConfiguration(const char* configFileName);
+
+void printItemInfo();
+void printCustomerInfo();
+void printCustomerShoppingList(int customerId);
 void printConfiguration();
 
 #endif /* CONFIG_H_ */

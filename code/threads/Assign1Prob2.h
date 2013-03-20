@@ -15,13 +15,10 @@
 #include "defines.h"
 
 static void initItemInfo();
-void printItemInfo();
 
 static void initCustomerShoppingList();
-void printCustomerShoppingList(int customerId);
 
 static void initCustomerInfo();
-void printCustomerInfo();
 
 static void initSalesManInfo();
 void printSalesManInfo(int salesManId);
