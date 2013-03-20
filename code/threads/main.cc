@@ -73,7 +73,7 @@ extern void TestSuite5();
 extern void TestSuite6();
 extern void TestSuite7();
 extern void TestSuite8();
-extern void Problem2(const char* configFileName);
+extern void Problem2(const char* testOption);
 
 #endif
 

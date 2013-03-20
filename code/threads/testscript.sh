@@ -10,7 +10,8 @@ set logDir = ./terminal-logs
     
 #GETTING ALL THE COMMAND LINE ARGUMENTS
 set nachosOption = $1
-set testFile = $2
+set testOption = $2
+#set testFile = $2
 set enableDebugging = $3
 set debugOptions = $4
 set currentDateTime = `date +'%d-%m-%Y_%H-%M-%S'`
@@ -24,15 +25,15 @@ echo "$currentDateTime"
 --END-COMMENT--
 
 #CREATING A NEW GDB SESSION LOG FILE
-#set logFile = "$testFile"."$(date +"%F_%T")".log
-set logFile = $testFile.$currentDateTime.log
+#set logFile = "currentTest"."$(date +"%F_%T")".log
+set logFile = "currentTest".$currentDateTime.log
 
-echo "$logFile"
+#echo "$logFile"
 
 #STARTING GDB SESSION
 gdb nachos <<GDB_INPUT
 pwd
-run nachos -$nachosOption $testFile -$enableDebugging $debugOptions >$logDir/$logFile
+run nachos -$nachosOption $testOption -$enableDebugging $debugOptions >$logDir/$logFile
 
 #ENDING GDB SESSION 
 quit

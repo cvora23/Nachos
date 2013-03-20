@@ -1450,7 +1450,7 @@ void initLockCvForSimulation()
 	}
 }
 
-void startSimulation(const char* configFileName)
+void startSimulation(const char* testOption)
 {
 	Thread* t;
 	int configRetVal;
@@ -1467,14 +1467,34 @@ void startSimulation(const char* configFileName)
     DEBUG('p',"Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
 
     /**
-     * Create configuration file for ITEM
+     * Check if client wants to repeat the test with same configuration
      */
-    createConfigFileForItem();
 
     /**
-     * Create configuration file for CUSTOMER
+     * IF YES - DO NOTHING USE THE SAME OLD CONFIG FILE
      */
-    createConfigFileForCustomer();
+    if(strcmp(testOption,"N"))
+    {
+    	DEBUG('p',"Repeat the same Previous test again\n");
+    }
+    /**
+     * ELSE NO - CREATE A LATEST CONFIG FILE
+     */
+    if (!strcmp(testOption, "N"))
+    {
+
+    	DEBUG('p',"Run the new test\n");
+
+		/**
+		 * Create configuration file for ITEM
+		 */
+		createConfigFileForItem();
+
+		/**
+		 * Create configuration file for CUSTOMER
+		 */
+		createConfigFileForCustomer();
+    }
 
 
 #if 0
@@ -1543,7 +1563,7 @@ void startSimulation(const char* configFileName)
 
 }
 
-void Problem2(const char* configFileName)
+void Problem2(const char* testOption)
 {
-	startSimulation(configFileName);
+	startSimulation(testOption);
 }

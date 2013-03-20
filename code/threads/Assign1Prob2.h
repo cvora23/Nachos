@@ -34,6 +34,6 @@ void printManagerInfo(int managerId);
 
 void initLockCvForSimulation();
 
-void startSimulation(const char* configFileName);
+void startSimulation(const char* testOption);
 
 #endif /* ASSIGN1PROB2_H_ */
