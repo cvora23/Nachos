@@ -135,8 +135,8 @@ switch.o: ../threads/switch.s
 	$(AS) -o switch.o swtch.s
 
 depend: $(CFILES) $(HFILES)
-	$(CC) $(INCPATH) $(DEFINES) $(HOST) -DCHANGED 
-	#-DNO_OF_MANAGERS=1 -DNO_OF_CASHIERS=15 -DNO_OF_DEPARTMENT=15 -DNO_OF_GOOD_LOADERS=15 -DNO_OF_CUSTOMERS=30 -M $(CFILES) > makedep
+	$(CC) $(INCPATH) $(DEFINES) $(HOST) -DCHANGED -M $(CFILES) > makedep
+	#-DNO_OF_MANAGERS=1 -DNO_OF_CASHIERS=15 -DNO_OF_DEPARTMENT=15 -DNO_OF_GOOD_LOADERS=15 -DNO_OF_CUSTOMERS=30 
 	echo '/^# DO NOT DELETE THIS LINE/+2,$$d' >eddep
 	echo '$$r makedep' >>eddep
 	echo 'w' >>eddep
