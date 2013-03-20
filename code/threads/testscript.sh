@@ -3,7 +3,8 @@
 #CREATING TERMINAL LOG DIRECTORY
     if [ ! -d ./terminal-logs ]; then
         mkdir ./terminal-logs
-
+    endif
+    
 #GETTING ALL THE COMMAND LINE ARGUMENTS
 set nachosOption = $1
 set testFile = $2
