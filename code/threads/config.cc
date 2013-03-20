@@ -7,7 +7,6 @@
 
 #include "config.h"
 
-
 void createConfigFileForItem()
 {
 	FILE* itemConfigFile;
@@ -22,8 +21,8 @@ void createConfigFileForItem()
 			fprintf(itemConfigFile,"itemNo = %d\n",i);
 			fprintf(itemConfigFile,"price = %d\n",Random()%MAX_PRICE_PER_ITEM + 1);
 			fprintf(itemConfigFile,"shelfNo = %d\n",i);
-			fprintf(itemConfigFile,"departmentNo = %d\n",Random()%MAX_PRICE_PER_ITEM + 1);
-			fprintf(itemConfigFile,"noOfItems = %d\n",Random()%MAX_PRICE_PER_ITEM + 1);
+			fprintf(itemConfigFile,"departmentNo = %d\n",(i/NO_OF_ITEMS_PER_DEPARTMENT));
+			fprintf(itemConfigFile,"noOfItems = %d\n",Random()%MAX_NO_ITEMS_PER_SHELF + 1);
 			fprintf(itemConfigFile,"\n");
 		}
 		fprintf(itemConfigFile,"; ****************************ITEM CONFIGURATION END******************"
@@ -34,32 +33,47 @@ void createConfigFileForItem()
 
 void createConfigFileForCustomer()
 {
-	int noOfItemsToPurchase = Random()%MAX_NO_ITEMS_TO_BE_PURCHASED + 1;
+	int noOfItemsToPurchase;
 	FILE* customerConfigFile;
 	customerConfigFile = fopen("customerConfigFile.ini","w");
 	if(customerConfigFile != NULL)
 	{
 		fprintf(customerConfigFile,"; ********************************CUSTOMER CONFIGURATION START******************"
 				"*******\n");
+
 		fprintf(customerConfigFile,"\n");
+
 		for(int i=0;i<NO_OF_CUSTOMERS;i++)
 		{
 			fprintf(customerConfigFile,"[CUSTOMER]\n");
+
 			fprintf(customerConfigFile,"id = %d\n",i);
+
 			fprintf(customerConfigFile,"type = %d\n",CustomerType(Random()%2));
+
 			fprintf(customerConfigFile,"money = %d\n",Random()%MAX_AMT_PER_CUSTOMER + 1);
+
+			noOfItemsToPurchase = Random()%MAX_NO_ITEMS_TO_BE_PURCHASED + 1;
+
 			fprintf(customerConfigFile,"noOfItemsToShop = %d\n",noOfItemsToPurchase);
+
 			fprintf(customerConfigFile,"hasEnoughMoneyForShopping = %d\n",0);
+
 			fprintf(customerConfigFile,"isDoneShopping = %d\n",0);
+
 			fprintf(customerConfigFile,"[SHOPPING LIST]\n");
+
 			for(int j=0;j<noOfItemsToPurchase;j++)
 			{
 				fprintf(customerConfigFile,"itemToShop = %d\n",Random()%NO_OF_ITEM_TYPES);
 				fprintf(customerConfigFile,"Quantity = %d\n",Random()%MAX_NO_ITEMS_TO_BE_PURCHASED_OF_EACH_TYPE + 1);
 			}
+
 			fprintf(customerConfigFile,"END = now\n");
+
 			fprintf(customerConfigFile,"\n");
 		}
+
 		fprintf(customerConfigFile,"; ****************************CUSTOMER CONFIGURATION END******************"
 				"*******\n");
 	}
@@ -202,6 +216,3 @@ int startConfiguration(const char* configFileName)
     }
     return retVal;
 }
-
-
-

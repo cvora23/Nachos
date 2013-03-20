@@ -1466,7 +1466,6 @@ void startSimulation(const char* configFileName)
     DEBUG('p',"Number of Managers = %d \n",NO_OF_MANAGERS);
     DEBUG('p',"Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
 
-
     /**
      * Create configuration file for ITEM
      */

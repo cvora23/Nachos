@@ -43,9 +43,11 @@ typedef struct _CustomerShoppingList
 	int		 noOfItems;
 }CustomerShoppingList;
 
-typedef enum _CustomerType{PRIVILEGED = 0,NON_PRIVILEGED}CustomerType;
-
-
+typedef enum _CustomerType
+{
+	PRIVILEGED = 0,
+	NON_PRIVILEGED
+}CustomerType;
 
 typedef struct _CustomerInfo
 {
