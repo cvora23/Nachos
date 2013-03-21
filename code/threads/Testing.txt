@@ -9,10 +9,23 @@
    IN MAKEFILE (Makefile.common Line no: 29, Line no: 137).  ----- (DONE)
 
 3: NOW WITH ALL THE CONFIGURABLE ITEMS SET RUN THE TEST WITH OPTION
-   gdb --args ./nachos -P2 configFile.ini -d pt 
+
+   ./testScript.sh -P2 N -d p on Aludra Server. (This creates new itemConfigFile and customerConfigFile.
+                                                             This is new TEST SCENARIO)
+   
+   ./testScript.sh -P2 -d p on Aludra Server. (Runs the same previous PREVIOUS TEST SCENARIO)
+    
+   Keep running the same test again and again to create TEST LOG with same TEST SCENARIO
+     
 
 4: AS NACHOS ALWAYS WILL GIVE SAME PREDICTABLE RESULT ALL THE TIMES WITH SAME CONFIGURATION,
+     
+5: STEP 3 would create log files in directory called /home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs
+    
+6: Now on your local machine, run,
+    ./scpDownloadScript.sh
+    
+7: STEP 5 creates a new directory called 
+                /home/cvora/localNachosRepo/nachos-csci402/code/threads/testResultHomeDir/"CurrentDateTimeFolder"
 
-5: USE SCRIPT COMMAND ON UNIX TO SAVE THE CURRENT TERMINAL SESSION. TIME STAMP THE CURRENT SESSION FILE.
-
-6: USE BEYOND COMPARE TOOL TO COMPARE THE SAME TEST CONFIGURATION TO PROVE SUCCESS...
+8: USE BEYOND COMPARE TOOL TO COMPARE THE SAME TEST CONFIGURATION TO PROVE SUCCESS FOR SAME TEST SCENARIO SAME LOG FILE OUTPUT...
