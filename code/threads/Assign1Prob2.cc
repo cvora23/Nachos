@@ -608,12 +608,7 @@ void CustomerThread(int ThreadId)
     	g_customerTrolleyCV->Signal(g_customerTrolleyLock);
     }
     g_noOfCustomersLeft++;
-    if(g_noOfCustomersLeft == NO_OF_CUSTOMERS)
-    {
-    	simulationEnd = 1;
-    }
     g_customerTrolleyLock->Release();
-
 }
 
 void SalesmanThread(int ThreadId)
@@ -1223,7 +1218,6 @@ void ManagerThread(int ThreadId)
 
     while(!simulationEnd)
     {
-
     	itemRemoveCounter = 0;
 
     	for(int i=0;i<NO_OF_CASHIERS;i++)
@@ -1242,6 +1236,10 @@ void ManagerThread(int ThreadId)
     	if(g_managerWaitQueueLength == 0)
     	{
     		g_managerCashierLock->Release();
+    	    if(g_noOfCustomersLeft == NO_OF_CUSTOMERS)
+    	    {
+    	    	simulationEnd = 1;
+    	    }
     	}
     	else
     	{
