@@ -206,6 +206,29 @@ void printConfiguration()
 	printCustomerInfo();
 }
 
+int startItemConfiguration(const char* configFileName)
+{
+	int retVal = 1;
+    if (ini_parse(configFileName, handler, NULL) < 0)
+    {
+    	DEBUG('p',"Can't load 'test.ini'\n");
+        retVal = 0;
+    }
+    return retVal;
+}
+
+int startCustomerConfiguration(const char* configFileName)
+{
+	int retVal = 1;
+    if (ini_parse(configFileName, handler, NULL) < 0)
+    {
+    	DEBUG('p',"Can't load 'test.ini'\n");
+        retVal = 0;
+    }
+    return retVal;
+}
+
+
 int startConfiguration(const char* configFileName)
 {
 	int retVal = 1;

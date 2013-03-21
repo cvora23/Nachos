@@ -17,6 +17,9 @@ void createConfigFileForCustomer();
 
 int startConfiguration(const char* configFileName);
 
+int startItemConfiguration(const char* configFileName);
+int startCustomerConfiguration(const char* configFileName);
+
 void printItemInfo();
 void printCustomerInfo();
 void printCustomerShoppingList(int customerId);

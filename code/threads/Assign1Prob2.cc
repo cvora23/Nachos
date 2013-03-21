@@ -1496,12 +1496,11 @@ void startSimulation(const char* testOption)
 		createConfigFileForCustomer();
     }
 
-
-#if 0
     /**
-     * Start the configuration Process
+     * Read the values from config file into global data structures
      */
-    configRetVal = startConfiguration(configFileName);
+    startItemConfiguration("itemConfigFile.ini");
+    startCustomerConfiguration("customerConfigFile.ini");
 
     if(configRetVal == 0)
     {
@@ -1559,8 +1558,6 @@ void startSimulation(const char* testOption)
     	t = new Thread(threadName);
     	t->Fork((VoidFunctionPtr)CustomerThread,i);
     }
-#endif
-
 }
 
 void Problem2(const char* testOption)
