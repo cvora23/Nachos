@@ -26,6 +26,12 @@ CashierInfo		g_cashierInfo[NO_OF_CASHIERS];
 ManagerInfo		g_managerInfo;
 
 /**
+ * Number of customer served and left
+ */
+int g_noOfCustomersLeft = 0;
+int simulationEnd = 0;
+
+/**
  * Locks, Condition Variables, Queue Wait Count for Customer-Trolley interaction
  */
 int 		g_usedTrolleyCount;

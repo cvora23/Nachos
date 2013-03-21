@@ -195,6 +195,12 @@ extern CashierInfo		g_cashierInfo[NO_OF_CASHIERS];
 extern ManagerInfo		g_managerInfo;
 
 /**
+ * Number of customer served and left
+ */
+extern int g_noOfCustomersLeft;
+extern int simulationEnd;
+
+/**
  * Locks, Condition Variables, Queue Wait Count for Customer-Trolley interaction
  */
 extern int 			g_usedTrolleyCount;
