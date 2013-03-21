@@ -38,10 +38,10 @@ pwd
 #run nachos $nachosOption $testOption $enableDebugging $debugOptions >$logDir/$logFile
 
 #Following commands writes the output only to the file and screen (stdout)
-#run nachos $nachosOption $testOption $enableDebugging $debugOptions | tee $logDir/$logFile
+run nachos $nachosOption $testOption $enableDebugging $debugOptions | tee $logDir/$logFile
 
 #Following commands writes the output only to the screen (stdout)
-run nachos $nachosOption $testOption $enableDebugging $debugOptions
+#run nachos $nachosOption $testOption $enableDebugging $debugOptions
 
 #ENDING GDB SESSION 
 quit
