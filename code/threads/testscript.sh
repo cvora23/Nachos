@@ -21,8 +21,9 @@ set debugOptions = $4
 
 #echo "$logFile"
 
-for i in {1..10}
-do
+@counter = 1
+
+while($counter <= 10)
 
 set currentDateTime = `date +'%d-%m-%Y_%H-%M-%S'`
 set logFile = "currentTest".$currentDateTime.log
@@ -45,7 +46,7 @@ pwd
 #run nachos $nachosOption $testOption $enableDebugging $debugOptions >$logDir/$logFile
 
 #Following commands writes the output only to the file and screen (stdout)
-if(i==0) then
+if($counter==0) then
 run nachos $nachosOption $testOption $enableDebugging $debugOptions | tee $logDir/$logFile
 else
 run nachos $nachosOption $testOption $debugOptions | tee $logDir/$logFile
@@ -57,4 +58,4 @@ endif
 #ENDING GDB SESSION 
 quit
 GDB_INPUT
-done
+end
