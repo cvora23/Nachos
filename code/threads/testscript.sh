@@ -14,7 +14,7 @@ set testOption = $2
 #set testFile = $2
 set enableDebugging = $3
 set debugOptions = $4
-set currentDateTime = `date +'%d-%m-%Y_%H-%M-%S'`
+
 
 : << --END-COMMENT--
 echo "$nachosOption"
@@ -25,13 +25,16 @@ echo "$currentDateTime"
 --END-COMMENT--
 
 #CREATING A NEW GDB SESSION LOG FILE
-#set logFile = "currentTest"."$(date +"%F_%T")".log
-set logFile = "currentTest".$currentDateTime.log
+
 
 #echo "$logFile"
 
 for i in {1..10}
 do
+
+set currentDateTime = `date +'%d-%m-%Y_%H-%M-%S'`
+set logFile = "currentTest".$currentDateTime.log
+
 #STARTING GDB SESSION
 gdb nachos <<GDB_INPUT
 pwd
