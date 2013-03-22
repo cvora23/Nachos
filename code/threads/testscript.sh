@@ -21,7 +21,7 @@ set debugOptions = $4
 
 #echo "$logFile"
 
-@counter = 1
+set counter = 1
 
 while($counter <= 10)
 
