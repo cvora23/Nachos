@@ -59,6 +59,6 @@ pwd
 quit
 GDB_INPUT
 
-$counter += 1
+set counter=('expr $counter + 1')
 
 end
