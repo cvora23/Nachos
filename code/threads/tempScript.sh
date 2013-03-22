@@ -1,7 +1,7 @@
 #!/bin/tcsh
 
-set number1=5
-set number2=10
+set number1 = 5
+set number2 = 10
 
 
 if ($number1 > $number2) then
