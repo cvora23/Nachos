@@ -30,6 +30,8 @@ set logFile = "currentTest".$currentDateTime.log
 
 #echo "$logFile"
 
+for i in {1..10}
+do
 #STARTING GDB SESSION
 gdb nachos <<GDB_INPUT
 pwd
@@ -46,3 +48,4 @@ run nachos $nachosOption $testOption $enableDebugging $debugOptions | tee $logDi
 #ENDING GDB SESSION 
 quit
 GDB_INPUT
+done
