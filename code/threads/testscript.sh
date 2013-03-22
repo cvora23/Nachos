@@ -43,7 +43,11 @@ pwd
 #run nachos $nachosOption $testOption $enableDebugging $debugOptions >$logDir/$logFile
 
 #Following commands writes the output only to the file and screen (stdout)
+if(i==0) then
 run nachos $nachosOption $testOption $enableDebugging $debugOptions | tee $logDir/$logFile
+else
+run nachos $nachosOption $testOption $debugOptions | tee $logDir/$logFile
+endif
 
 #Following commands writes the output only to the screen (stdout)
 #run nachos $nachosOption $testOption $enableDebugging $debugOptions
