@@ -58,4 +58,7 @@ pwd
 #ENDING GDB SESSION 
 quit
 GDB_INPUT
+
+$counter += 1
+
 end
