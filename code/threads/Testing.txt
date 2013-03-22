@@ -23,7 +23,7 @@
 5: STEP 3 would create log files in directory called /home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs
     
 6: Now on your local machine, run,
-    ./scpDownloadScript.sh
+    expect ./scpDownloadScript.sh
     
 7: STEP 5 creates a new directory called 
                 /home/cvora/localNachosRepo/nachos-csci402/code/threads/testResultHomeDir/"CurrentDateTimeFolder"

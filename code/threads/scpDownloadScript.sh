@@ -22,8 +22,15 @@ set testResultHomeDirPath "/home/cvora/localNachosRepo/nachos-csci402/code/threa
 if {!([file exists $testResultHomeDirPath/$DATE])} then {
 set MakeDir [exec mkdir $testResultHomeDirPath/$DATE]}
 
+#SETTING REMOTE INI DIRECTORY
+set remoteIniDir "/home/scf-05/ptaskar/nachos-csci402/code/threads"
+
+#SETTING REMOTE LOG DIRECTORY
+set remoteLogDir "/home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs"
+
 #CREATING A INTERACTIVE SCP SESSION FOR DOWNLOADING FILES 
-spawn scp -r ptaskar@aludra.usc.edu:"/home/scf-05/ptaskar/nachos-csci402/code/threads/terminal-logs" $testResultHomeDirPath/$DATE
+spawn scp -r ptaskar@aludra.usc.edu:/{$remoteLogDir,$remoteIniDir/itemConfigFile.ini,$remoteIniDir/customerConfigFile.ini} \
+                        $testResultHomeDirPath/$DATE
 
 expect {
 -re ".*es.*o.*" {
