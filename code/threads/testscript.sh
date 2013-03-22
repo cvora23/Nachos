@@ -14,22 +14,7 @@ set testOption = $2
 #set testFile = $2
 set enableDebugging = $3
 set debugOptions = $4
-
-
-#CREATING A NEW GDB SESSION LOG FILE
-
-
-#echo "$logFile"
-
-set counter = 1
-set init = 0
-
-while($counter <= 10)
-
 set currentDateTime = `date +'%d-%m-%Y_%H-%M-%S'`
-set logFile = "currentTest".$currentDateTime.log
-
-
 
 : << --END-COMMENT--
 echo "$nachosOption"
@@ -39,6 +24,12 @@ echo "$debugOptions"
 echo "$currentDateTime"
 --END-COMMENT--
 
+#CREATING A NEW GDB SESSION LOG FILE
+#set logFile = "currentTest"."$(date +"%F_%T")".log
+set logFile = "currentTest".$currentDateTime.log
+
+#echo "$logFile"
+
 #STARTING GDB SESSION
 gdb nachos <<GDB_INPUT
 pwd
@@ -47,11 +38,7 @@ pwd
 #run nachos $nachosOption $testOption $enableDebugging $debugOptions >$logDir/$logFile
 
 #Following commands writes the output only to the file and screen (stdout)
-    if($counter > $init) then
-         run nachos $nachosOption $testOption $debugOptions | tee $logDir/$logFile
-    else
-        run nachos $nachosOption $testOption $enableDebugging $debugOptions | tee $logDir/$logFile
-    endif
+run nachos $nachosOption $testOption $enableDebugging $debugOptions | tee $logDir/$logFile
 
 #Following commands writes the output only to the screen (stdout)
 #run nachos $nachosOption $testOption $enableDebugging $debugOptions
@@ -59,7 +46,3 @@ pwd
 #ENDING GDB SESSION 
 quit
 GDB_INPUT
-
-set counter=('expr $counter + 1')
-
-end
