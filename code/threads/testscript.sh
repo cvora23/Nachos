@@ -46,7 +46,7 @@ pwd
 #run nachos $nachosOption $testOption $enableDebugging $debugOptions >$logDir/$logFile
 
 #Following commands writes the output only to the file and screen (stdout)
-    if( $counter == 0 ) then
+    if( $counter == 0 );then
         run nachos $nachosOption $testOption $enableDebugging $debugOptions | tee $logDir/$logFile
     else
         run nachos $nachosOption $testOption $debugOptions | tee $logDir/$logFile
