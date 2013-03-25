@@ -241,12 +241,6 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 {
 	int lockId;
 
-	if(buf == NULL)
-	{
-		printf("Memory unavailable of the heap \n");
-		return -1;
-	}
-
 	if(lockNameLen<1 || lockNameLen>MAX_LOCK_NAME)
 	{
 		printf("LockName is invalid \n");
@@ -254,6 +248,12 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 	}
 
 	char *buf = new char[lockNameLen+1];
+
+	if(buf == NULL)
+	{
+		printf("Memory unavailable of the heap \n");
+		return -1;
+	}
 
 	if(vaddr<0 || (vaddr+lockNameLen)>=(currentThread->space)->addrSpaceSize)
 	{
