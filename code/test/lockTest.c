@@ -11,7 +11,7 @@
 void testCase1()
 {
 	int lockId = -1;
-
+	int i;
 	print("CREATE LOCK SYSTEM CALL TEST\n\n");
 
 	print("PASSING LOCK NAME LENGTH > MAX_LOCK_NAME \n\n");
@@ -27,7 +27,7 @@ void testCase1()
 	print("------------------------------------------------------\n");
 
 	print("CREATING MORE number of locks than MAX_LOCKS = 500 \n\n");
-	for(int i = 0;i<501;i++)
+	for(i = 0;i<501;i++)
 	{
 		lockId = createLock((char*)"LockNo",10);
 	}
