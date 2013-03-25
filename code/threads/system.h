@@ -57,7 +57,7 @@ typedef struct UserLockArray
 		for(int i=0;i<MAX_LOCKS;i++)
 		{
 			locks[i].lock = NULL;
-			locks[i].space = NULL;
+			locks[i].addrSpace = NULL;
 			locks[i].isToBeDeleted = false;
 		}
 	}
