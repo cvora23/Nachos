@@ -6,7 +6,7 @@
  */
 
 #include "syscall.h"
-
+#include <stdio.h>
 
 void testCase1()
 {
@@ -101,7 +101,7 @@ void testCase3()
 	lockId = createLock((char*)"LockName",10);
 	acquireLock(lockId);
 	releaseLock(lockId);
-	detroyLock(lockId);
+	destroyLock(lockId);
 	print("------------------------------------------------------\n");
 }
 
@@ -127,7 +127,7 @@ void testCase4()
 	lockId = createLock((char*)"LockName",10);
 	acquireLock(lockId);
 	releaseLock(lockId);
-	detroyLock(lockId);
+	destroyLock(lockId);
 	print("------------------------------------------------------\n");
 }
 
