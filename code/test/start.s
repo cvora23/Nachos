@@ -130,6 +130,55 @@ Yield:
 	j	$31
 	.end Yield
 
+    .globl createLock
+    .ent    createLock
+createLock:
+    addiu $2,$0,SC_CreateLock
+    syscall
+    j   $31
+    .end createLock
+
+    .globl acquireLock
+    .ent    acquireLock
+acquireLock:
+    addiu $2,$0,SC_AcquireLock
+    syscall
+    j   $31
+    .end acquireLock
+
+    .globl releaseLock
+    .ent    releaseLock
+releaseLock:
+    addiu $2,$0,SC_ReleaseLock
+    syscall
+    j   $31
+    .end releaseLock
+
+    .globl destroyLock
+    .ent    destroyLock
+destroyLock:
+    addiu $2,$0,SC_DestroyLock
+    syscall
+    j   $31
+    .end destroyLock
+
+    .globl print
+    .ent    print
+print:
+    addiu $2,$0,SC_Print
+    syscall
+    j   $31
+    .end print
+
+    .globl scan
+    .ent    scan
+scan:
+    addiu $2,$0,SC_Scan
+    syscall
+    j   $31
+    .end scan
+
+
 /* dummy function to keep gcc happy */
         .globl  __main
         .ent    __main

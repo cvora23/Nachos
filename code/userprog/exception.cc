@@ -279,7 +279,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 
 	userLockTable.locks[lockId].lock = new Lock(buf);
 
-	userLockTable.locks[lockId].space = currentThread->space;
+	userLockTable.locks[lockId].addrSpace = currentThread->space;
 	userLockTable.locks[lockId].isDeleted = false;
 	userLockTable.locks[lockId].isToBeDeleted = false;
 	userLockTable.locks[lockId].lockCounter = 0;
@@ -335,7 +335,7 @@ void ReleaseLock_Syscall(int lockId)
 		return;
 	}
 
-	if(userLockTable.locks[lockId].lock == NULL || userLockTableLock.locks[lockId].isDeleted)
+	if(userLockTable.locks[lockId].lock == NULL || userLockTable.locks[lockId].isDeleted)
 	{
 		printf("Tring to release lock on invalid lockId. LockId does not exist \n");
 		userLockTableLock->Release();
