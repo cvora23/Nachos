@@ -6,7 +6,7 @@
  */
 
 #include "syscall.h"
-#include <stdio.h>
+
 
 void testCase1()
 {
@@ -34,7 +34,7 @@ void testCase1()
 	print("------------------------------------------------------\n");
 
 	print("CREATING LOCK SUCCESS CASE \n");
-	createLock((char*)"LockNo",strlen("LockNo"));
+	createLock((char*)"LockNo",10);
 	print("------------------------------------------------------\n");
 
 }
