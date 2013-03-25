@@ -136,9 +136,9 @@ int main()
 	int testCaseNo;
 
 	print("1 : CreateLock system call \n");
-	print("2 : AcquireLock system call \n");
-	print("3 : ReleaseLock system call \n");
-	print("4 : DestroyLock system call \n");
+	print("2 : DestroyLock system call \n");
+	print("3 : AcquireLock system call \n");
+	print("4 : ReleaseLock system call \n");
 
 	print("Enter your choice \n");
 	testCaseNo = scan();
