@@ -269,7 +269,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 	buf[lockNameLen] = '\0';
 
 	userLockTableLock->Acquire();
-	if((lockId = userLockTableLock.lockBitMap->Find()) == -1)
+	if((lockId = userLockTable.lockBitMap->Find()) == -1)
 	{
 		printf("No space for new lock \n");
 		delete[] buf;
@@ -299,27 +299,27 @@ void AcquireLock_Syscall(int lockId)
 		return;
 	}
 
-	if(userLockTableLock.locks[lockId].lock == NULL || userLockTableLock.locks[lockId].isDeleted)
+	if(userLockTable.locks[lockId].lock == NULL || userLockTable.locks[lockId].isDeleted)
 	{
 		printf("Tring to acquire lock on invalid lockId. LockId does not exist \n");
 		userLockTableLock->Release();
 		return;
 	}
 
-	if(userLockTableLock.locks[lockId].addrSpace != currentThread->space)
+	if(userLockTable.locks[lockId].addrSpace != currentThread->space)
 	{
 		printf("Address space mismatch.. Trying to Acquire Lock out of address space \n");
 		userLockTableLock->Release();
 		return;
 	}
 
-	if(!(userLockTableLock.locks[lockId].lock->isHeldByCurrentThread()))
+	if(!(userLockTable.locks[lockId].lock->isHeldByCurrentThread()))
 	{
-		userLockTableLock.locks[lockId].lockCounter++;
+		userLockTable.locks[lockId].lockCounter++;
 	}
 	userLockTableLock->Release();
 
-	userLockTableLock.locks[lockId].lock->Acquire();
+	userLockTable.locks[lockId].lock->Acquire();
 
 	return;
 }
@@ -335,36 +335,36 @@ void ReleaseLock_Syscall(int lockId)
 		return;
 	}
 
-	if(userLockTableLock.locks[lockId].lock == NULL || userLockTableLock.locks[lockId].isDeleted)
+	if(userLockTable.locks[lockId].lock == NULL || userLockTableLock.locks[lockId].isDeleted)
 	{
 		printf("Tring to release lock on invalid lockId. LockId does not exist \n");
 		userLockTableLock->Release();
 		return;
 	}
 
-	if(userLockTableLock.locks[lockId].addrSpace != currentThread->space)
+	if(userLockTable.locks[lockId].addrSpace != currentThread->space)
 	{
 		printf("Address space mismatch.. Trying to release Lock out of address space \n");
 		userLockTableLock->Release();
 		return;
 	}
 
-	if((userLockTableLock.locks[lockId].lock->isHeldByCurrentThread()))
+	if((userLockTable.locks[lockId].lock->isHeldByCurrentThread()))
 	{
-		userLockTableLock.locks[lockId].lockCounter--;
+		userLockTable.locks[lockId].lockCounter--;
 	}
 
-	userLockTableLock.locks[lockId].lock->Release();
+	userLockTable.locks[lockId].lock->Release();
 
-	if((userLockTableLock.locks[lockId].isToBeDeleted) && (userLockTableLock.locks[lockId].lockCounter == 0))
+	if((userLockTable.locks[lockId].isToBeDeleted) && (userLockTable.locks[lockId].lockCounter == 0))
 	{
-		userLockTableLock.lockBitMap->Clear(lockId);
-		userLockTableLock.locks[lockId].isDeleted = true;
-		userLockTableLock.locks[lockId].isToBeDeleted = false;
-		delete userLockTableLock.locks[lockId].lock;
-		userLockTableLock.locks[lockId].lock = NULL;
-		userLockTableLock.locks[lockId].addrSpace = NULL;
-		userLockTableLock.locks[lockId].lockCounter = 0;
+		userLockTable.lockBitMap->Clear(lockId);
+		userLockTable.locks[lockId].isDeleted = true;
+		userLockTable.locks[lockId].isToBeDeleted = false;
+		delete userLockTable.locks[lockId].lock;
+		userLockTable.locks[lockId].lock = NULL;
+		userLockTable.locks[lockId].addrSpace = NULL;
+		userLockTable.locks[lockId].lockCounter = 0;
 	}
 
 	userLockTableLock->Release();
@@ -383,35 +383,35 @@ void DestroyLock_Syscall(int lockId)
 		return;
 	}
 
-	if(userLockTableLock.locks[lockId].lock == NULL || userLockTableLock.locks[lockId].isDeleted)
+	if(userLockTable.locks[lockId].lock == NULL || userLockTable.locks[lockId].isDeleted)
 	{
 		printf("Tring to destroy lock on invalid lockId. LockId does not exist \n");
 		userLockTableLock->Release();
 		return;
 	}
 
-	if(userLockTableLock.locks[lockId].addrSpace != currentThread->space)
+	if(userLockTable.locks[lockId].addrSpace != currentThread->space)
 	{
 		printf("Address space mismatch.. Trying to destroy Lock out of address space \n");
 		userLockTableLock->Release();
 		return;
 	}
 
-	userLockTableLock.locks[lockId].isToBeDeleted = true;
-	if(userLockTableLock.locks[lockId].lockCounter > 0)
+	userLockTable.locks[lockId].isToBeDeleted = true;
+	if(userLockTable.locks[lockId].lockCounter > 0)
 	{
 		printf("Cannot Delete Lock. Its already in USE \n");
 		userLockTableLock->Release();
 		return;
 	}
 
-	userLockTableLock.lockBitMap->Clear(lockId);
-	userLockTableLock.locks[lockId].isDeleted = true;
-	userLockTableLock.locks[lockId].isToBeDeleted = false;
-	delete userLockTableLock.locks[lockId].lock;
-	userLockTableLock.locks[lockId].lock = NULL;
-	userLockTableLock.locks[lockId].addrSpace = NULL;
-	userLockTableLock.locks[lockId].lockCounter = 0;
+	userLockTable.lockBitMap->Clear(lockId);
+	userLockTable.locks[lockId].isDeleted = true;
+	userLockTable.locks[lockId].isToBeDeleted = false;
+	delete userLockTable.locks[lockId].lock;
+	userLockTable.locks[lockId].lock = NULL;
+	userLockTable.locks[lockId].addrSpace = NULL;
+	userLockTable.locks[lockId].lockCounter = 0;
 
 	userLockTableLock->Release();
 

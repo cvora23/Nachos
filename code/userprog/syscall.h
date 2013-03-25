@@ -38,6 +38,8 @@
 #define SC_Wait 					17
 #define SC_Broadcast 				18
 #define SC_DestroyCondition 		19
+#define SC_Print					20
+#define SC_Scan						21
 
 #define MAXFILENAME 				256
 #define MAX_LOCK_NAME 				256
