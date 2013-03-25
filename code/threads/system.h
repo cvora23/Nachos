@@ -40,7 +40,7 @@ extern Machine* machine;	// user program memory and registers
 typedef struct _UserLock
 {
 	Lock* 		lock;
-	AddrSpace* 	space;
+	AddrSpace* 	addrSpace;
 	bool		isDeleted;
 	bool 		isToBeDeleted;
 	int 		lockCounter;
