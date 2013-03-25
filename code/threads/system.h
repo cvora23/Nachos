@@ -32,6 +32,39 @@ extern Timer *timer;				// the hardware alarm clock
 #ifdef USER_PROGRAM
 #include "machine.h"
 extern Machine* machine;	// user program memory and registers
+
+#define MAX_LOCKS	500
+#define MAX_CVS		2000
+
+typedef struct _UserLock
+{
+	Lock* 		lock;
+	AddrSpace* 	space;
+	bool		isDeleted;
+	bool 		isToBeDeleted;
+	int 		lockCounter;
+}UserLock;
+
+typedef struct _UserLockArray
+{
+	UserLock locks[MAX_LOCKS];
+	BitMap*	lockBitMap;
+
+	UserLockArray()
+	{
+		lockBitMap = new BitMap(MAX_LOCKS);
+		for(int i=0;i<MAX_LOCKS;i++)
+		{
+			locks[i].lock = NULL;
+			locks[i].space = NULL;
+			locks[i].isToBeDeleted = false;
+		}
+	}
+}UserLockArray;
+
+extern Lock* userLockTableLock;
+extern UserLockArray userLockTable;
+
 #endif
 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 

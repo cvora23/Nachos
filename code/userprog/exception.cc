@@ -231,6 +231,212 @@ void Close_Syscall(int fd) {
     }
 }
 
+void Yield_Syscall()
+{
+	currentThread->Yield();
+	return;
+}
+
+int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
+{
+	char *buf = new char[lockNameLen+1];
+	int lockId;
+
+	if(buf == NULL)
+	{
+		printf("Memory unavailable of the heap \n");
+		return -1;
+	}
+
+	if(lockNameLen<1 || lockNameLen>MAX_LOCK_NAME)
+	{
+		printf("LockName is invalid \n");
+		delete [] buf;
+		return -1;
+	}
+
+	if(vaddr<0 || (vaddr+lockNameLen)>=(currentThread->space)->addrSpaceSize)
+	{
+		printf("Invalid Address passed \n");
+		return -1;
+	}
+
+	if(copyin(vaddr,lockNameLen,buf) == -1)
+	{
+		delete [] buf;
+		return -1;
+	}
+	buf[lockNameLen] = '\0';
+
+	userLockTableLock->Acquire();
+	if((lockId = userLockTableLock.lockBitMap->Find()) == -1)
+	{
+		printf("No space for new lock \n");
+		delete[] buf;
+		userLockTableLock->Release();
+		return -1;
+	}
+
+	userLockTable.locks[lockId].lock = new Lock(buf);
+
+	userLockTable.locks[lockId].space = currentThread->space;
+	userLockTable.locks[lockId].isDeleted = false;
+	userLockTable.locks[lockId].isToBeDeleted = false;
+	userLockTable.locks[lockId].lockCounter = 0;
+
+	userLockTableLock->Release();
+	return lockId;
+}
+
+void AcquireLock_Syscall(int lockId)
+{
+	userLockTableLock->Acquire();
+
+	if(lockId<0 || lockId>MAX_LOCKS)
+	{
+		printf("Trying to acquire lock on invalid lockId \n");
+		userLockTableLock->Release();
+		return;
+	}
+
+	if(userLockTableLock.locks[lockId].lock == NULL || userLockTableLock.locks[lockId].isDeleted)
+	{
+		printf("Tring to acquire lock on invalid lockId. LockId does not exist \n");
+		userLockTableLock->Release();
+		return;
+	}
+
+	if(userLockTableLock.locks[lockId].addrSpace != currentThread->space)
+	{
+		printf("Address space mismatch.. Trying to Acquire Lock out of address space \n");
+		userLockTableLock->Release();
+		return;
+	}
+
+	if(!(userLockTableLock.locks[lockId].lock->isHeldByCurrentThread()))
+	{
+		userLockTableLock.locks[lockId].lockCounter++;
+	}
+	userLockTableLock->Release();
+
+	userLockTableLock.locks[lockId].lock->Acquire();
+
+	return;
+}
+
+void ReleaseLock_Syscall(int lockId)
+{
+	userLockTableLock->Acquire();
+
+	if(lockId<0 || lockId>MAX_LOCKS)
+	{
+		printf("Trying to release lock on invalid lockId \n");
+		userLockTableLock->Release();
+		return;
+	}
+
+	if(userLockTableLock.locks[lockId].lock == NULL || userLockTableLock.locks[lockId].isDeleted)
+	{
+		printf("Tring to release lock on invalid lockId. LockId does not exist \n");
+		userLockTableLock->Release();
+		return;
+	}
+
+	if(userLockTableLock.locks[lockId].addrSpace != currentThread->space)
+	{
+		printf("Address space mismatch.. Trying to release Lock out of address space \n");
+		userLockTableLock->Release();
+		return;
+	}
+
+	if((userLockTableLock.locks[lockId].lock->isHeldByCurrentThread()))
+	{
+		userLockTableLock.locks[lockId].lockCounter--;
+	}
+
+	userLockTableLock.locks[lockId].lock->Release();
+
+	if((userLockTableLock.locks[lockId].isToBeDeleted) && (userLockTableLock.locks[lockId].lockCounter == 0))
+	{
+		userLockTableLock.lockBitMap->Clear(lockId);
+		userLockTableLock.locks[lockId].isDeleted = true;
+		userLockTableLock.locks[lockId].isToBeDeleted = false;
+		delete userLockTableLock.locks[lockId].lock;
+		userLockTableLock.locks[lockId].lock = NULL;
+		userLockTableLock.locks[lockId].addrSpace = NULL;
+		userLockTableLock.locks[lockId].lockCounter = 0;
+	}
+
+	userLockTableLock->Release();
+
+	return;
+}
+
+void DestroyLock_Syscall(int lockId)
+{
+	userLockTableLock->Acquire();
+
+	if(lockId<0 || lockId>MAX_LOCKS)
+	{
+		printf("Trying to destroy lock on invalid lockId \n");
+		userLockTableLock->Release();
+		return;
+	}
+
+	if(userLockTableLock.locks[lockId].lock == NULL || userLockTableLock.locks[lockId].isDeleted)
+	{
+		printf("Tring to destroy lock on invalid lockId. LockId does not exist \n");
+		userLockTableLock->Release();
+		return;
+	}
+
+	if(userLockTableLock.locks[lockId].addrSpace != currentThread->space)
+	{
+		printf("Address space mismatch.. Trying to destroy Lock out of address space \n");
+		userLockTableLock->Release();
+		return;
+	}
+
+	userLockTableLock.locks[lockId].isToBeDeleted = true;
+	if(userLockTableLock.locks[lockId].lockCounter > 0)
+	{
+		printf("Cannot Delete Lock. Its already in USE \n");
+		userLockTableLock->Release();
+		return;
+	}
+
+	userLockTableLock.lockBitMap->Clear(lockId);
+	userLockTableLock.locks[lockId].isDeleted = true;
+	userLockTableLock.locks[lockId].isToBeDeleted = false;
+	delete userLockTableLock.locks[lockId].lock;
+	userLockTableLock.locks[lockId].lock = NULL;
+	userLockTableLock.locks[lockId].addrSpace = NULL;
+	userLockTableLock.locks[lockId].lockCounter = 0;
+
+	userLockTableLock->Release();
+
+	return;
+}
+
+void Print_Syscall(unsigned int vaddr)
+{
+	char printBuf[MAX_CHAR_PRINTF];
+	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
+	{
+		printf("%s: Bad Virtual Address \n",currentThread->getName());
+		return ;
+	}
+	printf(printBuf);
+}
+
+int Scan_Syscall()
+{
+	int scanVal;
+	printf("Please enter an integer value to be scanned \n");
+	scanf("%d",&scanVal);
+	return scanVal;
+}
+
 void ExceptionHandler(ExceptionType which) {
     int type = machine->ReadRegister(2); // Which syscall?
     int rv=0; 	// the return value from a syscall
@@ -267,6 +473,53 @@ void ExceptionHandler(ExceptionType which) {
 		DEBUG('a', "Close syscall.\n");
 		Close_Syscall(machine->ReadRegister(4));
 		break;
+
+	    case SC_Yield:
+		DEBUG('a',"Yield syscall. \n");
+		Yield_Syscall();
+		break;
+
+	    case SC_CreateLock:
+	    {
+	    	DEBUG('a',"Create Lock syscall \n");
+	    	rv = CreateLock_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    }
+	    break;
+
+	    case SC_AcquireLock:
+	    {
+	    	DEBUG('a',"Acquire Lock syscall \n");
+	    	AcquireLock_Syscall(machine->ReadRegister(4));
+	    }
+	    break;
+
+	    case SC_ReleaseLock:
+	    {
+	    	DEBUG('a',"Release Lock syscall \n");
+	    	ReleaseLock_Syscall(machine->ReadRegister(4));
+	    }
+	    break;
+
+	    case SC_DestroyLock:
+	    {
+	    	DEBUG('a',"Destroy Lock syscall \n");
+	    	DestroyLock_Syscall(machine->ReadRegister(4));
+	    }
+	    break;
+
+	    case SC_Print:
+	    {
+	    	DEBUG('a',"Print syscall \n");
+	    	Print_Syscall(machine->ReadRegister(4));
+	    }
+	    break;
+
+	    case SC_Scan:
+	    {
+	    	DEBUG('a',"Scan syscall \n");
+	    	rv = Scan_Syscall();
+	    }
+	    break;
 	}
 
 	// Put in the return value and increment the PC

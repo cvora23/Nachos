@@ -137,6 +137,7 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
                                                 // we need to increase the size
 						// to leave room for the stack
     size = numPages * PageSize;
+    addrSpaceSize = size;
 
     ASSERT(numPages <= NumPhysPages);		// check we're not trying
 						// to run anything too big --
