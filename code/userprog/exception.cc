@@ -239,7 +239,6 @@ void Yield_Syscall()
 
 int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 {
-	char *buf = new char[lockNameLen+1];
 	int lockId;
 
 	if(buf == NULL)
@@ -251,12 +250,14 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 	if(lockNameLen<1 || lockNameLen>MAX_LOCK_NAME)
 	{
 		printf("LockName is invalid \n");
-		delete [] buf;
 		return -1;
 	}
 
+	char *buf = new char[lockNameLen+1];
+
 	if(vaddr<0 || (vaddr+lockNameLen)>=(currentThread->space)->addrSpaceSize)
 	{
+		delete [] buf;
 		printf("Invalid Address passed \n");
 		return -1;
 	}
