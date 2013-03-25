@@ -62,10 +62,5 @@ testfiles: testfiles.o start.o
 	$(LD) $(LDFLAGS) start.o testfiles.o -o testfiles.coff
 	../bin/coff2noff testfiles.coff testfiles
 
-lockTest.o: lockTest.c
-	$(CC) $(CFLAGS) -c lockTest.c
-lockTest: lockTest.o start.o
-	$(LD) $(LDFLAGS) start.o lockTest.o -o lockTest.coff
-	../bin/coff2noff lockTest.coff lockTest
 clean:
 	rm -f *.o *.coff
