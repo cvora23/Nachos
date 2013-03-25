@@ -45,7 +45,7 @@ typedef struct _UserLock
 	int 		lockCounter;
 }UserLock;
 
-typedef struct _UserLockArray
+typedef struct UserLockArray
 {
 	UserLock locks[MAX_LOCKS];
 	BitMap*	lockBitMap;
@@ -60,10 +60,10 @@ typedef struct _UserLockArray
 			locks[i].isToBeDeleted = false;
 		}
 	}
-}UserLockArray;
+}UserLockTable;
 
 extern Lock* userLockTableLock;
-extern UserLockArray userLockTable;
+extern UserLockTable userLockTable;
 
 #endif
 

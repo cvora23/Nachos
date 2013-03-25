@@ -31,8 +31,7 @@ SynchDisk   *synchDisk;
 Machine *machine;	// user program memory and registers
 
 Lock* userLockTableLock;
-
-UserLockArray userLockTable;
+UserLockTable userLockTable;
 
 #endif
 
