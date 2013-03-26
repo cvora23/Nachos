@@ -211,8 +211,8 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
     {
     	executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PageSize]),
     			PageSize,(noffH.code.inFileAddr + i*PageSize));
-    	DEBUG('a',"Page copied to PageTable at Physical Addr: %d . Code/Data of size %d "
-    			"copied from %d \n",pageTable[i].physicalPage*PageSize,PageSize,
+    	DEBUG('a',"Page copied to PageTable at Physical Addr: 0x%x . Code/Data of size %d "
+    			"copied from 0x%x \n",pageTable[i].physicalPage*PageSize,PageSize,
     			(noffH.code.inFileAddr + i*PageSize));
 		totalPagesReserved++;
     }
