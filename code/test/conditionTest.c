@@ -110,7 +110,11 @@ int main()
 	int testCaseNo;
 
 	print("1 : CreateCondition system call \n");
-	print("2 : DestroyCondition system call \n");
+	/**
+	 * \todo: Fork and Exec needed for This test case
+	 * 	print("2 : DestroyCondition system call \n");
+	 */
+
 	/**
 	 * \todo: Fork and Exec needed for This test case
 	 * 	print("3 : Wait Signal Broadcast system call \n");
