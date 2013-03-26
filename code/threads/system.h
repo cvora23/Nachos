@@ -31,7 +31,9 @@ extern Statistics *stats;			// performance metrics
 extern Timer *timer;				// the hardware alarm clock
 
 #ifdef USER_PROGRAM
+
 #include "machine.h"
+
 extern Machine* machine;	// user program memory and registers
 
 #define MAX_LOCKS	500
@@ -99,6 +101,10 @@ typedef struct UserConditionArray
 
 extern Lock* userConditionTableLock;
 extern UserConditionTable userConditionTable;
+
+extern int 		totalPagesReserved;
+extern Lock* 	mainMemoryAccessLock;
+extern BitMap*	mainMemoryBitMap;
 
 #endif
 

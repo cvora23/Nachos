@@ -36,6 +36,10 @@ UserLockTable userLockTable;
 Lock* userConditionTableLock;
 UserConditionTable userConditionTable;
 
+int totalPagesReserved;
+Lock* mainMemoryAccessLock;
+BitMap*	mainMemoryBitMap;
+
 #endif
 
 #ifdef NETWORK
@@ -155,11 +159,15 @@ Initialize(int argc, char **argv)
     CallOnUserAbort(Cleanup);			// if user hits ctl-C
     
 #ifdef USER_PROGRAM
+
     machine = new Machine(debugUserProg);	// this must come first
 
     userLockTableLock = new Lock("userLockTableLock");
     userConditionTableLock = new Lock("userConditionTableLock");
 
+    totalPagesReserved = 0;
+    mainMemoryAccessLock = new Lock("mainMemoryAccessLock");
+    mainMemoryBitMap = new BitMap(NumPhysPages);
 
 #endif
 
