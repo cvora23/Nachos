@@ -450,7 +450,7 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 	buf[conditionNameLen] = '\0';
 
 	userConditionTableLock->Acquire();
-	if((conditionId = userConditionTable.lockBitMap->Find()) == -1)
+	if((conditionId = userConditionTable.conditionBitMap->Find()) == -1)
 	{
 		printf("No space for new condition \n");
 		delete[] buf;
@@ -553,10 +553,10 @@ void Signal_Syscall(int conditionId,int lockId)
 			userConditionTable.conditions[conditionId].conditionCounter == 0)
 	{
 		userConditionTable.conditionBitMap->Clear(conditionId);
-		delete userConditionTable.conditions[condition].condition;
-		userConditionTable.conditions[condition].condition = NULL;
-		userConditionTable.conditions[condition].isDeleted = true;
-		userConditionTable.conditions[condition].isToBeDeleted = false;
+		delete userConditionTable.conditions[conditionId].condition;
+		userConditionTable.conditions[conditionId].condition = NULL;
+		userConditionTable.conditions[conditionId].isDeleted = true;
+		userConditionTable.conditions[conditionId].isToBeDeleted = false;
 	}
 	userLockTableLock->Release();
 	userConditionTableLock->Release();
@@ -608,10 +608,10 @@ void Broadcast_Syscall(int conditionId,int lockId)
 			userConditionTable.conditions[conditionId].conditionCounter == 0)
 	{
 		userConditionTable.conditionBitMap->Clear(conditionId);
-		delete userConditionTable.conditions[condition].condition;
-		userConditionTable.conditions[condition].condition = NULL;
-		userConditionTable.conditions[condition].isDeleted = true;
-		userConditionTable.conditions[condition].isToBeDeleted = false;
+		delete userConditionTable.conditions[conditionId].condition;
+		userConditionTable.conditions[conditionId].condition = NULL;
+		userConditionTable.conditions[conditionId].isDeleted = true;
+		userConditionTable.conditions[conditionId].isToBeDeleted = false;
 	}
 	userLockTableLock->Release();
 	userConditionTableLock->Release();
@@ -653,7 +653,7 @@ void DestroyCondition_Syscall(int conditionId)
 		return;
 	}
 
-	userConditionTable.lockBitMap->Clear(conditionId);
+	userConditionTable.conditionBitMap->Clear(conditionId);
 	userConditionTable.conditions[conditionId].isDeleted = true;
 	userConditionTable.conditions[conditionId].isToBeDeleted = false;
 	delete userConditionTable.conditions[conditionId].condition;
