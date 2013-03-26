@@ -120,7 +120,7 @@ SwapHeader (NoffHeader *noffH)
 AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 {
     NoffHeader noffH;
-    unsigned int i, size;
+    unsigned int size;
 
     // Don't allocate the input or output to disk files
     fileTable.Put(0);
@@ -157,7 +157,7 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 					numPages, size);
 // first, set up the translation 
     pageTable = new TranslationEntry[numPages];
-    for (i = 0; i < numPages; i++)
+    for (int i = 0; i < numPages; i++)
     {
     	mainMemoryAccessLock->Acquire();
 		pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
