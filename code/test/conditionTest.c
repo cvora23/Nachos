@@ -59,8 +59,8 @@ void testCase2()
 	lockId = createLock((char*)"LockName",10);
 	acquireLock(lockId);
 	conditionId = createCondition((char*)"ConditionName",10);
-	Wait(conditionId,lockId);
-	Release(lockId);
+	wait(conditionId,lockId);
+	releaseLock(lockId);
 	destroyCondition(conditionId);
 	print("------------------------------------------------------\n");
 
