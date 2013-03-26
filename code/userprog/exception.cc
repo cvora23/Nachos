@@ -620,8 +620,6 @@ void Broadcast_Syscall(int conditionId,int lockId)
 
 void DestroyCondition_Syscall(int conditionId)
 {
-	int conditionId;
-
 	userConditionTableLock->Acquire();
 	if(conditionId<0 || conditionId>MAX_CVS)
 	{
