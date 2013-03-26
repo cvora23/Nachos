@@ -162,6 +162,46 @@ destroyLock:
     j   $31
     .end destroyLock
 
+    .globl createCondition
+    .ent    createCondition
+createCondition:
+    addiu $2,$0,SC_CreateCondition
+    syscall
+    j   $31
+    .end createCondition
+
+    .globl destroyCondition
+    .ent    destroyCondition
+destroyCondition:
+    addiu $2,$0,SC_DestroyCondition
+    syscall
+    j   $31
+    .end destroyCondition
+
+    .globl signal
+    .ent    signal
+signal:
+    addiu $2,$0,SC_Signal
+    syscall
+    j   $31
+    .end signal
+
+    .globl wait
+    .ent    wait
+wait:
+    addiu $2,$0,SC_Wait
+    syscall
+    j   $31
+    .end wait
+
+    .globl broadcast
+    .ent    broadcast
+broadcast:
+    addiu $2,$0,SC_Broadcast
+    syscall
+    j   $31
+    .end broadcast
+
     .globl print
     .ent    print
 print:

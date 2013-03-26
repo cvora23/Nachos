@@ -58,13 +58,47 @@ typedef struct UserLockArray
 		{
 			locks[i].lock = NULL;
 			locks[i].addrSpace = NULL;
+			locks[i].isDeleted = false;
 			locks[i].isToBeDeleted = false;
+			locks[i].lockCounter = 0;
 		}
 	}
 }UserLockTable;
 
 extern Lock* userLockTableLock;
 extern UserLockTable userLockTable;
+
+typedef struct _UserCondition
+{
+	Condition*		condition;
+	AddrSpace* 		addrSpace;
+	bool			isToBeDeleted;
+	bool			isDeleted;
+	int				conditionCounter;
+}UserCondition;
+
+typedef struct UserConditionArray
+{
+	UserCondition	conditions[MAX_CVS];
+	BitMap*			conditionBitMap;
+
+	UserConditionArray()
+	{
+		conditionBitMap = new BitMap(MAX_CVS);
+		for(int i=0;i<MAX_CVS;i++)
+		{
+			conditions[i].condition = NULL;
+			conditons[i].addrSpace = NULL;
+			condtions[i].isDeleted = false;
+			conditions[i].isToBeDeleted = false;
+			conditions[i].conditionCounter = 0;
+		}
+	}
+
+}UserConditionTable;
+
+extern Lock* userConditionTableLock;
+extern UserConditionTable userConditionTable;
 
 #endif
 

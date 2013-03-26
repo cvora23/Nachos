@@ -140,13 +140,6 @@ void Fork(void (*func)());
  */
 void Yield();
 
-/**
- *	Initialize lock for synchronization.
- *	debugName useful for debugging.
- *	Lock's WaitQueue should be initialized
- *	initialize currentLockOwner
- *	initialize currentState of the Lock.
- */
 int createLock(char* lockName,int lockNameLen);
 
 void acquireLock(int LockId);
@@ -154,6 +147,16 @@ void acquireLock(int LockId);
 void releaseLock(int LockId);
 
 void detroyLock(int LockId);
+
+int createCondition(char* conditionName,int conditionNameLen);
+
+void signal(int conditionId,int lockId);
+
+void wait(int conditionId,int lockId);
+
+void broadcast(int conditionId,int lockId);
+
+void destroyCondition(int conditionId);
 
 void print(char* buf);
 

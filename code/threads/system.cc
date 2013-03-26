@@ -33,6 +33,9 @@ Machine *machine;	// user program memory and registers
 Lock* userLockTableLock;
 UserLockTable userLockTable;
 
+Lock* userConditionTableLock;
+UserConditionTable userConditionTable;
+
 #endif
 
 #ifdef NETWORK
@@ -155,6 +158,8 @@ Initialize(int argc, char **argv)
     machine = new Machine(debugUserProg);	// this must come first
 
     userLockTableLock = new Lock("userLockTableLock");
+    userConditionTableLock = new Lock("userConditionTableLock");
+
 
 #endif
 

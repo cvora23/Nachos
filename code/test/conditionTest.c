@@ -1,5 +1,5 @@
 /*
- * lockTest.c
+ * conditionTest.c
  *
  *  Created on: Mar 25, 2013
  *      Author: cvora
@@ -7,67 +7,67 @@
 
 #include "syscall.h"
 
-
 void testCase1()
 {
-	int lockId = -1;
+	int conditionId = -1;
 	int i;
-	print("CREATE LOCK SYSTEM CALL TEST\n\n");
+	print("CREATE CONDITION SYSTEM CALL TEST\n\n");
 
-	print("PASSING LOCK NAME LENGTH > MAX_LOCK_NAME \n\n");
-	lockId = createLock((char*)"LockName",400);
+	print("PASSING CONDITION NAME LENGTH > MAX_CV_NAME \n\n");
+	conditionId = createCondition((char*)"ConditionName",400);
 	print("------------------------------------------------------\n");
 
-	print("PASSING LOCK NAME LENGTH < 0 \n\n");
-	lockId = createLock((char*)"LockName",-4);
+	print("PASSING CONDITION NAME LENGTH < 0 \n\n");
+	conditionId = createCondition((char*)"ConditionName",-4);
 	print("------------------------------------------------------\n");
 
 	print("PASSING INVALID VIRTUAL ADDR \n\n");
-	lockId = createLock((char*)0xdeadbeef,10);
+	conditionId = createCondition((char*)0xdeadbeef,10);
 	print("------------------------------------------------------\n");
 
-	print("CREATING MORE number of locks than MAX_LOCKS = 500 \n\n");
-	for(i = 0;i<501;i++)
+	print("CREATING MORE number of Conditions than MAX_CVS = 2000 \n\n");
+	for(i = 0;i<2001;i++)
 	{
-		lockId = createLock((char*)"LockNo",10);
+		conditionId = createCondition((char*)"ConditionNo",10);
 	}
 	print("------------------------------------------------------\n");
 
-	print("CREATING LOCK SUCCESS CASE \n");
-	lockId = createLock((char*)"LockNo",10);
+	print("CREATING CONDITION SUCCESS CASE \n");
+	conditionId = createCondition((char*)"ConditionNo",10);
 	print("------------------------------------------------------\n");
-
 }
 
 void testCase2()
 {
-	int lockId = -1;
+	int lockId = -1,conditionId = -1;
 
-	print("DESTROY LOCK SYSTEM CALL TEST\n\n");
+	print("DESTROY CONDITION SYSTEM CALL TEST\n\n");
 
-	print("PASSING LOCK ID > MAX_LOCK to destroy \n\n");
-	destroyLock(1000);
+	print("PASSING CONDITION ID > MAX_CVS to destroy \n\n");
+	destroyCondition(2001);
 	print("------------------------------------------------------\n");
 
-	print("PASSING LOCK ID < 0 to destroy \n\n");
-	destroyLock(-1);
+	print("PASSING CONDITION ID < 0 to destroy \n\n");
+	destroyCondition(-1);
 	print("------------------------------------------------------\n");
 
-	print("TRYING TO DESTROY A LOCK NOT EVEN CREATED \n\n");
-	destroyLock(0);
+	print("TRYING TO DESTROY A CONDITION NOT EVEN CREATED \n\n");
+	destroyCondition(0);
 	print("------------------------------------------------------\n");
 
-	print("TRYING TO DESTROY A LOCK ALREADY IN USE \n\n");
+	print("TRYING TO DESTROY A CONDITION ALREADY IN USE \n\n");
 	lockId = createLock((char*)"LockName",10);
 	acquireLock(lockId);
-	destroyLock(lockId);
-	releaseLock(lockId);
+	conditionId = createCondition((char*)"ConditionName",10);
+	Wait(conditionId,lockId);
+	Release(lockId);
+	destroyCondition(conditionId);
 	print("------------------------------------------------------\n");
 
 
-	print("DESTROYING LOCK SUCCESS CASE \n");
-	lockId = createLock((char*)"LockName",10);
-	destroyLock(lockId);
+	print("DESTROYING CONDITION SUCCESS CASE \n");
+	conditionId = createCondition((char*)"ConditionName",10);
+	destroyCondition(conditionId);
 	print("------------------------------------------------------\n");
 
 }
@@ -105,40 +105,16 @@ void testCase3()
 	print("------------------------------------------------------\n");
 }
 
-void testCase4()
-{
-	int lockId = -1;
-
-	print("RELEASE LOCK SYSTEM CALL TEST\n\n");
-
-	print("PASSING LOCK ID > MAX_LOCK to release \n\n");
-	releaseLock(1000);
-	print("------------------------------------------------------\n");
-
-	print("PASSING LOCK ID < 0 to release \n\n");
-	releaseLock(-1);
-	print("------------------------------------------------------\n");
-
-	print("TRYING TO release A LOCK NOT EVEN CREATED \n\n");
-	releaseLock(0);
-	print("------------------------------------------------------\n");
-
-	print("RELEASE LOCK SUCCESS CASE \n");
-	lockId = createLock((char*)"LockName",10);
-	acquireLock(lockId);
-	releaseLock(lockId);
-	destroyLock(lockId);
-	print("------------------------------------------------------\n");
-}
-
 int main()
 {
 	int testCaseNo;
 
-	print("1 : CreateLock system call \n");
-	print("2 : DestroyLock system call \n");
-	print("3 : AcquireLock system call \n");
-	print("4 : ReleaseLock system call \n");
+	print("1 : CreateCondition system call \n");
+	print("2 : DestroyCondition system call \n");
+	/**
+	 * \todo: Fork and Exec needed for This test case
+	 * 	print("3 : Wait Signal Broadcast system call \n");
+	 */
 
 	print("Enter your choice \n");
 	testCaseNo = scan();
@@ -160,11 +136,6 @@ int main()
 		case 3:
 		{
 			testCase3();
-		}
-		break;
-		case 4:
-		{
-			testCase4();
 		}
 		break;
 		default:

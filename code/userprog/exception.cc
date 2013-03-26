@@ -279,7 +279,6 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 	}
 
 	userLockTable.locks[lockId].lock = new Lock(buf);
-
 	userLockTable.locks[lockId].addrSpace = currentThread->space;
 	userLockTable.locks[lockId].isDeleted = false;
 	userLockTable.locks[lockId].isToBeDeleted = false;
@@ -365,7 +364,6 @@ void ReleaseLock_Syscall(int lockId)
 		delete userLockTable.locks[lockId].lock;
 		userLockTable.locks[lockId].lock = NULL;
 		userLockTable.locks[lockId].addrSpace = NULL;
-		userLockTable.locks[lockId].lockCounter = 0;
 	}
 
 	userLockTableLock->Release();
@@ -417,6 +415,256 @@ void DestroyLock_Syscall(int lockId)
 	userLockTableLock->Release();
 
 	return;
+}
+
+int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
+{
+	int conditionId;
+
+	if(conditionNameLen<1 || conditionNameLen>MAX_CV_NAME)
+	{
+		printf("ConditionName is invalid \n");
+		return -1;
+	}
+
+	char *buf = new char[conditionNameLen+1];
+
+	if(buf == NULL)
+	{
+		printf("Memory unavailable of the heap \n");
+		return -1;
+	}
+
+	if(vaddr<0 || (vaddr+conditionNameLen)>=(currentThread->space)->addrSpaceSize)
+	{
+		delete [] buf;
+		printf("Invalid Address passed \n");
+		return -1;
+	}
+
+	if(copyin(vaddr,conditionNameLen,buf) == -1)
+	{
+		delete [] buf;
+		return -1;
+	}
+	buf[conditionNameLen] = '\0';
+
+	userConditionTableLock->Acquire();
+	if((conditionId = userConditionTable.lockBitMap->Find()) == -1)
+	{
+		printf("No space for new condition \n");
+		delete[] buf;
+		userConditionTableLock->Release();
+		return -1;
+	}
+
+	userConditionTable.conditions[conditionId].condition = new Condition(buf);
+	userConditionTable.conditions[conditionId].addrSpace = currentThread->space;
+	userConditionTable.conditions[conditionId].isDeleted = false;
+	userConditionTable.conditions[conditionId].isToBeDeleted = false;
+	userConditionTable.conditions[conditionId].conditionCounter = 0;
+
+	userConditionTableLock->Release();
+	return conditionId;
+}
+
+void Wait_Syscall(int conditionId,int lockId)
+{
+	userLockTableLock->Acquire();
+	userConditionTableLock->Acquire();
+
+	if(lockId<0 || lockId>MAX_LOCKS || conditionId<0 || conditionId>MAX_CVS)
+	{
+		printf("Error in Wait System call: lockId or ConditionId out of bounds \n");
+		userLockTableLock->Release();
+		userConditionTableLock->Release();
+		return;
+	}
+
+	if(userLockTable.locks[lockId].lock == NULL ||
+			userLockTable.locks[lockId].isDeleted ||
+			userConditionTable.conditions[conditionId].condition == NULL ||
+			userConditionTable.conditions[conditionId].isDeleted)
+	{
+		printf("Error in Wait System call: lock or CV is not valid \n");
+		userLockTableLock->Release();
+		userConditionTableLock->Release();
+		return;
+	}
+
+	if(userLockTable.locks[lockId].addrSpace != currentThread->space ||
+			userConditionTable.conditions[conditionId].addrSpace != currentThread->space)
+	{
+		printf("Error in Wait System call: Lock or CV does not belong to current thread address space\n");
+		userLockTableLock->Release();
+		userConditionTableLock->Release();
+		return;
+	}
+
+	userConditionTable.conditions[conditionId].conditionCounter++;
+	userLockTableLock->Release();
+	userConditionTableLock->Release();
+
+	(userConditionTable.conditions[conditionId].condition)->Wait(userLockTable.locks[lockId].lock);
+	return;
+}
+
+void Signal_Syscall(int conditionId,int lockId)
+{
+	userLockTableLock->Acquire();
+	userConditionTableLock->Acquire();
+
+	if(lockId<0 || lockId>MAX_LOCKS || conditionId<0 || conditionId>MAX_CVS)
+	{
+		printf("Error in Signal System call: lockId or ConditionId out of bounds \n");
+		userLockTableLock->Release();
+		userConditionTableLock->Release();
+		return;
+	}
+
+	if(userLockTable.locks[lockId].lock == NULL ||
+			userLockTable.locks[lockId].isDeleted ||
+			userConditionTable.conditions[conditionId].condition == NULL ||
+			userConditionTable.conditions[conditionId].isDeleted)
+	{
+		printf("Error in Signal System call: lock or CV is not valid \n");
+		userLockTableLock->Release();
+		userConditionTableLock->Release();
+		return;
+	}
+
+	if(userLockTable.locks[lockId].addrSpace != currentThread->space ||
+			userConditionTable.conditions[conditionId].addrSpace != currentThread->space)
+	{
+		printf("Error in Signal System call: Lock or CV does not belong to current thread address space\n");
+		userLockTableLock->Release();
+		userConditionTableLock->Release();
+		return;
+	}
+
+	(userConditionTable.conditions[conditionId].condition)->Signal(userLockTable.locks[lockId].lock);
+
+	if(userConditionTable.conditions[conditionId].conditionCounter>0)
+	{
+		userConditionTable.conditions[conditionId].conditionCounter--;
+	}
+
+	if(userConditionTable.conditions[conditionId].isToBeDeleted &&
+			userConditionTable.conditions[conditionId].conditionCounter == 0)
+	{
+		userConditionTable.conditionBitMap->Clear(conditionId);
+		delete userConditionTable.conditions[condition].condition;
+		userConditionTable.conditions[condition].condition = NULL;
+		userConditionTable.conditions[condition].isDeleted = true;
+		userConditionTable.conditions[condition].isToBeDeleted = false;
+	}
+	userLockTableLock->Release();
+	userConditionTableLock->Release();
+	return;
+}
+
+void Broadcast_Syscall(int conditionId,int lockId)
+{
+	userLockTableLock->Acquire();
+	userConditionTableLock->Acquire();
+
+	if(lockId<0 || lockId>MAX_LOCKS || conditionId<0 || conditionId>MAX_CVS)
+	{
+		printf("Error in Broadcast System call: lockId or ConditionId out of bounds \n");
+		userLockTableLock->Release();
+		userConditionTableLock->Release();
+		return;
+	}
+
+	if(userLockTable.locks[lockId].lock == NULL ||
+			userLockTable.locks[lockId].isDeleted ||
+			userConditionTable.conditions[conditionId].condition == NULL ||
+			userConditionTable.conditions[conditionId].isDeleted)
+	{
+		printf("Error in Broadcast System call: lock or CV is not valid \n");
+		userLockTableLock->Release();
+		userConditionTableLock->Release();
+		return;
+	}
+
+	if(userLockTable.locks[lockId].addrSpace != currentThread->space ||
+			userConditionTable.conditions[conditionId].addrSpace != currentThread->space)
+	{
+		printf("Error in Broadcast System call: Lock or CV does not belong to current thread address space\n");
+		userLockTableLock->Release();
+		userConditionTableLock->Release();
+		return;
+	}
+
+	if(userConditionTable.conditions[conditionId].conditionCounter>0)
+	{
+		userConditionTable.conditions[conditionId].conditionCounter = 0;
+	}
+
+	(userConditionTable.conditions[conditionId].condition)->Broadcast(userLockTable.locks[lockId].lock);
+
+
+	if(userConditionTable.conditions[conditionId].isToBeDeleted &&
+			userConditionTable.conditions[conditionId].conditionCounter == 0)
+	{
+		userConditionTable.conditionBitMap->Clear(conditionId);
+		delete userConditionTable.conditions[condition].condition;
+		userConditionTable.conditions[condition].condition = NULL;
+		userConditionTable.conditions[condition].isDeleted = true;
+		userConditionTable.conditions[condition].isToBeDeleted = false;
+	}
+	userLockTableLock->Release();
+	userConditionTableLock->Release();
+	return;
+}
+
+void DestroyCondition_Syscall(int conditionId)
+{
+	int conditionId;
+
+	userConditionTableLock->Acquire();
+	if(conditionId<0 || conditionId>MAX_CVS)
+	{
+		printf("Trying to destroy condition on invalid conditionId \n");
+		userConditionTableLock->Release();
+		return;
+	}
+
+	if(userConditionTable.conditions[conditionId].condition == NULL ||
+			userConditionTable.conditions[conditionId].isDeleted)
+	{
+		printf("Tring to destroy condition on invalid conditionId. conditionId does not exist \n");
+		userConditionTableLock->Release();
+		return;
+	}
+
+	if(userConditionTable.conditions[conditionId].addrSpace != currentThread->space)
+	{
+		printf("Address space mismatch.. Trying to destroy Condition out of address space \n");
+		userConditionTableLock->Release();
+		return;
+	}
+
+	userConditionTable.conditions[conditionId].isToBeDeleted = true;
+	if(userConditionTable.conditions[conditionId].conditionCounter > 0)
+	{
+		printf("Cannot Delete Condition. Its already in USE \n");
+		userConditionTableLock->Release();
+		return;
+	}
+
+	userConditionTable.lockBitMap->Clear(conditionId);
+	userConditionTable.conditions[conditionId].isDeleted = true;
+	userConditionTable.conditions[conditionId].isToBeDeleted = false;
+	delete userConditionTable.conditions[conditionId].condition;
+	userConditionTable.conditions[conditionId].condition = NULL;
+	userConditionTable.conditions[conditionId].addrSpace = NULL;
+	userConditionTable.conditions[conditionId].conditionCounter = 0;
+
+	userConditionTableLock->Release();
+
+	return;
+
 }
 
 void Print_Syscall(unsigned int vaddr)
@@ -505,6 +753,41 @@ void ExceptionHandler(ExceptionType which) {
 	    {
 	    	DEBUG('a',"Destroy Lock syscall \n");
 	    	DestroyLock_Syscall(machine->ReadRegister(4));
+	    }
+	    break;
+
+	    case SC_CreateCondition:
+	    {
+	    	DEBUG('a',"Create Condition syscall \n");
+	    	CreateCondition_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    }
+	    break;
+
+	    case SC_DestroyCondition:
+	    {
+	    	DEBUG('a',"Destroy Condition syscall \n");
+	    	DestroyCondition_Syscall(machine->ReadRegister(4));
+	    }
+	    break;
+
+	    case SC_Signal:
+	    {
+	    	DEBUG('a',"Signal syscall \n");
+	    	Signal_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    }
+	    break;
+
+	    case SC_Wait:
+	    {
+	    	DEBUG('a',"Wait syscall \n");
+	    	Wait_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    }
+	    break;
+
+	    case SC_Broadcast:
+	    {
+	    	DEBUG('a',"Broadcast syscall \n");
+	    	Broadcast_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
 	    }
 	    break;
 
