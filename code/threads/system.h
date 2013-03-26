@@ -88,8 +88,8 @@ typedef struct UserConditionArray
 		for(int i=0;i<MAX_CVS;i++)
 		{
 			conditions[i].condition = NULL;
-			conditons[i].addrSpace = NULL;
-			condtions[i].isDeleted = false;
+			conditions[i].addrSpace = NULL;
+			conditions[i].isDeleted = false;
 			conditions[i].isToBeDeleted = false;
 			conditions[i].conditionCounter = 0;
 		}
