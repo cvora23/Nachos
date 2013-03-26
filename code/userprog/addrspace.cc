@@ -151,7 +151,9 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
     // zero out the entire address space, to zero the uninitialized data segment
     // and the stack segment
     //
+#if 0
     bzero(machine->mainMemory, size);
+#endif
 
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
 					numPages, size);
@@ -174,7 +176,8 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 		{
 			pageTable[i].physicalPage = i;
 		}
-		DEBUG('a',"Initializing PHYSICAL PAGE = %d, VIRTUAL PAGE = %d \n",pageTable[i].physicalPage);
+		bzero(machine->mainMemory + pageTable[i].physicalPage* PageSize,PageSize);
+		DEBUG('a',"Initializing PHYSICAL PAGE = %d, VIRTUAL PAGE = %d \n",pageTable[i].physicalPage,i);
 		pageTable[i].valid = TRUE;
 		pageTable[i].use = FALSE;
 		pageTable[i].dirty = FALSE;
