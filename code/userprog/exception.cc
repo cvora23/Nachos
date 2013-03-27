@@ -856,7 +856,7 @@ void Exit_Syscall(int status)
 
 	if((processTableBitMap->NumClear() == (MAX_PROCESS -1)) &&
 			((processTableArray[(currentThread->space)->processId].totalThreads) == 1) &&
-			((processTableArray[(currentThread->space)->processId].activeThreadsCounter) == 1))
+			((processTableArray[(currentThread->space)->processId].activeThreadCounter) == 1))
 	{
 		printf("Exit_Syscall : Process %d Thread %d : Last thread of last process exiting.... BYE BYE NACHOS !!!!\n",
 				currentThread->space->processId,currentThread->threadId);
@@ -864,7 +864,7 @@ void Exit_Syscall(int status)
 	}
 
 	else if(((processTableArray[(currentThread->space)->processId].totalThreads) == 1) &&
-			((processTableArray[(currentThread->space)->processId].activeThreadsCounter) == 1))
+			((processTableArray[(currentThread->space)->processId].activeThreadCounter) == 1))
 	{
 		int numPages = (currentThread->space)->numPages;
 		AddrSpace *oldAddrSpace = currentThread->space;
