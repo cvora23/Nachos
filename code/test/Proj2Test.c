@@ -183,7 +183,7 @@ void testCase4()
 /**
  * The testcases to prove the correctness of the "Exit" implementation
  */
-void testcase5()
+void testCase5()
 {
 	int i,rv;
 
