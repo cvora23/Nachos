@@ -690,7 +690,7 @@ void newKernelThread(unsigned int vaddr)
 
 	machine->WriteRegister(NextPCReg,vaddr+4);
 
-    machine->WriteRegister(StackReg, (currentThread->stackRegVpage) * PageSize * PageSize - 16);
+    machine->WriteRegister(StackReg, (currentThread->stackRegVirtualPage) * PageSize - 16);
 
     (currentThread->space)->RestoreState();
 
@@ -755,7 +755,7 @@ void Fork_Syscall(unsigned int vaddr)
     tempPageTableForDel = (currentThread->space)->pageTable;
     (currentThread->space)->pageTable = tempPageTable;
 
-    delete [] tempPageForDel;
+    delete [] tempPageTableForDel;
 
     (currentThread->space)->RestoreState();
 
@@ -784,7 +784,7 @@ void Fork_Syscall(unsigned int vaddr)
 
 void newExecProcess(unsigned int vaddr)
 {
-	currentThread->space->initRegisters();
+	currentThread->space->InitRegisters();
 	currentThread->space->RestoreState();
 
 	machine->Run();
@@ -829,7 +829,7 @@ SpaceId Exec_Syscall(unsigned int vaddr,int len)
 
 	Thread* firstNewThreadForExecProcess = new Thread("firstNewThreadForExecProcess");
 	firstNewThreadForExecProcess->space = new AddrSpace(executable);
-	firstNewThreadForExecProcess->stackRegVPage = (firstThreadUserProcess->space)->numPages;
+	firstNewThreadForExecProcess->stackRegVirtualPage = (firstNewThreadForExecProcess->space)->numPages;
 
 	delete executable;
 	delete [] execBuf;
@@ -855,16 +855,16 @@ void Exit_Syscall(int status)
 	processTableAccessLock->Acquire();
 
 	if((processTableBitMap->NumClear() == (MAX_PROCESS -1)) &&
-			((processTable[(currentThread->space)->processId].totalThreads) == 1) &&
-			((processTable[(currentThread->space)->processId].activeThreadsCounter) == 1))
+			((processTableArray[(currentThread->space)->processId].totalThreads) == 1) &&
+			((processTableArray[(currentThread->space)->processId].activeThreadsCounter) == 1))
 	{
 		printf("Exit_Syscall : Process %d Thread %d : Last thread of last process exiting.... BYE BYE NACHOS !!!!\n",
 				currentThread->space->processId,currentThread->threadId);
 		interrupt->Halt();
 	}
 
-	else if(((processTable[(currentThread->space)->processId].totalThreads) == 1) &&
-			((processTable[(currentThread->space)->processId].activeThreadsCounter) == 1))
+	else if(((processTableArray[(currentThread->space)->processId].totalThreads) == 1) &&
+			((processTableArray[(currentThread->space)->processId].activeThreadsCounter) == 1))
 	{
 		int numPages = (currentThread->space)->numPages;
 		AddrSpace *oldAddrSpace = currentThread->space;
@@ -893,16 +893,16 @@ void Exit_Syscall(int status)
 
 		userLockTableLock->Acquire();
 
-		for(int lockId = 0;lockId<MAX_LOCS;lockId++)
+		for(int lockId = 0;lockId<MAX_LOCKS;lockId++)
 		{
 			if((userLockTable.lockBitMap->Test(lockId)) &&
-					(userLockTableLock.locks[lockId].addrSpace == oldAddrSpace))
+					(userLockTable.locks[lockId].addrSpace == oldAddrSpace))
 			{
 				DestroyLock_Syscall(lockId);
 			}
 		}
 
-		userLockTable->Release();
+		userLockTableLock->Release();
 
 		userConditionTableLock->Acquire();
 
@@ -923,8 +923,8 @@ void Exit_Syscall(int status)
 	else
 	{
 		(currentThread->space)->pageTableLock->Acquire();
-		proccessTable[(currentThread->space)->processId].activeThreadCounter--;
-		proccessTable[(currentThread->space)->processId].totalThreads--;
+		processTableArray[(currentThread->space)->processId].activeThreadCounter--;
+		processTableArray[(currentThread->space)->processId].totalThreads--;
 
 		mainMemoryAccessLock->Acquire();
 
@@ -1081,7 +1081,7 @@ void ExceptionHandler(ExceptionType which) {
 	    case SC_Exit:
 	    {
 	    	DEBUG('a',"Exit syscall \n");
-	    	Exit_syscall(machine->ReadRegister(4));
+	    	Exit_Syscall(machine->ReadRegister(4));
 	    }
 	    break;
 	}
