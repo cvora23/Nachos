@@ -32,12 +32,21 @@ extern Timer *timer;				// the hardware alarm clock
 
 #ifdef USER_PROGRAM
 
+
+
 #include "machine.h"
 
 extern Machine* machine;	// user program memory and registers
 
 #define MAX_LOCKS	500
 #define MAX_CVS		2000
+#define MAX_PROCESS 10
+
+#define MAXFILENAME 				256
+#define MAX_LOCK_NAME 				256
+#define MAX_CV_NAME					256
+#define MAX_CHAR_PRINTF				256
+#define MAX_PROCESS_NAME_LEN		256
 
 typedef struct _UserLock
 {
@@ -105,6 +114,19 @@ extern UserConditionTable userConditionTable;
 extern int 		totalPagesReserved;
 extern Lock* 	mainMemoryAccessLock;
 extern BitMap*	mainMemoryBitMap;
+
+
+typedef struct _ProcessTable
+{
+	AddrSpace*	addrSpace;
+	int			activeThreadCounter;
+	int			totalThreads;
+	int			threadCounter;
+}ProcessTable;
+
+extern ProcessTable processTableArray[MAX_PROCESS];
+extern Lock* processTableAccessLock;
+extern BitMap* processTableBitMap;
 
 #endif
 

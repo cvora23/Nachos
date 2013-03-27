@@ -684,6 +684,270 @@ int Scan_Syscall()
 	return scanVal;
 }
 
+void newKernelThread(unsigned int vaddr)
+{
+	machine->WriteRegister(PCReg,vaddr);
+
+	machine->WriteRegister(NextPCReg,vaddr+4);
+
+    machine->WriteRegister(StackReg, (currentThread->stackRegVpage) * PageSize * PageSize - 16);
+
+    (currentThread->space)->RestoreState();
+
+    machine->Run();
+
+    ASSERT(false);
+}
+
+void Fork_Syscall(unsigned int vaddr)
+{
+	int numPages;
+	TranslationEntry* tempPageTableForDel;
+
+	if(vaddr > currentThread->space->addrSpaceSize)
+	{
+		DEBUG('a',"Fork ERROR: Invalid virtual address passed \n");
+		return;
+	}
+
+	processTableAccessLock->Acquire();
+
+	(currentThread->space)->pageTableLock->Acquire();
+
+	numPages = (currentThread->space)->numPages;
+
+	TranslationEntry* tempPageTable = new TranslationEntry[numPages + 8];
+
+    for (int i = 0; i < numPages; i++)
+    {
+    	tempPageTable[i].virtualPage = (currentThread->space)->pageTable[i].virtualPage;
+    	tempPageTable[i].physicalPage = (currentThread->space)->pageTable[i].physicalPage;
+		tempPageTable[i].valid = (currentThread->space)->pageTable[i].valid ;
+		tempPageTable[i].use = (currentThread->space)->pageTable[i].use ;
+		tempPageTable[i].dirty = (currentThread->space)->pageTable[i].dirty ;
+		tempPageTable[i].readOnly = (currentThread->space)->pageTable[i].readOnly ;
+						// if the code segment was entirely on
+						// a separate page, we could set its
+						// pages to be read-only
+    }
+
+	mainMemoryAccessLock->Acquire();
+
+    for(int i = numPages;i<numPages+8;i++)
+    {
+
+
+    	tempPageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
+    	tempPageTable[i].physicalPage = mainMemoryBitMap->Find();
+    	tempPageTable[i].valid = TRUE;
+    	tempPageTable[i].use = FALSE;
+    	tempPageTable[i].dirty = FALSE;
+    	tempPageTable[i].readOnly = FALSE;  // if the code segment was entirely on
+						// a separate page, we could set its
+						// pages to be read-only
+    }
+
+	mainMemoryAccessLock->Release();
+
+    (currentThread->space)->numPages = numPages + 8;
+    (currentThread->space)->addrSpaceSize = (currentThread->space)->numPages * PageSize;
+
+    tempPageTableForDel = (currentThread->space)->pageTable;
+    (currentThread->space)->pageTable = tempPageTable;
+
+    delete [] tempPageForDel;
+
+    (currentThread->space)->RestoreState();
+
+    Thread* newForkedThread = new Thread("newForkedThread");
+    newForkedThread->space = currentThread->space;
+    newForkedThread->stackRegVirtualPage = (newForkedThread->space)->numPages;
+
+    (currentThread->space)->pageTableLock->Release();
+
+
+    newForkedThread->threadId = processTableArray[(currentThread->space)->processId].threadCounter;
+
+    DEBUG('a',"Process %d 's Thread %d forked a New Thread %d \n",(currentThread->space)->processId,
+    		currentThread->threadId,newForkedThread->threadId);
+
+    processTableArray[(currentThread->space)->processId].activeThreadCounter++;
+    processTableArray[(currentThread->space)->processId].totalThreads++;
+    processTableArray[(currentThread->space)->processId].threadCounter++;
+
+	processTableAccessLock->Release();
+
+	newForkedThread->Fork((VoidFunctionPtr)newKernelThread,vaddr);
+
+	return;
+}
+
+void newExecProcess(unsigned int vaddr)
+{
+	currentThread->space->initRegisters();
+	currentThread->space->RestoreState();
+
+	machine->Run();
+
+	ASSERT(false);
+}
+
+SpaceId Exec_Syscall(unsigned int vaddr,int len)
+{
+	char* execBuf;
+
+	if(len <1 || len>MAX_PROCESS_NAME_LEN)
+	{
+		printf("Exe_Syscall : Illegal Executable file name \n");
+	}
+	execBuf = new char[len+1];
+
+	if(execBuf == NULL)
+	{
+		printf("Exec_Syscall : Temp Buffer cant be created \n");
+		return -1;
+	}
+
+	if(copyin(vaddr,len,execBuf) == -1)
+	{
+		printf("Exec_Syscall : Bad Virtual Address \n");
+		delete [] execBuf;
+		return -1;
+	}
+	execBuf[len] = '\0';
+
+	OpenFile* executable = fileSystem->Open(execBuf);
+
+	AddrSpace* space;
+
+	if(executable == NULL)
+	{
+		printf("Exec_Syscall : Unable to open executable file passed \n");
+		delete [] execBuf;
+		return -1;
+	}
+
+	Thread* firstNewThreadForExecProcess = new Thread("firstNewThreadForExecProcess");
+	firstNewThreadForExecProcess->space = new AddrSpace(executable);
+	firstNewThreadForExecProcess->stackRegVPage = (firstThreadUserProcess->space)->numPages;
+
+	delete executable;
+	delete [] execBuf;
+
+	DEBUG('a',"Process %d Thread %d Exec_Syscall: New Process created with Process Id \n",
+			currentThread->space->processId,currentThread->threadId,
+			firstNewThreadForExecProcess->space->processId);
+
+	firstNewThreadForExecProcess->Fork((VoidFunctionPtr)newExecProcess,vaddr);
+
+	return firstNewThreadForExecProcess->space->processId;
+}
+
+void Exit_Syscall(int status)
+{
+	int physPageToClear;
+
+	if(status != 0)
+	{
+		printf("User Program Result Returned %d \n",status);
+	}
+
+	processTableAccessLock->Acquire();
+
+	if((processTableBitMap->NumClear() == (MAX_PROCESS -1)) &&
+			((processTable[(currentThread->space)->processId].totalThreads) == 1) &&
+			((processTable[(currentThread->space)->processId].activeThreadsCounter) == 1))
+	{
+		printf("Exit_Syscall : Process %d Thread %d : Last thread of last process exiting.... BYE BYE NACHOS !!!!\n",
+				currentThread->space->processId,currentThread->threadId);
+		interrupt->Halt();
+	}
+
+	else if(((processTable[(currentThread->space)->processId].totalThreads) == 1) &&
+			((processTable[(currentThread->space)->processId].activeThreadsCounter) == 1))
+	{
+		int numPages = (currentThread->space)->numPages;
+		AddrSpace *oldAddrSpace = currentThread->space;
+
+		(currentThread->space)->pageTableLock->Acquire();
+		mainMemoryAccessLock->Acquire();
+
+		for(int i=0;i<numPages;i++)
+		{
+			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
+			if(physPageToClear != -1)
+			{
+				mainMemoryBitMap->Clear(physPageToClear);
+			}
+		}
+
+		mainMemoryAccessLock->Release();
+
+		processTableBitMap->Clear((currentThread->space)->processId);
+
+		(currentThread->space)->pageTableLock->Release();
+
+		delete currentThread->space;
+
+		processTableAccessLock->Release();
+
+		userLockTableLock->Acquire();
+
+		for(int lockId = 0;lockId<MAX_LOCS;lockId++)
+		{
+			if((userLockTable.lockBitMap->Test(lockId)) &&
+					(userLockTableLock.locks[lockId].addrSpace == oldAddrSpace))
+			{
+				DestroyLock_Syscall(lockId);
+			}
+		}
+
+		userLockTable->Release();
+
+		userConditionTableLock->Acquire();
+
+		for(int cvId = 0;cvId<MAX_CVS;cvId++)
+		{
+			if((userConditionTable.conditionBitMap->Test(cvId)) &&
+					(userConditionTable.conditions[cvId].addrSpace == oldAddrSpace))
+			{
+				DestroyCondition_Syscall(cvId);
+			}
+		}
+
+		userConditionTableLock->Release();
+
+		currentThread->Finish();
+	}
+
+	else
+	{
+		(currentThread->space)->pageTableLock->Acquire();
+		proccessTable[(currentThread->space)->processId].activeThreadCounter--;
+		proccessTable[(currentThread->space)->processId].totalThreads--;
+
+		mainMemoryAccessLock->Acquire();
+
+		for(int i = (currentThread->stackRegVirtualPage - 8);i<currentThread->stackRegVirtualPage;i++)
+		{
+			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
+			if(physPageToClear != -1)
+			{
+				mainMemoryBitMap->Clear(physPageToClear);
+			}
+		}
+
+		mainMemoryAccessLock->Release();
+
+		(currentThread->space)->pageTableLock->Release();
+
+		processTableAccessLock->Release();
+
+		currentThread->Finish();
+	}
+
+}
+
 void ExceptionHandler(ExceptionType which) {
     int type = machine->ReadRegister(2); // Which syscall?
     int rv=0; 	// the return value from a syscall
@@ -800,6 +1064,24 @@ void ExceptionHandler(ExceptionType which) {
 	    {
 	    	DEBUG('a',"Scan syscall \n");
 	    	rv = Scan_Syscall();
+	    }
+	    break;
+	    case SC_Fork:
+	    {
+	    	DEBUG('a',"Fork syscall \n");
+	    	Fork_Syscall(machine->ReadRegister(4));
+	    }
+	    break;
+	    case SC_Exec:
+	    {
+	    	DEBUG('a',"Exec syscall \n");
+	    	rv = Exec_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    }
+	    break;
+	    case SC_Exit:
+	    {
+	    	DEBUG('a',"Exit syscall \n");
+	    	Exit_syscall(machine->ReadRegister(4));
 	    }
 	    break;
 	}

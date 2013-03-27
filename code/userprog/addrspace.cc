@@ -121,6 +121,25 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 {
     NoffHeader noffH;
     unsigned int size;
+    int newProcessId;
+
+    processTableAccessLock->Acquire();
+
+    if((newProcessId = processTableBitMap->Find()) == -1)
+	{
+    	printf("SYSTEM DOES NOT SUPPORT MORE THAN %d PROCESSES AT A TIME TO BE LOADED OR RUNNING.... \n",
+    			MAX_PROCESS);
+    	interrupt->Halt();
+	}
+    processId = newProcessId;
+    processTableArray[processId].addrSpace = this;
+    processTableArray[processId].totalThreads = 1;
+    processTableArray[processId].threadCounter = 1;
+    processTableArray[processId].activeThreadCounter = 1;
+
+    processTableAccessLock->Release();
+
+    pageTableLock = new Lock("pageTableLock");
 
     // Don't allocate the input or output to disk files
     fileTable.Put(0);
@@ -157,6 +176,9 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
 					numPages, size);
+
+    pageTableLock->Acquire();
+
 // first, set up the translation 
     pageTable = new TranslationEntry[numPages];
     for (int i = 0; i < numPages; i++)
@@ -187,6 +209,8 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 		mainMemoryAccessLock->Release();
 
     }
+
+    pageTableLock->Release();
 
 // then, copy in the code and data segments into memory
 

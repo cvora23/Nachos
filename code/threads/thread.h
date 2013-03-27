@@ -126,6 +126,9 @@ class Thread {
     void SaveUserState();		// save user-level register state
     void RestoreUserState();		// restore user-level register state
 
+    int threadId;
+    int stackRegVirtualPage;
+
     AddrSpace *space;			// User code this thread is running.
 #endif
 };

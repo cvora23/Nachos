@@ -35,17 +35,18 @@ class AddrSpace {
     void SaveState();			// Save/restore address space-specific
     void RestoreState();		// info on a context switch
     Table fileTable;			// Table of openfiles
-    unsigned int addrSpaceSize; // Total size of the addrSpace
 
- private:
+    unsigned int addrSpaceSize; // Total size of the addrSpace
+    int processId;
 
     int numCodePages;
     int numCodeDataPages;
 
+    Lock *pageTableLock;
     TranslationEntry *pageTable;	// Assume linear page table translation
-					// for now!
-    unsigned int numPages;		// Number of pages in the virtual 
-								// address space
+    								// for now!
+    unsigned int numPages;			// Number of pages in the virtual
+									// address space
 };
 
 #endif // ADDRSPACE_H

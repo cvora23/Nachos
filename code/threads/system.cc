@@ -40,6 +40,10 @@ int totalPagesReserved;
 Lock* mainMemoryAccessLock;
 BitMap*	mainMemoryBitMap;
 
+ProcessTable processTableArray[MAX_PROCESS];
+Lock* processTableAccessLock;
+BitMap* processTableBitMap;
+
 #endif
 
 #ifdef NETWORK
@@ -168,6 +172,9 @@ Initialize(int argc, char **argv)
     totalPagesReserved = 0;
     mainMemoryAccessLock = new Lock("mainMemoryAccessLock");
     mainMemoryBitMap = new BitMap(NumPhysPages);
+
+    processTableAccessLock = new Lock("processTableAccessLock");
+    processTableBitMap = new BitMap(MAX_PROCESS);
 
 #endif
 
