@@ -11,7 +11,7 @@ int lockId=-1;
 
 int main()
 {
-	Print("Execution Started\n");
+	print("Execution Started\n");
 	lockId = CreateLock((char *)"testlock",8);
 	Acquire(lockId);
 	Release(lockId);

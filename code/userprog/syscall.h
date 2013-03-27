@@ -40,6 +40,8 @@
 #define SC_DestroyCondition 		19
 #define SC_Print					20
 #define SC_Scan						21
+#define SC_Print1					22
+#define SC_Print2					23
 
 #ifndef IN_ASM
 
@@ -154,6 +156,10 @@ void broadcast(int conditionId,int lockId);
 void destroyCondition(int conditionId);
 
 void print(char* buf);
+
+void print1(char* buf,int arg1);
+
+void print2(char* buf,int arg1,int arg2);
 
 int scan();
 

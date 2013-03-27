@@ -46,27 +46,27 @@ int threadID=0;
 void testfunc()
 {
 	int myID;
-	Acquire(lockNumber1);
+	acquireLock(lockNumber1);
 	myID=threadID;
 	threadID=threadID+1;
-	Print2("Thread : %d is waiting on lockId : %d \n",myID,lockNumber1);
+	print2("Thread : %d is waiting on lockId : %d \n",myID,lockNumber1);
 	threadsWaiting=threadsWaiting+1;
-	Wait(cvNumber1,lockNumber1);
-	Print1("Thread %d Coming Out of Wait\n",myID);
-	Release(lockNumber1);
+	wait(cvNumber1,lockNumber1);
+	print1("Thread %d Coming Out of Wait\n",myID);
+	releaseLock(lockNumber1);
 	Exit(0);
 }
 
 void testfunc1()
 {
 	int myID;
-	Acquire(lockNumber1);
+	acquireLock(lockNumber1);
 	myID=threadID;
 	threadID=threadID+1;
-	Print1("Thread : %d to send Signal\n",myID);
-	Signal(cvNumber1,lockNumber1);
+	print1("Thread : %d to send Signal\n",myID);
+	signal(cvNumber1,lockNumber1);
 	threadsWaiting=threadsWaiting-1;
-	Release(lockNumber1);
+	releaseLock(lockNumber1);
 	Exit(0);
 
 }
@@ -74,12 +74,12 @@ void testfunc1()
 void testfunc2()
 {
 	int myID;
-	Acquire(lockNumber1);
+	acquireLock(lockNumber1);
 	myID=threadID;
 	threadID=threadID+1;
-	Print2("Thread : %d to send Broadcast to %d more waiting threads\n",myID,threadsWaiting);
-	Broadcast(cvNumber1,lockNumber1);
-	Release(lockNumber1);
+	print2("Thread : %d to send Broadcast to %d more waiting threads\n",myID,threadsWaiting);
+	broadcast(cvNumber1,lockNumber1);
+	releaseLock(lockNumber1);
 	Exit(0);
 
 }
@@ -94,19 +94,19 @@ void testCase2()
 	print("WAIT/SIGNAL/BROADCAST SYSTEM CALL TEST \n");
 
 	print(" WAITING on invalid LOCK/CONDITION .. Passing -VE CONDITION ID and LOCK ID\n");
-	Wait(negativeCVId,negativeLockId);
+	wait(negativeCVId,negativeLockId);
 	print(" WAITING on invalid LOCK/CONDITION .. Passing CONDITION ID > MAX_CVS and LOCK ID > MAX_LOCKS\n");
-	Wait(hugeCVId,hugeLockId);
+	wait(hugeCVId,hugeLockId);
 
 	print(" SIGNAL on invalid LOCK/CONDITION .. Passing -VE CONDITION ID and LOCK ID\n");
-	Signal(negativeCVId,negativeLockId);
+	signal(negativeCVId,negativeLockId);
 	print(" SIGNAL on invalid LOCK/CONDITION .. Passing CONDITION ID > MAX_CVS and LOCK ID > MAX_LOCKS\n");
-	Signal(hugeCVId,hugeLockId);
+	signal(hugeCVId,hugeLockId);
 
 	print(" BROADCAST on invalid LOCK/CONDITION .. Passing -VE CONDITION ID and LOCK ID\n");
-	Broadcast(negativeCVId,negativeLockId);
+	broadcast(negativeCVId,negativeLockId);
 	print(" BROADCAST on invalid LOCK/CONDITION .. Passing CONDITION ID > MAX_CVS and LOCK ID > MAX_LOCKS\n");
-	Broadcast(hugeCVId,hugeLockId);
+	broadcast(hugeCVId,hugeLockId);
 
 	print("SIGNAL , BROADCAST, WAIT SUCCESS CASE\n");
 	print("FORKING THREE THREADS TO SIMULATE Wait/Signal/Broadcast System calls \n");
@@ -132,7 +132,7 @@ void testCase2()
 
 void forktest()
 {
-	Print("Inside the forked function\n");
+	print("Inside the forked function\n");
 	Exit(0);
 }
 
@@ -158,22 +158,22 @@ void testCase3()
 void testCase4()
 {
 	int rv;
-	Print("EXEC SYSTEM CALL TEST\n\n");
-	Print("--------------------------------------------------------\n");
-	Print("NEGATIVE TEST CASES\n");
-	Print("--------------------------------------------------------\n");
+	print("EXEC SYSTEM CALL TEST\n\n");
+	print("--------------------------------------------------------\n");
+	print("NEGATIVE TEST CASES\n");
+	print("--------------------------------------------------------\n");
 
-	Print("1.Invalid Call:\nFile name provided to the syscall was invalid\n");
+	print("1.Invalid Call:\nFile name provided to the syscall was invalid\n");
 	rv = Exec("../test/dudenoway",14);
-	Print("--------------------------------------------------------\n");
+	print("--------------------------------------------------------\n");
 
-	Print("2.Invalid Address-space used:\nAddress-space used is out of the range\n");
+	print("2.Invalid Address-space used:\nAddress-space used is out of the range\n");
 	rv = Exec((char *)0xdeadbeef,10);
 
-	Print("--------------------------------------------------------\n");
-	Print("POSITIVE TEST CASES\n");
-	Print("--------------------------------------------------------\n");
-	Print("1.Executing Executables\nThe same executable is twice executed\n\n");
+	print("--------------------------------------------------------\n");
+	print("POSITIVE TEST CASES\n");
+	print("--------------------------------------------------------\n");
+	print("1.Executing Executables\nThe same executable is twice executed\n\n");
 	rv = Exec("../test/exec",12);
 	rv = Exec("../test/exec",12);
 	Exit(0);
@@ -187,18 +187,18 @@ void testcase5()
 {
 	int i,rv;
 
-	Print("EXIT SYSTEM CALL TEST\n\n");
-	Print("--------------------------------------------------------\n");
-	Print("POSITIVE TEST CASES\n");
-	Print("--------------------------------------------------------\n");
-	Print("1.Exiting a Last Thread in Process\nSimulating Last thread in Exiting process\n\n");
+	print("EXIT SYSTEM CALL TEST\n\n");
+	print("--------------------------------------------------------\n");
+	print("POSITIVE TEST CASES\n");
+	print("--------------------------------------------------------\n");
+	print("1.Exiting a Last Thread in Process\nSimulating Last thread in Exiting process\n\n");
 	rv = Exec("../test/exec",12);
 	for(i=0;i<10;i++)
 	{
 		Yield();
 	}
-	Print("--------------------------------------------------------\n");
-	Print("2. Exiting a Last Thread in Last Process\nSimulating Last thread in Last process\n\n");
+	print("--------------------------------------------------------\n");
+	print("2. Exiting a Last Thread in Last Process\nSimulating Last thread in Last process\n\n");
 	Exit(0);
 }
 

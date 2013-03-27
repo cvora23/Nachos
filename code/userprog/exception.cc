@@ -676,6 +676,26 @@ void Print_Syscall(unsigned int vaddr)
 	printf(printBuf);
 }
 
+void Print1_Syscall(unsigned int vaddr,int arg1)
+{
+	char printBuf[MAX_CHAR_PRINTF];
+	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1){
+		printf("%s: Bad Virtual address\n",currentThread->getName());
+		return;
+	}
+	printf(printBuf, arg1);
+}
+
+void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
+{
+	char printBuf[MAX_CHAR_PRINTF];
+	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1){
+		printf("%s: Bad Virtual address\n",currentThread->getName());
+		return;
+	}
+	printf(printBuf, arg1, arg2);
+}
+
 int Scan_Syscall()
 {
 	int scanVal;
@@ -1057,6 +1077,20 @@ void ExceptionHandler(ExceptionType which) {
 	    {
 	    	DEBUG('a',"Print syscall \n");
 	    	Print_Syscall(machine->ReadRegister(4));
+	    }
+	    break;
+
+	    case SC_Print1:
+	    {
+	    	DEBUG('a',"Print syscall \n");
+	    	Print1_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    }
+	    break;
+
+	    case SC_Print2:
+	    {
+	    	DEBUG('a',"Print syscall \n");
+	    	Print2_Syscall(machine->ReadRegister(4),machine->ReadRegister(5),machine->ReadRegister(6));
 	    }
 	    break;
 
