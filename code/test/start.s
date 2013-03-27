@@ -220,7 +220,7 @@ print1:
 
     .globl print2
     .ent    print2
-print:
+print2:
     addiu $2,$0,SC_Print2
     syscall
     j   $31
