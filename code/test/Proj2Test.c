@@ -209,16 +209,13 @@ void testCase5()
 
 void testCase6()
 {
-	int temp;
+	char lockName[50];
 
 	print("SPRINTF SYSTEM CALL TEST \n");
 	print("--------------------------------------------------------\n");
 
-#if 0
-	unsigned int lockName[50];
-
-
-    sprintf((char*)lockName, CUSTOMERSALESMANLOCK_STRING,sizeof(CUSTOMERSALESMANLOCK_STRING), 1);
+#if 1
+    sprintf(lockName, CUSTOMERSALESMANLOCK_STRING,sizeof(CUSTOMERSALESMANLOCK_STRING), 1);
 
     printString("Lock Name returned after sprintf test is %s \n",lockName);
 #endif
