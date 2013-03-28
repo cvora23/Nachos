@@ -151,13 +151,12 @@ void testCase3()
 	print("Forking a Thread out of Address Space \n ");
 	Fork(0xdeadbeef);
 
-	print("1.Forking 3 threads:\n");
+	print("Forking 3 threads:\n");
 	for(i=0;i<3;i++)
 	{
-		print("Thread %d forked\n");
+		print1("Thread %d forked\n",i);
 		Fork(forktest);
 	}
-
 }
 
 void testCase4()
