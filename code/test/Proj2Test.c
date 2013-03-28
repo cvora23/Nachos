@@ -209,7 +209,7 @@ void testCase5()
 
 void testCase6()
 {
-	char lockName[MAX_CHAR_SPRINTF];
+	char lockName[256];
 	print("SPRINTF SYSTEM CALL TEST \n");
 	print("--------------------------------------------------------\n");
 
