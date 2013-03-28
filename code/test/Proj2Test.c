@@ -214,7 +214,7 @@ void testCase6()
 	print("--------------------------------------------------------\n");
 
 #if 1
-    sprintf(lockName, CUSTOMERSALESMANLOCK_STRING,20, 1);
+    sprintf(lockName, CUSTOMERSALESMANLOCK_STRING,21, 1);
     printString("Lock Name returned after sprintf test is %s \n",lockName);
 
 #endif
