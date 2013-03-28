@@ -46,6 +46,7 @@ extern Machine* machine;	// user program memory and registers
 #define MAX_LOCK_NAME 				256
 #define MAX_CV_NAME					256
 #define MAX_CHAR_PRINTF				256
+#define MAX_CHAR_SPRINTF			256
 #define MAX_PROCESS_NAME_LEN		256
 
 typedef struct _UserLock

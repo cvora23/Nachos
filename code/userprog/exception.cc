@@ -81,14 +81,55 @@ int copyout(unsigned int vaddr, int len, char *buf) {
     return n;
 }
 
-void Sprintf_Syscall(unsigned int outBuf,unsigned int arg1,int arg1Len,int arg2)
+void Sprintf_Syscall(unsigned int textToCreate,unsigned int textPassed,unsigned int lenTextPassed,int intPassed)
 {
-	bool result;
-	int bytesReturned;
+	/**
+	 * Creating a known template buffer
+	 */
+	char *templateBuf = new char("%s_%d");
+	if(templateBuf == NULL)
+	{
+		printf("Sprintf_Syscall  ERROR: Unable to allocate memory of the heap for template buffer\n");
+		return;
+	}
 
-	bytesReturned = copyout(outBuf,arg1Len,(char*)arg1);
-	bytesReturned = copyout(outBuf+bytesReturned,sizeof("_"),(char*)"_");
-	bytesReturned = copyout(outBuf+bytesReturned,sizeof(int),(char*)arg2);
+	/**
+	 * Validating textToCreate
+	 */
+	char sprintBuf[MAX_CHAR_SPRINTF];
+	if(copyin(textToCreate,MAX_CHAR_SPRINTF-1,sprintBuf) == -1)
+	{
+		printf("%s: Bad Virtual Address \n",currentThread->getName());
+		return ;
+	}
+	sprintBuf[MAX_CHAR_SPRINTF] = '\0';
+
+	/**
+	 * Validating textPassed
+	 */
+	char *tempTextPassedBuf = new char[lenTextPassed];
+	if(tempTextPassedBuf == NULL)
+	{
+		printf("Sprintf_Syscall  ERROR: Unable to allocate memory of the heap for tempTextPassed buffer\n");
+		return;
+	}
+	if(copyin(textPassed,lenTextPassed-1,tempTextPassedBuf) == -1)
+	{
+		printf("%s: Bad Virtual Address \n",currentThread->getName());
+		return ;
+	}
+	tempTextPassedBuf[lenTextPassed] = '\0';
+
+	/**
+	 * Calling actual sprintf function
+	 */
+	sprintf(sprintBuf,templateBuf,tempTextPassedBuf,intPassed);
+	int length = strlen(sprintBuf);
+
+	/**
+	 * Finally copyout the sprintBuf to textToCreate
+	 */
+	copyout(textToCreate,length,sprintBuf);
 }
 
 void Create_Syscall(unsigned int vaddr, int len) {
