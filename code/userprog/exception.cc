@@ -86,9 +86,9 @@ void Sprintf_Syscall(char* outBuf,unsigned int arg1,int arg1Len,int arg2)
 	bool result;
 	int bytesReturned;
 
-	bytesReturned = copyout(arg1,arg1Len,outBuf);
-	bytesReturned = copyout((unsigned int)"_",sizeof("_"),outBuf+bytesReturned);
-	bytesReturned = copyout(arg2,sizeof(int),outBuf+bytesReturned);
+	bytesReturned = copyout(outBuf,arg1,arg1Len);
+	bytesReturned = copyout(outBuf+bytesReturned,(unsigned int)"_",sizeof("_"));
+	bytesReturned = copyout(outBuf+bytesReturned,arg2,sizeof(int));
 }
 
 void Create_Syscall(unsigned int vaddr, int len) {
