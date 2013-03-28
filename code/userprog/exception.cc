@@ -1119,7 +1119,7 @@ void ExceptionHandler(ExceptionType which) {
 	    case SC_Print2:
 	    {
 	    	DEBUG('a',"Print syscall \n");
-	    	Print2_Syscall(arg1,arg2);
+	    	Print2_Syscall(arg1,arg2,arg3);
 	    }
 	    break;
 	    case SC_Sprintf:
