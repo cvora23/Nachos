@@ -948,7 +948,7 @@ void Exit_Syscall(int status)
 
 		mainMemoryAccessLock->Acquire();
 
-		for(int i = (currentThread->stackRegVirtualPage - 8);i<currentThread->stackRegVirtualPage;i++)
+		for(int i = (currentThread->stackRegVirtualPage)-8;i<(currentThread->stackRegVirtualPage);i++)
 		{
 			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
 			if(physPageToClear != -1)

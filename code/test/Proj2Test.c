@@ -125,8 +125,13 @@ void testCase2()
 	Yield();
 	Yield();
 	Fork(testfunc2);
-
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+	Yield();
 	Exit(0);
+
 
 }
 
