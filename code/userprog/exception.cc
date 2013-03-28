@@ -118,7 +118,7 @@ void Sprintf_Syscall(unsigned int textToCreate,unsigned int textPassed,unsigned 
 	/**
 	 * Calling actual sprintf function
 	 */
-	sprintf(sprintBuf,templateBuf,tempTextPassedBuf,intPassed);
+	sprintf(sprintBuf,"%s_%d",tempTextPassedBuf,intPassed);
 
 	/**
 	 * Finally copyout the sprintBuf to textToCreate
