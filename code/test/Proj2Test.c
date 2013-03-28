@@ -169,7 +169,7 @@ void testCase4()
 	print("--------------------------------------------------------\n");
 
 	print("2.Invalid Address-space used:\nAddress-space used is out of the range\n");
-	rv = Exec((char *)0xdeadbeef,10);
+	rv = Exec((char *)0xffffff00,10);
 
 	print("--------------------------------------------------------\n");
 	print("POSITIVE TEST CASES\n");
