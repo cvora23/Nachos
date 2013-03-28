@@ -232,6 +232,7 @@ int main()
 	print("3: Fork System Call\n");
 	print("4: Exec System Call\n");
 	print("5: Exit System Call\n");
+	print("6: Sprintf System Call\n");
 
 	print("Enter your choice \n");
 	testCaseNo = scan();
