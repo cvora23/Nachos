@@ -86,7 +86,7 @@ void Sprintf_Syscall(unsigned int textToCreate,unsigned int textPassed,unsigned 
 	/**
 	 * Creating a known template buffer
 	 */
-	char templateBuf[] = "Hello World";
+	char templateBuf[] = "%s_%d";
 
 	/**
 	 * Validating textToCreate
