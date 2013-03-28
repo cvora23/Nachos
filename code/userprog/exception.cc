@@ -119,12 +119,11 @@ void Sprintf_Syscall(unsigned int textToCreate,unsigned int textPassed,unsigned 
 	 * Calling actual sprintf function
 	 */
 	sprintf(sprintBuf,templateBuf,tempTextPassedBuf,intPassed);
-	int length = strlen(sprintBuf);
 
 	/**
 	 * Finally copyout the sprintBuf to textToCreate
 	 */
-	copyout(textToCreate,length,sprintBuf);
+	copyout(textToCreate,MAX_CHAR_SPRINTF,sprintBuf);
 }
 
 void Create_Syscall(unsigned int vaddr, int len) {
