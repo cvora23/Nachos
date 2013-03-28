@@ -209,10 +209,10 @@ void testCase5()
 
 void testCase6()
 {
+	int temp;
+
 	print("SPRINTF SYSTEM CALL TEST \n");
 	print("--------------------------------------------------------\n");
-
-	int temp;
 
 #if 0
 	unsigned int lockName[50];
