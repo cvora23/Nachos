@@ -35,7 +35,10 @@ StartProcess(char *filename)
    
     space = new AddrSpace(executable);
 
+    currentThread->threadId = 0;
     currentThread->space = space;
+
+    currentThread->stackRegVirtualPage = (currentThread->space)->numPages;
 
     delete executable;			// close file
 
