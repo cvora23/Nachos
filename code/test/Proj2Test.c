@@ -7,6 +7,8 @@
 
 #include "syscall.h"
 
+#define CUSTOMERSALESMANLOCK_STRING	(const char*)"CustomerSalesmanLock"
+
 void testCase1()
 {
 	int conditionId = -1;
@@ -205,6 +207,16 @@ void testCase5()
 	Exit(0);
 }
 
+void testCase6()
+{
+	print("SPRINTF SYSTEM CALL TEST \n");
+	print("--------------------------------------------------------\n");
+
+	char lockName[50];
+    sprintf (lockName, CUSTOMERSALESMANLOCK_STRING,sizeof(CUSTOMERSALESMANLOCK_STRING), 1);
+
+    printString("Lock Name returned after sprintf test is %s \n",lockName);
+}
 
 
 int main()
@@ -247,6 +259,11 @@ int main()
 		case 5:
 		{
 			testCase5();
+		}
+		break;
+		case 6:
+		{
+			testCase6();
 		}
 		break;
 		default:

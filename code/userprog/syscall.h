@@ -42,6 +42,8 @@
 #define SC_Scan						21
 #define SC_Print1					22
 #define SC_Print2					23
+#define SC_Sprintf					24
+#define SC_PrintString				25
 
 #ifndef IN_ASM
 
@@ -160,6 +162,10 @@ void print(char* buf);
 void print1(char* buf,int arg1);
 
 void print2(char* buf,int arg1,int arg2);
+
+void printString(char* buf,char* string);
+
+void sprintf(char* outBuf,char* arg1,int arg1Len,int arg2);
 
 int scan();
 

@@ -81,6 +81,16 @@ int copyout(unsigned int vaddr, int len, char *buf) {
     return n;
 }
 
+void Sprintf_Syscall(char* outBuf,unsigned int arg1,int arg1Len,int arg2)
+{
+	bool result;
+	int bytesReturned;
+
+	bytesReturned = copyout(arg1,arg1Len,outBuf);
+	bytesReturned = copyout((unsigned int)"_",sizeof("_"),outBuf+bytesReturned);
+	bytesReturned = copyout(arg2,sizeof(int),outBuf+bytesReturned);
+}
+
 void Create_Syscall(unsigned int vaddr, int len) {
     // Create the file with the name in the user buffer pointed to by
     // vaddr.  The file name is at most MAXFILENAME chars long.  No
@@ -676,6 +686,17 @@ void Print_Syscall(unsigned int vaddr)
 	printf(printBuf);
 }
 
+void PrintString_Syscall(unsigned int vaddr,unsigned int string)
+{
+	char printBuf[MAX_CHAR_PRINTF];
+	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
+	{
+		printf("%s: Bad Virtual Address \n",currentThread->getName());
+		return ;
+	}
+	printf(printBuf,(char*)string);
+}
+
 void Print1_Syscall(unsigned int vaddr,int arg1)
 {
 	char printBuf[MAX_CHAR_PRINTF];
@@ -972,6 +993,11 @@ void ExceptionHandler(ExceptionType which) {
     int type = machine->ReadRegister(2); // Which syscall?
     int rv=0; 	// the return value from a syscall
 
+    int arg1 = machine->ReadRegister(4);
+    int arg2 = machine->ReadRegister(5);
+    int arg3 = machine->ReadRegister(6);
+    int arg4 = machine->ReadRegister(7);
+
     if ( which == SyscallException ) {
 	switch (type) {
 	    default:
@@ -982,27 +1008,23 @@ void ExceptionHandler(ExceptionType which) {
 		break;
 	    case SC_Create:
 		DEBUG('a', "Create syscall.\n");
-		Create_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
+		Create_Syscall(arg1,arg2);
 		break;
 	    case SC_Open:
 		DEBUG('a', "Open syscall.\n");
-		rv = Open_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
+		rv = Open_Syscall(arg1,arg2);
 		break;
 	    case SC_Write:
 		DEBUG('a', "Write syscall.\n");
-		Write_Syscall(machine->ReadRegister(4),
-			      machine->ReadRegister(5),
-			      machine->ReadRegister(6));
+		Write_Syscall(arg1,arg2,arg3);
 		break;
 	    case SC_Read:
 		DEBUG('a', "Read syscall.\n");
-		rv = Read_Syscall(machine->ReadRegister(4),
-			      machine->ReadRegister(5),
-			      machine->ReadRegister(6));
+		rv = Read_Syscall(arg1,arg2,arg3);
 		break;
 	    case SC_Close:
 		DEBUG('a', "Close syscall.\n");
-		Close_Syscall(machine->ReadRegister(4));
+		Close_Syscall(arg1);
 		break;
 
 	    case SC_Yield:
@@ -1013,109 +1035,121 @@ void ExceptionHandler(ExceptionType which) {
 	    case SC_CreateLock:
 	    {
 	    	DEBUG('a',"Create Lock syscall \n");
-	    	rv = CreateLock_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    	rv = CreateLock_Syscall(arg1,arg2);
 	    }
 	    break;
 
 	    case SC_AcquireLock:
 	    {
 	    	DEBUG('a',"Acquire Lock syscall \n");
-	    	AcquireLock_Syscall(machine->ReadRegister(4));
+	    	AcquireLock_Syscall(arg1);
 	    }
 	    break;
 
 	    case SC_ReleaseLock:
 	    {
 	    	DEBUG('a',"Release Lock syscall \n");
-	    	ReleaseLock_Syscall(machine->ReadRegister(4));
+	    	ReleaseLock_Syscall(arg1);
 	    }
 	    break;
 
 	    case SC_DestroyLock:
 	    {
 	    	DEBUG('a',"Destroy Lock syscall \n");
-	    	DestroyLock_Syscall(machine->ReadRegister(4));
+	    	DestroyLock_Syscall(arg1);
 	    }
 	    break;
 
 	    case SC_CreateCondition:
 	    {
 	    	DEBUG('a',"Create Condition syscall \n");
-	    	CreateCondition_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    	CreateCondition_Syscall(arg1,arg2);
 	    }
 	    break;
 
 	    case SC_DestroyCondition:
 	    {
 	    	DEBUG('a',"Destroy Condition syscall \n");
-	    	DestroyCondition_Syscall(machine->ReadRegister(4));
+	    	DestroyCondition_Syscall(arg1);
 	    }
 	    break;
 
 	    case SC_Signal:
 	    {
 	    	DEBUG('a',"Signal syscall \n");
-	    	Signal_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    	Signal_Syscall(arg1,arg2);
 	    }
 	    break;
 
 	    case SC_Wait:
 	    {
 	    	DEBUG('a',"Wait syscall \n");
-	    	Wait_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    	Wait_Syscall(arg1,arg2);
 	    }
 	    break;
 
 	    case SC_Broadcast:
 	    {
 	    	DEBUG('a',"Broadcast syscall \n");
-	    	Broadcast_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    	Broadcast_Syscall(arg1,arg2);
 	    }
 	    break;
 
 	    case SC_Print:
 	    {
 	    	DEBUG('a',"Print syscall \n");
-	    	Print_Syscall(machine->ReadRegister(4));
+	    	Print_Syscall(arg1);
+	    }
+	    break;
+
+	    case SC_PrintString:
+	    {
+	    	DEBUG('a',"PrintString syscall \n");
+	    	PrintString_Syscall(arg1,arg2);
 	    }
 	    break;
 
 	    case SC_Print1:
 	    {
 	    	DEBUG('a',"Print syscall \n");
-	    	Print1_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    	Print1_Syscall(arg1,arg2);
 	    }
 	    break;
 
 	    case SC_Print2:
 	    {
 	    	DEBUG('a',"Print syscall \n");
-	    	Print2_Syscall(machine->ReadRegister(4),machine->ReadRegister(5),machine->ReadRegister(6));
+	    	Print2_Syscall(arg1,arg2);
 	    }
 	    break;
-
+	    case SC_Sprintf:
+	    {
+	    	DEBUG('a',"Sprintf syscall\n");
+	    	Sprintf_Syscall(arg1,arg2,arg3,arg4);
+	    }
+	    break;
 	    case SC_Scan:
 	    {
 	    	DEBUG('a',"Scan syscall \n");
-	    	rv = Scan_Syscall();
+	    	rv = Scan_Syscall(arg1,arg2);
 	    }
 	    break;
 	    case SC_Fork:
 	    {
 	    	DEBUG('a',"Fork syscall \n");
-	    	Fork_Syscall(machine->ReadRegister(4));
+	    	Fork_Syscall(arg1);
 	    }
 	    break;
 	    case SC_Exec:
 	    {
 	    	DEBUG('a',"Exec syscall \n");
-	    	rv = Exec_Syscall(machine->ReadRegister(4),machine->ReadRegister(5));
+	    	rv = Exec_Syscall(arg1,arg2);
 	    }
 	    break;
 	    case SC_Exit:
 	    {
 	    	DEBUG('a',"Exit syscall \n");
-	    	Exit_Syscall(machine->ReadRegister(4));
+	    	Exit_Syscall(arg1);
 	    }
 	    break;
 	}
