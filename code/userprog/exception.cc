@@ -86,12 +86,7 @@ void Sprintf_Syscall(unsigned int textToCreate,unsigned int textPassed,unsigned 
 	/**
 	 * Creating a known template buffer
 	 */
-	char *templateBuf = new char("%s_%d");
-	if(templateBuf == NULL)
-	{
-		printf("Sprintf_Syscall  ERROR: Unable to allocate memory of the heap for template buffer\n");
-		return;
-	}
+	char templateBuf[] = "%s_%d";
 
 	/**
 	 * Validating textToCreate
