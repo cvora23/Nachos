@@ -1131,7 +1131,7 @@ void ExceptionHandler(ExceptionType which) {
 	    case SC_Scan:
 	    {
 	    	DEBUG('a',"Scan syscall \n");
-	    	rv = Scan_Syscall(arg1,arg2);
+	    	rv = Scan_Syscall();
 	    }
 	    break;
 	    case SC_Fork:
