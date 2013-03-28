@@ -168,8 +168,10 @@ void testCase4()
 	rv = Exec("../test/dudenoway",14);
 	print("--------------------------------------------------------\n");
 
+#if 0
 	print("2.Invalid Address-space used:\nAddress-space used is out of the range\n");
 	rv = Exec((char *)0xffffff00,10);
+#endif
 
 	print("--------------------------------------------------------\n");
 	print("POSITIVE TEST CASES\n");
