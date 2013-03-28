@@ -212,7 +212,7 @@ void testCase6()
 	print("SPRINTF SYSTEM CALL TEST \n");
 	print("--------------------------------------------------------\n");
 
-	unsigned int lock;
+	int lock;
 
 #if 0
 	unsigned int lockName[50];
