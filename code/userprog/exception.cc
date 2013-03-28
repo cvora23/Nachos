@@ -81,7 +81,7 @@ int copyout(unsigned int vaddr, int len, char *buf) {
     return n;
 }
 
-void Sprintf_Syscall(char* outBuf,unsigned int arg1,int arg1Len,int arg2)
+void Sprintf_Syscall(unsigned int outBuf,unsigned int arg1,int arg1Len,int arg2)
 {
 	bool result;
 	int bytesReturned;
