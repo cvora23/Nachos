@@ -1230,7 +1230,7 @@ void ExceptionHandler(ExceptionType which) {
 	    case SC_GetMallocedMemory:
 	    {
 	    	DEBUG('a',"GetMallocedMemory syscall \n");
-	    	rv = GetMallocedMemory_Syscall(arg1,arg2);
+	    	GetMallocedMemory_Syscall(arg1,arg2);
 	    }
 	    break;
 	}
