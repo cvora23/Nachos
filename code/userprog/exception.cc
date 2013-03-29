@@ -1033,6 +1033,31 @@ void Exit_Syscall(int status)
 
 }
 
+int GetRand_Syscall()
+{
+	int returnScanVal;
+	returnScanVal=(int)rand();
+	return returnScanVal;
+}
+
+void GetMallocedMemory_Syscall(unsigned int vaddr,int size)
+{
+	char *tempMallocedBuf = malloc(size);
+	if(tempMallocedBuf == NULL)
+	{
+		printf("GetMallocedMemory_Syscall  ERROR: Unable to allocate memory of the heap for tempMallocedBuf buffer\n");
+		return;
+	}
+	memset(tempMallocedBuf,0,size);
+	if(copyout(vaddr,size,tempMallocedBuf) == -1)
+	{
+		printf("%s: Bad Virtual Address \n",currentThread->getName());
+		free(tempMallocedBuf);
+		return;
+	}
+
+}
+
 void ExceptionHandler(ExceptionType which) {
     int type = machine->ReadRegister(2); // Which syscall?
     int rv=0; 	// the return value from a syscall
@@ -1194,6 +1219,18 @@ void ExceptionHandler(ExceptionType which) {
 	    {
 	    	DEBUG('a',"Exit syscall \n");
 	    	Exit_Syscall(arg1);
+	    }
+	    break;
+	    case SC_GetRand:
+	    {
+	    	DEBUG('a',"GetRand syscall \n");
+	    	rv = GetRand_Syscall();
+	    }
+	    break;
+	    case SC_GetMallocedMemory:
+	    {
+	    	DEBUG('a',"GetMallocedMemory syscall \n");
+	    	rv = GetMallocedMemory_Syscall(arg1,arg2);
 	    }
 	    break;
 	}

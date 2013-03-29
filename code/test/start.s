@@ -250,6 +250,21 @@ scan:
     j   $31
     .end scan
 
+    .globl Random
+    .ent    Random
+Random:
+    addiu $2,$0,SC_GetRand
+    syscall
+    j   $31
+    .end Random
+
+    .globl getMallocedMemory
+    .ent    getMallocedMemory
+getMallocedMemory:
+    addiu $2,$0,SC_GetMallocedMemory
+    syscall
+    j   $31
+    .end getMallocedMemory
 
 /* dummy function to keep gcc happy */
         .globl  __main

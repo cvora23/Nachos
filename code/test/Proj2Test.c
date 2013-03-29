@@ -221,6 +221,20 @@ void testCase6()
 
 }
 
+void testCase7()
+{
+	int* buf;
+	int size = 100;
+
+	print("MALLOC SYSTEM CALL TEST \n");
+	print("--------------------------------------------------------\n");
+
+	getMallocedMemory(buf,sizeof(int)*size);
+	for(int i=0;i<size;i++)
+	{
+		print1("Buffer Value is %d \n",buf[i]);
+	}
+}
 
 int main()
 {
@@ -232,6 +246,7 @@ int main()
 	print("4: Exec System Call\n");
 	print("5: Exit System Call\n");
 	print("6: Sprintf System Call\n");
+	print("7: Malloced System Call\n");
 
 	print("Enter your choice \n");
 	testCaseNo = scan();
@@ -268,6 +283,11 @@ int main()
 		case 6:
 		{
 			testCase6();
+		}
+		break;
+		case 6:
+		{
+			testCase7();
 		}
 		break;
 		default:

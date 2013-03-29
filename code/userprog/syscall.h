@@ -44,6 +44,8 @@
 #define SC_Print2					23
 #define SC_Sprintf					24
 #define SC_PrintString				25
+#define SC_GetRand					26
+#define SC_GetMallocedMemory        27
 
 #ifndef IN_ASM
 
@@ -168,6 +170,10 @@ void printString(char* buf,char* string);
 void sprintf(char* outBuf,char* arg1,int arg1Len,int arg2);
 
 int scan();
+
+int Random();
+
+void getMallocedMemory(char* ptrMem,int sizeReq);
 
 #endif /* IN_ASM */
 
