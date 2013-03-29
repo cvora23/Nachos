@@ -225,12 +225,12 @@ void testCase7()
 {
 	int* buf;
 	int size = 100;
-
+	int i;
 	print("MALLOC SYSTEM CALL TEST \n");
 	print("--------------------------------------------------------\n");
 
 	getMallocedMemory(buf,sizeof(int)*size);
-	for(int i=0;i<size;i++)
+	for(i=0;i<size;i++)
 	{
 		print1("Buffer Value is %d \n",buf[i]);
 	}
@@ -285,7 +285,7 @@ int main()
 			testCase6();
 		}
 		break;
-		case 6:
+		case 7:
 		{
 			testCase7();
 		}
