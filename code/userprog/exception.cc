@@ -1040,7 +1040,7 @@ int GetRand_Syscall()
 	return returnScanVal;
 }
 
-void GetMallocedMemory_Syscall(char* buf,int size)
+void GetMallocedMemory_Syscall(unsigned int buf,int size)
 {
 	buf = (char*)malloc(size);
 	if(buf == NULL)
@@ -1221,7 +1221,7 @@ void ExceptionHandler(ExceptionType which) {
 	    case SC_GetMallocedMemory:
 	    {
 	    	DEBUG('a',"GetMallocedMemory syscall \n");
-	    	rv = GetMallocedMemory_Syscall(arg1,arg2);
+	    	GetMallocedMemory_Syscall(arg1,arg2);
 	    }
 	    break;
 	}
