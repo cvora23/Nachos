@@ -229,8 +229,7 @@ void testCase7()
 	print("MALLOC SYSTEM CALL TEST \n");
 	print("--------------------------------------------------------\n");
 
-	getMallocedMemory(buf,sizeof(int)*size);
-
+	buf = getMallocedMemory(sizeof(int)*size);
 
 	for(i=0;i<size;i++)
 	{
