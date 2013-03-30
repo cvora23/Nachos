@@ -230,6 +230,8 @@ void testCase7()
 	print("--------------------------------------------------------\n");
 
 	getMallocedMemory(buf,sizeof(int)*size);
+
+
 	for(i=0;i<size;i++)
 	{
 		print1("Buffer Value is %d \n",buf[i]);
