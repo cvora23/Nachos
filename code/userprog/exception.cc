@@ -1206,7 +1206,7 @@ void ExceptionHandler(ExceptionType which) {
 	    }
 	    break;
 
-	    case SC_PrintStringInt:
+	    case SC_PrintStringIntInt:
 	    {
 	    	DEBUG('a',"PrintStringIntInt syscall \n");
 	    	PrintStringIntInt_Syscall(arg1,arg2,arg3,arg4);
