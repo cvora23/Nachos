@@ -741,6 +741,44 @@ void PrintString_Syscall(unsigned int vaddr,unsigned int string)
 
 }
 
+void PrintStringInt_Syscall(unsigned int vaddr,unsigned int string,int var)
+{
+	char printBuf[MAX_CHAR_PRINTF];
+	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
+	{
+		printf("%s: Bad Virtual Address \n",currentThread->getName());
+		return ;
+	}
+
+	char tempStringBuf[MAX_CHAR_PRINTF];
+	if(copyin(string,MAX_CHAR_PRINTF - 1,tempStringBuf) == -1)
+	{
+		printf("%s: Bad Virtual Address \n",currentThread->getName());
+		return ;
+	}
+
+	printf(printBuf,tempStringBuf,var);
+}
+
+void PrintStringIntInt_Syscall(unsigned int vaddr,unsigned int string,int var1,int var2)
+{
+	char printBuf[MAX_CHAR_PRINTF];
+	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
+	{
+		printf("%s: Bad Virtual Address \n",currentThread->getName());
+		return ;
+	}
+
+	char tempStringBuf[MAX_CHAR_PRINTF];
+	if(copyin(string,MAX_CHAR_PRINTF - 1,tempStringBuf) == -1)
+	{
+		printf("%s: Bad Virtual Address \n",currentThread->getName());
+		return ;
+	}
+
+	printf(printBuf,tempStringBuf,var1,var2);
+}
+
 void Print1_Syscall(unsigned int vaddr,int arg1)
 {
 	char printBuf[MAX_CHAR_PRINTF];
@@ -1158,6 +1196,20 @@ void ExceptionHandler(ExceptionType which) {
 	    {
 	    	DEBUG('a',"PrintString syscall \n");
 	    	PrintString_Syscall(arg1,arg2);
+	    }
+	    break;
+
+	    case SC_PrintStringInt:
+	    {
+	    	DEBUG('a',"PrintStringInt syscall \n");
+	    	PrintStringInt_Syscall(arg1,arg2,arg3);
+	    }
+	    break;
+
+	    case SC_PrintStringInt:
+	    {
+	    	DEBUG('a',"PrintStringIntInt syscall \n");
+	    	PrintStringIntInt_Syscall(arg1,arg2,arg3,arg4);
 	    }
 	    break;
 

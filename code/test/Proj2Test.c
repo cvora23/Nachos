@@ -221,6 +221,22 @@ void testCase6()
 
 }
 
+void testCase6()
+{
+
+}
+
+void testCase7()
+{
+	printStringInt("%s has found ITEM_%d and placed ITEM_%d in the trolley \n",CUSTOMERSALESMANLOCK_STRING,5);
+}
+
+void testCase8()
+{
+	printStringIntInt("%s has found ITEM_%d and placed ITEM_%d in the trolley \n",CUSTOMERSALESMANLOCK_STRING,
+						5,5);
+}
+
 int main()
 {
 	int testCaseNo;
@@ -231,7 +247,8 @@ int main()
 	print("4: Exec System Call\n");
 	print("5: Exit System Call\n");
 	print("6: Sprintf System Call\n");
-	print("7: Malloced System Call\n");
+	print("7: PrintStringInt System Call\n");
+	print("8: PrintStringIntInt System Call\n");
 
 	print("Enter your choice \n");
 	testCaseNo = scan();
@@ -268,6 +285,16 @@ int main()
 		case 6:
 		{
 			testCase6();
+		}
+		break;
+		case 7:
+		{
+			testCase7();
+		}
+		break;
+		case 8:
+		{
+			testCase8();
 		}
 		break;
 		default:

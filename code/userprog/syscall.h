@@ -46,6 +46,8 @@
 #define SC_PrintString				25
 #define SC_GetRand					26
 #define SC_GetMallocedMemory        27
+#define SC_PrintStringInt			28
+#define SC_PrintStringIntInt		29
 
 #ifndef IN_ASM
 
@@ -166,6 +168,10 @@ void print1(char* buf,int arg1);
 void print2(char* buf,int arg1,int arg2);
 
 void printString(char* buf,char* string);
+
+void printStringInt(char* buf,char* string,int var1);
+
+void printStringIntInt(char* buf,char* string,int var1,int var2);
 
 void sprintf(char* outBuf,char* arg1,int arg1Len,int arg2);
 

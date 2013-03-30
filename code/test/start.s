@@ -218,6 +218,22 @@ printString:
     j   $31
     .end printString
 
+    .globl printStringInt
+    .ent    printStringInt
+printStringInt:
+    addiu $2,$0,SC_PrintStringInt
+    syscall
+    j   $31
+    .end printStringInt
+
+    .globl printStringIntInt
+    .ent    printStringIntInt
+printStringIntInt:
+    addiu $2,$0,SC_PrintStringIntInt
+    syscall
+    j   $31
+    .end printStringIntInt
+
     .globl print1
     .ent    print1
 print1:
