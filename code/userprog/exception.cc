@@ -1040,17 +1040,14 @@ int GetRand_Syscall()
 	return returnScanVal;
 }
 
-int GetMallocedMemory_Syscall(int size)
+int GetMallocedMemory_Syscall(void* buf,int size)
 {
-	char *tempMallocedBuf = (char*)malloc(size);
-	if(tempMallocedBuf == NULL)
+	buf = (char*)malloc(size);
+	if(buf == NULL)
 	{
 		printf("GetMallocedMemory_Syscall  ERROR: Unable to allocate memory of the heap for tempMallocedBuf buffer\n");
 		return NULL;
 	}
-	memset(tempMallocedBuf,0,size);
-
-	return tempMallocedBuf;
 }
 
 void ExceptionHandler(ExceptionType which) {
@@ -1225,7 +1222,7 @@ void ExceptionHandler(ExceptionType which) {
 	    case SC_GetMallocedMemory:
 	    {
 	    	DEBUG('a',"GetMallocedMemory syscall \n");
-	    	rv = GetMallocedMemory_Syscall(arg1);
+	    	rv = GetMallocedMemory_Syscall(arg1,arg2);
 	    }
 	    break;
 	}

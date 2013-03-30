@@ -173,7 +173,7 @@ int scan();
 
 int Random();
 
-int getMallocedMemory(int sizeReq);
+void getMallocedMemory(void* buf,int sizeReq);
 
 #endif /* IN_ASM */
 
