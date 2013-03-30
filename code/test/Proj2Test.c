@@ -221,11 +221,6 @@ void testCase6()
 
 }
 
-void testCase6()
-{
-
-}
-
 void testCase7()
 {
 	printStringInt("%s has found ITEM_%d and placed ITEM_%d in the trolley \n",CUSTOMERSALESMANLOCK_STRING,5);
