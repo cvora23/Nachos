@@ -1040,13 +1040,12 @@ int GetRand_Syscall()
 	return returnScanVal;
 }
 
-void GetMallocedMemory_Syscall(void* buf,int size)
+void GetMallocedMemory_Syscall(char* buf,int size)
 {
 	buf = (char*)malloc(size);
 	if(buf == NULL)
 	{
 		printf("GetMallocedMemory_Syscall  ERROR: Unable to allocate memory of the heap for tempMallocedBuf buffer\n");
-		return NULL;
 	}
 }
 
