@@ -442,9 +442,10 @@ void clearCharBuf(char* s)
 static void initItemInfo()
 {
     static bool firstCall = true;
+    int i;
     if(firstCall)
     {
-		for (int i = 0;i<NO_OF_ITEM_TYPES;i++)
+		for (i = 0;i<NO_OF_ITEM_TYPES;i++)
 		{
 			g_itemInfo[i].Price = Random()%MAX_PRICE_PER_ITEM + 1;
 			g_itemInfo[i].departmentNo = (int)(i/NO_OF_ITEMS_PER_DEPARTMENT);
@@ -458,9 +459,10 @@ static void initItemInfo()
 static void initCustomerInfo()
 {
     static bool firstCall = true;
+    int i;
     if(firstCall)
     {
-		for(int i = 0;i<NO_OF_CUSTOMERS;i++)
+		for(i = 0;i<NO_OF_CUSTOMERS;i++)
 		{
 			g_customerInfo[i].money = Random()%MAX_AMT_PER_CUSTOMER + 1;
 			g_customerInfo[i].type = CustomerType(Random()%2);
@@ -486,11 +488,12 @@ static void initCustomerInfo()
 static void initCustomerShoppingList()
 {
     static bool firstCall = true;
+    int i,j;
     if(firstCall)
     {
-    	for(int i = 0;i<NO_OF_CUSTOMERS;i++)
+    	for(i = 0;i<NO_OF_CUSTOMERS;i++)
     	{
-			for(int j =0;j<g_customerInfo[i].noOfItems;j++)
+			for(j =0;j<g_customerInfo[i].noOfItems;j++)
 			{
 				g_customerInfo[i].pCustomerShoppingList[j].itemNo = Random()%NO_OF_ITEM_TYPES;
 				g_customerInfo[i].pCustomerShoppingList[j].noOfItems =
@@ -504,9 +507,10 @@ static void initCustomerShoppingList()
 static void initSalesManInfo()
 {
     static bool firstCall = true;
+    int i;
     if(firstCall)
     {
-    	for(int i=0;i<NO_OF_SALESMAN;i++)
+    	for(i=0;i<NO_OF_SALESMAN;i++)
     	{
     		g_salesmanInfo[i].customerId = -1;
     		g_salesmanInfo[i].status = salesmanIsBusy;
@@ -525,9 +529,10 @@ void printSalesManInfo(int salesManId)
 static void initGoodLoaderInfo()
 {
     static bool firstCall = true;
+    int i;
     if(firstCall)
     {
-    	for(int i=0;i<NO_OF_GOOD_LOADERS;i++)
+    	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
     	{
     		g_goodLoaderInfo[i].status = goodLoaderIsBusy;
     		g_goodLoaderInfo[i].salesmanId = -1;
@@ -545,9 +550,10 @@ void printGoodLoaderInfo(int goodLoaderId)
 static void initCashierInfo()
 {
     static bool firstCall = true;
+    int i;
     if(firstCall)
     {
-    	for(int i=0;i<NO_OF_CASHIERS;i++)
+    	for(i=0;i<NO_OF_CASHIERS;i++)
     	{
     		g_cashierInfo[i].status = cashierIsBusy;
     		g_cashierInfo[i].customerId = -1;
@@ -566,9 +572,10 @@ void printCashierInfo(int cashierId)
 static void initManagerInfo()
 {
     static bool firstCall = true;
+    int i;
     if(firstCall)
     {
-    	for(int i=0;i<NO_OF_MANAGERS;i++)
+    	for(i=0;i<NO_OF_MANAGERS;i++)
     	{
     		g_managerInfo.cashierId = -1;
     		g_managerInfo.customerId = -1;
@@ -601,13 +608,15 @@ void CustomerThread()
     int myCashier = -1;
     int minCashierLineLength = MAX_CASHIER_LINE_LENGTH;
 	int currentItemNoCountToRemoveFromTrolley = 0;
+	char threadName[256];
+	int i;
+	int salesmanIndex;
 
 	acquireLock(g_customerThreadCounterLock);
 	ThreadId = g_customerThreadCounter;
 	g_customerThreadCounter++;
 	releaseLock(g_customerThreadCounterLock);
 
-	char threadName[256];
     sprintf(threadName, CUSTOMER_STRING,xstrlen(CUSTOMER_STRING), ThreadId);
     printString("%s enters the SuperMarket !!!!!!! \n",threadName);
 
@@ -640,7 +649,7 @@ void CustomerThread()
     /**
      * Customer will start the shopping now.
      */
-    for(int i=0;i<g_customerInfo[ThreadId].noOfItems;i++)
+    for(i=0;i<g_customerInfo[ThreadId].noOfItems;i++)
     {
     	/**
     	 * Customer will now find Department for particular item no
@@ -664,7 +673,7 @@ void CustomerThread()
     	 */
     	mySalesMan = -1;
 
-    	for(int salesmanIndex=salesManStartForDepartment;
+    	for(salesmanIndex=salesManStartForDepartment;
     			salesmanIndex<salesManEndForDepartment;salesmanIndex++)
     	{
     		/**
@@ -717,7 +726,7 @@ void CustomerThread()
 
     		wait(g_customerDepartmentCV[currentDepartmentNoForItem],g_customerDepartmentLock[currentDepartmentNoForItem]);
 
-        	for(int salesmanIndex=salesManStartForDepartment;
+        	for(salesmanIndex=salesManStartForDepartment;
         			salesmanIndex<salesManEndForDepartment;salesmanIndex++)
         	{
         		/**
@@ -775,7 +784,7 @@ void CustomerThread()
     		printStringInt("%s is not able to find ITEM_%d and is searching for SALESMAN's \n",
     				threadName,currentItemNoFromShoppingList);
 
-    		for(int salesmanIndex=salesManStartForDepartment;
+    		for(salesmanIndex=salesManStartForDepartment;
 	    			salesmanIndex<salesManEndForDepartment;salesmanIndex++)
 	    	{
 	    		/**
@@ -886,7 +895,7 @@ void CustomerThread()
     /**
      * Finding the Cashier which is least busy.
      */
-    for(int i=0;i<NO_OF_CASHIERS;i++)
+    for(i=0;i<NO_OF_CASHIERS;i++)
     {
     	if(g_customerInfo[ThreadId].type == PRIVILEGED)
     	{
@@ -1065,13 +1074,15 @@ void SalesmanThread()
 	int ThreadId;
     int myDepartmentNo = g_salesmanInfo[ThreadId].departmentNo;
     int myGoodsLoader = -1;
+	char threadName[256];
+	int goodLoaderIndex;
+
 
 	acquireLock(g_salesmanThreadCounterLock);
 	ThreadId = g_salesmanThreadCounter;
 	g_salesmanThreadCounter++;
 	releaseLock(g_salesmanThreadCounterLock);
 
-	char threadName[256];
     sprintf(threadName, SALESMAN_STRING,xstrlen(SALESMAN_STRING), ThreadId);
     printString( "%s Started !!!!!!! \n",threadName);
     printStringInt("%s will be working for DEPARTMENT_%d \n",
@@ -1181,7 +1192,7 @@ void SalesmanThread()
 
     		/**************************START INTERACTING WITH GOODS LOADER NOW ***************************/
 
-    		for(int goodLoaderIndex=0;goodLoaderIndex<NO_OF_GOOD_LOADERS;goodLoaderIndex++)
+    		for(goodLoaderIndex=0;goodLoaderIndex<NO_OF_GOOD_LOADERS;goodLoaderIndex++)
     		{
     			acquireLock(g_salesmanGoodsLoaderLock[goodLoaderIndex]);
 
@@ -1355,7 +1366,7 @@ void SalesmanThread()
 
         			wait(g_goodLoaderWaitCV[0],g_goodLoaderWaitLock[0]);
 
-            		for(int goodLoaderIndex=0;goodLoaderIndex<NO_OF_GOOD_LOADERS;goodLoaderIndex++)
+            		for(goodLoaderIndex=0;goodLoaderIndex<NO_OF_GOOD_LOADERS;goodLoaderIndex++)
             		{
             			acquireLock(g_salesmanGoodsLoaderLock[goodLoaderIndex]);
 
@@ -1419,13 +1430,14 @@ void GoodLoaderThread()
 {
     int mySalesman = -1;
     int ThreadId;
+	char threadName[256];
+	int i;
 
 	acquireLock(g_goodsLoaderThreadCounterLock);
 	ThreadId = g_goodsLoaderThreadCounter;
 	g_goodsLoaderThreadCounter++;
 	releaseLock(g_goodsLoaderThreadCounterLock);
 
-	char threadName[256];
     sprintf(threadName, GOOD_LOADERS_STRING,xstrlen(GOOD_LOADERS_STRING), ThreadId);
     printString( "%s Started !!!!!!! \n",threadName);
 
@@ -1475,7 +1487,7 @@ void GoodLoaderThread()
     		 * Walking time from re stocking room to shelf
     		 */
 
-    		for(int i=0;i<goodsLoaderWalkingTime;i++)
+    		for(i=0;i<goodsLoaderWalkingTime;i++)
     		{
     			Yield();
     			printStringInt("%s is walking from RE-STOCK room to shelf to RE-STOCK ITEM_%d\n",threadName,
@@ -1564,13 +1576,14 @@ void CashierThread()
     int currentItemNoFromShoppingList;
     int currentItemNoCountFromShoppingList;
     int currentItemNoPriceFromShoppingList;
+	char threadName[256];
+	int i;
 
 	acquireLock(g_cashierThreadCounterLock);
 	ThreadId = g_cashierThreadCounter;
 	g_cashierThreadCounter++;
 	releaseLock(g_cashierThreadCounterLock);
 
-	char threadName[256];
     sprintf(threadName, CASHIER_STRING,xstrlen(CASHIER_STRING), ThreadId);
     printString( "%s Started !!!!!!! \n",threadName);
 
@@ -1615,7 +1628,7 @@ void CashierThread()
     	wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
     	myCustomer = g_cashierInfo[ThreadId].customerId;
 
-    	for(int i=0;i<g_customerInfo[myCustomer].noOfItems;i++)
+    	for(i=0;i<g_customerInfo[myCustomer].noOfItems;i++)
     	{
         	currentItemNoFromShoppingList = g_customerInfo[myCustomer].pCustomerShoppingList[i].itemNo;
           	currentItemNoCountFromShoppingList = g_customerInfo[myCustomer].pCustomerShoppingList[i].noOfItems;
@@ -1694,8 +1707,10 @@ void ManagerThread()
 	int currentItemNoToRemove = 0;
 	int currentItemNoToRemoveCount = 0;
 	int currentItemNoToRemovePrice = 0;
-
+	int i;
 	char threadName[256];
+
+
     sprintf(threadName, MANAGER_STRING,xstrlen(MANAGER_STRING), ThreadId);
     printString( "%s Started !!!!!!! \n",threadName);
 
@@ -1703,7 +1718,7 @@ void ManagerThread()
     {
     	itemRemoveCounter = 0;
 
-    	for(int i=0;i<NO_OF_CASHIERS;i++)
+    	for(i=0;i<NO_OF_CASHIERS;i++)
     	{
     		acquireLock(g_managerCashierCashLock[i]);
     		g_managerInfo.totalRevenue += g_cashierInfo[i].totalSalesMoney;
@@ -1790,7 +1805,9 @@ void ManagerThread()
 
 void initLockCvForSimulation()
 {
-
+	char lockName[256];
+	char cvName[256];
+	int i;
 	/**
 	 * Creating Locks for Thread Counters
 	 */
@@ -1812,10 +1829,7 @@ void initLockCvForSimulation()
 	g_customerTrolleyCV = createCondition(CUSTOMERTROLLEYCV_STRING,xstrlen(CUSTOMERTROLLEYCV_STRING));
 
 
-	char lockName[256];
-	char cvName[256];
-
-	for(int i=0;i<NO_OF_SALESMAN;i++)
+	for(i=0;i<NO_OF_SALESMAN;i++)
 	{
 		sprintf(lockName,CUSTOMERSALESMANLOCK_STRING,xtrlen(CUSTOMERSALESMANLOCK_STRING), i);
         g_customerSalesmanLock[i] = createLock(lockName,xstrlen(lockName));
@@ -1826,7 +1840,7 @@ void initLockCvForSimulation()
         clearCharBuf(cvName);
 	}
 
-	for(int i=0;i<NO_OF_DEPARTMENT;i++)
+	for(i=0;i<NO_OF_DEPARTMENT;i++)
 	{
         sprintf (lockName,CUSTOMERDEPARTMENTLOCK_STRING,xstrlen(CUSTOMERDEPARTMENTLOCK_STRING), i);
         g_customerDepartmentLock[i] = createLock(lockName,xstrlen(lockName));
@@ -1839,14 +1853,14 @@ void initLockCvForSimulation()
         g_departmentWaitQueue[i] = 0;
 	}
 
-	for(int i =0;i<NO_OF_SHELFS;i++)
+	for(i =0;i<NO_OF_SHELFS;i++)
 	{
         sprintf (lockName,SHELFACCESSLOCK_STRING,xstrlen(SHELFACCESSLOCK_STRING), i);
         g_shelfAccessLock[i] = createLock(lockName,xstrlen(lockName));
         clearCharBuf(lockName);
 	}
 
-	for(int i=0;i<NO_OF_DEPARTMENT;i++)
+	for(i=0;i<NO_OF_DEPARTMENT;i++)
 	{
         sprintf (lockName,CUSTOMERDEPARTMENTCOMPLAINLOCK_STRING,
         		xstrlen(CUSTOMERDEPARTMENTCOMPLAINLOCK_STRING), i);
@@ -1861,7 +1875,7 @@ void initLockCvForSimulation()
         g_departmentComplainWaitQueue[i] = 0;
 	}
 
-	for(int i=0;i<NO_OF_GOOD_LOADERS;i++)
+	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
 	{
         sprintf (lockName,SALESMANGOODLOADERLOCK_STRING,xstrlen(SALESMANGOODLOADERLOCK_STRING), i);
         g_salesmanGoodsLoaderLock[i] = createLock(lockName,xstrlen(lockName));
@@ -1872,7 +1886,7 @@ void initLockCvForSimulation()
         clearCharBuf(cvName);
 	}
 
-	for(int i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
+	for(i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
 	{
         sprintf (lockName,GOODLOADERWAITQUEUELOCK_STRING,
         		xstrlen(GOODLOADERWAITQUEUELOCK_STRING),i);
@@ -1887,7 +1901,7 @@ void initLockCvForSimulation()
         g_goodLoaderWaitQueue[i] = 0;
 	}
 
-	for(int i=0;i<NO_OF_CASHIERS;i++)
+	for(i=0;i<NO_OF_CASHIERS;i++)
 	{
         sprintf (lockName,CASHIERLINELOCK_STRING,
         		xstrlen(CASHIERLINELOCK_STRING),i);
@@ -1924,7 +1938,7 @@ void initLockCvForSimulation()
         clearCharBuf(cvName);
 	}
 
-	for(int i=0;i<NO_OF_CASHIERS;i++)
+	for(i=0;i<NO_OF_CASHIERS;i++)
 	{
         sprintf (lockName, MANAGERCASHIERCASHLOCK_STRING,
         		xstrlen(MANAGERCASHIERCASHLOCK_STRING),i);
@@ -1955,7 +1969,7 @@ void initLockCvForSimulation()
         clearCharBuf(cvName);
 	}
 
-	for(int i=0;i<NO_OF_MANAGERS;i++)
+	for(i=0;i<NO_OF_MANAGERS;i++)
 	{
         sprintf (lockName,MANAGERCUSTOMERINTERACTIONLOCK_STRING,
         		xstrlen(MANAGERCUSTOMERINTERACTIONLOCK_STRING), i);
@@ -1972,6 +1986,7 @@ void initLockCvForSimulation()
 void main(const char* testOption)
 {
 	int configRetVal;
+	int i;
 
     print( "Entering Assign 1 Problem 2 !!!!!!! \n");
     print( "Starting to initialize all the Threads for Problem 2 !!!!!!! \n");
@@ -2040,33 +2055,27 @@ void main(const char* testOption)
 
     initLockCvForSimulation();
 
-    for(int i = 0;i<NO_OF_MANAGERS;i++)
+    for(i = 0;i<NO_OF_MANAGERS;i++)
     {
        Fork(ManagerThread);
     }
-    for(int i = 0;i<NO_OF_CASHIERS;i++)
+    for(i = 0;i<NO_OF_CASHIERS;i++)
     {
     	Fork(CashierThread);
     }
-    for(int i = 0;i<NO_OF_SALESMAN;i++)
+    for(i = 0;i<NO_OF_SALESMAN;i++)
     {
     	Fork(SalesmanThread);
     }
-    for(int i = 0;i<NO_OF_GOOD_LOADERS;i++)
+    for(i = 0;i<NO_OF_GOOD_LOADERS;i++)
     {
     	Fork(GoodLoaderThread);
     }
-    for(int i = 0;i<NO_OF_CUSTOMERS;i++)
+    for(i = 0;i<NO_OF_CUSTOMERS;i++)
     {
     	Fork(CustomerThread);
     }
 }
-
-void Problem2(const char* testOption)
-{
-	startSimulation(testOption);
-}
-
 
 /********************************************PROJ1 PROBLEM SIMULATION***********************************************/
 
