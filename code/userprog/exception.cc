@@ -1040,7 +1040,7 @@ int GetRand_Syscall()
 	return returnScanVal;
 }
 
-int GetMallocedMemory_Syscall(void* buf,int size)
+void GetMallocedMemory_Syscall(void* buf,int size)
 {
 	buf = (char*)malloc(size);
 	if(buf == NULL)
