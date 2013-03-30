@@ -173,8 +173,6 @@ int scan();
 
 int Random();
 
-void getMallocedMemory(char* buf,int sizeReq);
-
 #endif /* IN_ASM */
 
 #endif /* SYSCALL_H */
