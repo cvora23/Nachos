@@ -1984,7 +1984,7 @@ void initLockCvForSimulation()
         sprintf (lockName,CUSTOMERDEPARTMENTCOMPLAINLOCK_STRING,
         		xstrlen(CUSTOMERDEPARTMENTCOMPLAINLOCK_STRING), i);
         g_customerDepartmentComplainLock[i] = createLock(lockName,xstrlen(lockName));
-    	print2("g_customerDepartmentComplainLock[%d] = %d \n",i,g_customerDepartmentComplainLock);
+    	print2("g_customerDepartmentComplainLock[%d] = %d \n",i,g_customerDepartmentComplainLock[i]);
         clearCharBuf(lockName);
 
         sprintf (cvName,CUSTOMERDEPARTMENTCOMPLAINCV_STRING,
