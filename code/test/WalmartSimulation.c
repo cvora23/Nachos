@@ -1542,7 +1542,7 @@ void GoodLoaderThread()
     		 * Walking time from re stocking room to shelf
     		 */
 
-    		for(int i=0;i<goodsLoaderWalkingTime;i++)
+    		for(i=0;i<goodsLoaderWalkingTime;i++)
     		{
     			Yield();
     			printStringInt("%s is walking from RE-STOCK room to shelf to RE-STOCK ITEM_%d\n",threadName,
