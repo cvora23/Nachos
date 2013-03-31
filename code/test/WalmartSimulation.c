@@ -2230,11 +2230,13 @@ void main(const char* testOption)
     {
     	Fork(CashierThread);
     }
+
+#if 0
     for(i = 0;i<NO_OF_GOOD_LOADERS;i++)
     {
     	Fork(GoodLoaderThread);
     }
-#if 0
+
     for(i = 0;i<NO_OF_SALESMAN;i++)
     {
     	Fork(SalesmanThread);
