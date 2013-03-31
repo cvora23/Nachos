@@ -761,7 +761,7 @@ void CustomerThread()
 
     	signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
 
-    	waait(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
+    	wait(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
 
     	signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
 
@@ -1669,7 +1669,7 @@ void CashierThread()
 
     		releaseLock(g_managerCashierLock);
 
-    		g_managerCashierInteractionCVsignal(g_managerCashierInteractionLock);
+    		signal(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
 
     		printStringInt("%s informs Manager that CUSTOMER_%d does not have enough money\n",
     				threadName,myCustomer);
@@ -1838,7 +1838,7 @@ void initLockCvForSimulation()
 
 	for(i=0;i<NO_OF_SALESMAN;i++)
 	{
-		sprintf(lockName,CUSTOMERSALESMANLOCK_STRING,xtrlen(CUSTOMERSALESMANLOCK_STRING), i);
+		sprintf(lockName,CUSTOMERSALESMANLOCK_STRING,xstrlen(CUSTOMERSALESMANLOCK_STRING), i);
         g_customerSalesmanLock[i] = createLock(lockName,xstrlen(lockName));
         clearCharBuf(lockName);
 
