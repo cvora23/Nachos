@@ -1477,7 +1477,7 @@ void GoodLoaderThread()
     		printStringIntInt("%s is informed by SALESMAN_%d of DEPARTMENT_%d ",
     				threadName,g_goodLoaderInfo[ThreadId].salesmanId,
     				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo);
-    				printStringInt("to re stock ITEM_%d \n",g_goodLoaderInfo[ThreadId].itemToRestock);
+    				print1("to re stock ITEM_%d \n",g_goodLoaderInfo[ThreadId].itemToRestock);
 
 
     		/**
@@ -1530,10 +1530,10 @@ void GoodLoaderThread()
 
     		wait(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
 
-    		printStringIntInt("%s is informed by SALESMAN_%d of DEPARTMENT_%d to re stock ITEM_%d \n",
+    		printStringIntInt("%s is informed by SALESMAN_%d of DEPARTMENT_%d ",
     				threadName,g_goodLoaderInfo[ThreadId].salesmanId,
-    				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo,
-    				g_goodLoaderInfo[ThreadId].itemToRestock);
+    				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo);
+    				print1("to re stock ITEM_%d \n",g_goodLoaderInfo[ThreadId].itemToRestock);
 
     		/**
     		 * BEFORE SIGNALING BACK TO SALESMAN RESTOCK THE ITEM
@@ -1783,7 +1783,7 @@ void ManagerThread()
     					g_customerInfo[g_managerInfo.customerId].pCustomerShoppingList[itemRemoveCounter].noOfItems;
 
     			printStringIntInt("%s removes ITEM_%d from trolley of CUSTOMER_%d\n",
-    					threadName,currentItemNoToRemove);
+    					threadName,currentItemNoToRemove,g_managerInfo.customerId);
 
     			g_managerInfo.customerBill -= currentItemNoToRemovePrice * currentItemNoToRemoveCount;
 
