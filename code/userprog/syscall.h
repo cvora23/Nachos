@@ -173,7 +173,7 @@ void printStringInt(char* buf,char* string,int var1);
 
 void printStringIntInt(char* buf,char* string,int var1,int var2);
 
-void sprintf(char* outBuf,char* arg1,int arg1Len,int arg2);
+void sprintf(char* outBuf,const char* arg1,int arg1Len,int arg2);
 
 int scan();
 

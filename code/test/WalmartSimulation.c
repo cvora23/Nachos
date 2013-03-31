@@ -415,7 +415,7 @@ int			g_managerCustomerInteractionCV;
 
 /********************************************PROJ1 PROBLEM SIMULATION***********************************************/
 
-int xstrlen(char* s)
+int xstrlen(const char* s)
 {
 	int length = 0;
 	while(*s!='\0')
