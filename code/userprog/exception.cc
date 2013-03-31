@@ -1155,7 +1155,7 @@ void ExceptionHandler(ExceptionType which) {
 	    case SC_CreateCondition:
 	    {
 	    	DEBUG('a',"Create Condition syscall \n");
-	    	CreateCondition_Syscall(arg1,arg2);
+	    	rv = CreateCondition_Syscall(arg1,arg2);
 	    }
 	    break;
 
