@@ -1946,7 +1946,7 @@ void initLockCvForSimulation()
         clearCharBuf(lockName);
 	}
 
-	for(int i=0;i<NO_OF_MANAGERS;i++)
+	for(i=0;i<NO_OF_MANAGERS;i++)
 	{
         sprintf (lockName,MANAGERCASHIERLOCK_STRING,
         		xtrlen(MANAGERCASHIERLOCK_STRING),i);
