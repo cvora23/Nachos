@@ -309,6 +309,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 
 	if(copyin(vaddr,lockNameLen,buf) == -1)
 	{
+		printf("Invalid Address passed \n");
 		delete [] buf;
 		return -1;
 	}
@@ -489,6 +490,7 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 
 	if(copyin(vaddr,conditionNameLen,buf) == -1)
 	{
+		printf("Invalid Address passed \n");
 		delete [] buf;
 		return -1;
 	}
