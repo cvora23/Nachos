@@ -1718,7 +1718,7 @@ void ManagerThread()
 	char threadName[256];
 
 
-    sprintf(threadName, MANAGER_STRING,xstrlen(MANAGER_STRING), ThreadId);
+    sprintf(threadName, MANAGER_STRING,xstrlen(MANAGER_STRING), 0);
     printString( "%s Started !!!!!!! \n",threadName);
 
     while(!simulationEnd)
