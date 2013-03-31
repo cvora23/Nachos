@@ -1640,6 +1640,7 @@ void CashierThread()
     		}
     		releaseLock(g_cashierLineLock[ThreadId]);
     	}
+		print2("Cashier %d total sales money is %d \n",ThreadId,g_cashierInfo[ThreadId].totalSalesMoney);
     	wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
     	myCustomer = g_cashierInfo[ThreadId].customerId;
 
