@@ -340,14 +340,14 @@ void AcquireLock_Syscall(int lockId)
 
 	if(lockId<0 || lockId>MAX_LOCKS)
 	{
-		printf("Trying to acquire lock on invalid lockId \n");
+		printf("Trying to acquire lock on invalid lockId = %d \n",lockId);
 		userLockTableLock->Release();
 		return;
 	}
 
 	if(userLockTable.locks[lockId].lock == NULL || userLockTable.locks[lockId].isDeleted)
 	{
-		printf("Tring to acquire lock on invalid lockId. LockId does not exist \n");
+		printf("Tring to acquire lock on invalid lockId = %d. LockId does not exist \n",lockId);
 		userLockTableLock->Release();
 		return;
 	}
@@ -376,14 +376,14 @@ void ReleaseLock_Syscall(int lockId)
 
 	if(lockId<0 || lockId>MAX_LOCKS)
 	{
-		printf("Trying to release lock on invalid lockId \n");
+		printf("Trying to release lock on invalid lockId = %d \n",lockId);
 		userLockTableLock->Release();
 		return;
 	}
 
 	if(userLockTable.locks[lockId].lock == NULL || userLockTable.locks[lockId].isDeleted)
 	{
-		printf("Tring to release lock on invalid lockId. LockId does not exist \n");
+		printf("Tring to release lock on invalid lockId = %d . LockId does not exist \n",lockId);
 		userLockTableLock->Release();
 		return;
 	}
@@ -423,14 +423,14 @@ void DestroyLock_Syscall(int lockId)
 
 	if(lockId<0 || lockId>MAX_LOCKS)
 	{
-		printf("Trying to destroy lock on invalid lockId \n");
+		printf("Trying to destroy lock on invalid lockId = %d \n",lockId);
 		userLockTableLock->Release();
 		return;
 	}
 
 	if(userLockTable.locks[lockId].lock == NULL || userLockTable.locks[lockId].isDeleted)
 	{
-		printf("Tring to destroy lock on invalid lockId. LockId does not exist \n");
+		printf("Tring to destroy lock on invalid lockId = %d . LockId does not exist \n",lockId);
 		userLockTableLock->Release();
 		return;
 	}
@@ -522,7 +522,8 @@ void Wait_Syscall(int conditionId,int lockId)
 
 	if(lockId<0 || lockId>MAX_LOCKS || conditionId<0 || conditionId>MAX_CVS)
 	{
-		printf("Error in Wait System call: lockId or ConditionId out of bounds \n");
+		printf("Error in Wait System call: lockId = %d or ConditionId = %d out of bounds \n",
+				lockId,conditionId);
 		userLockTableLock->Release();
 		userConditionTableLock->Release();
 		return;
@@ -563,7 +564,8 @@ void Signal_Syscall(int conditionId,int lockId)
 
 	if(lockId<0 || lockId>MAX_LOCKS || conditionId<0 || conditionId>MAX_CVS)
 	{
-		printf("Error in Signal System call: lockId or ConditionId out of bounds \n");
+		printf("Error in Signal System call: lockId = %d or ConditionId = %d out of bounds \n",
+				lockId,conditionId);
 		userLockTableLock->Release();
 		userConditionTableLock->Release();
 		return;
