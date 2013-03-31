@@ -1528,6 +1528,8 @@ void GoodLoaderThread()
 
     		releaseLock(g_goodLoaderWaitLock[0]);
 
+    		print1("ThreadId is %d \n",ThreadId);
+    		print1("g_salesmanGoodsLoaderCV = %d \n",g_salesmanGoodsLoaderCV[ThreadId]);
     		wait(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
 
     		printStringIntInt("%s is informed by SALESMAN_%d of DEPARTMENT_%d ",
