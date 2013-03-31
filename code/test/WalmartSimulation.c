@@ -1631,7 +1631,7 @@ void CashierThread()
     		}
     		releaseLock(g_cashierLineLock[ThreadId]);
     	}
-
+    	print1("Thread ID for g_customerCashierCV is %d\n",ThreadId);
     	wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
     	myCustomer = g_cashierInfo[ThreadId].customerId;
 
