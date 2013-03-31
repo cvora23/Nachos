@@ -2206,7 +2206,7 @@ void main(const char* testOption)
 
     initLockCvForSimulation();
 
-    printLockCVForSimulation();
+    printLockCvForSimulation();
 
 #if 0
 
