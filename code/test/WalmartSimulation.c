@@ -65,7 +65,7 @@
 #define CASHIER_STRING									(const char*)"CASHIER"
 #define DEPARTMENT_STRING								(const char*)"DEPARTMENT"
 #define SALESMAN_STRING									(const char*)"SALESMAN"
-#define GOOD_LOADERS_STRING								(const char*)"GOOD LOADER"
+#define GOOD_LOADERS_STRING								(const char*)"GOODLOADER"
 #define CUSTOMER_STRING									(const char*)"CUSTOMER"
 
 #define CUSTOMERTHREADCOUNTER_STRING					(const char*)"CustomerThreadCounterLock"
