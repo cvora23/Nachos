@@ -1818,13 +1818,13 @@ void initLockCvForSimulation()
 	/**
 	 * Creating Locks for Thread Counters
 	 */
-	g_customerThreadCounterLock = createLock(CUSTOMERTHREADCOUNTER_STRING,
+	g_customerThreadCounterLock = createLock((char*)CUSTOMERTHREADCOUNTER_STRING,
 			xstrlen(CUSTOMERTHREADCOUNTER_STRING));
-	g_salesmanThreadCounterLock = createLock(SALESMANTHREADCOUNTER_STRING,
+	g_salesmanThreadCounterLock = createLock((char*)SALESMANTHREADCOUNTER_STRING,
 			xstrlen(SALESMANTHREADCOUNTER_STRING));
-	g_goodsLoaderThreadCounterLock = createLock(GOODSLOADERTHREADCOUNTER_STRING,
+	g_goodsLoaderThreadCounterLock = createLock((char*)GOODSLOADERTHREADCOUNTER_STRING,
 			xstrlen(GOODSLOADERTHREADCOUNTER_STRING));
-	g_cashierThreadCounterLock = createLock(CASHIERTHREADCOUNTER_STRING,
+	g_cashierThreadCounterLock = createLock((char*)CASHIERTHREADCOUNTER_STRING,
 			xstrlen(CASHIERTHREADCOUNTER_STRING));
 
 	/**
@@ -1832,8 +1832,8 @@ void initLockCvForSimulation()
 	 */
 	g_usedTrolleyCount = 0;
 	g_waitForTrolleyCount = 0;
-	g_customerTrolleyLock = createLock(CUSTOMERTROLLEYLOCK_STRING,xstrlen(CUSTOMERTROLLEYLOCK_STRING));
-	g_customerTrolleyCV = createCondition(CUSTOMERTROLLEYCV_STRING,xstrlen(CUSTOMERTROLLEYCV_STRING));
+	g_customerTrolleyLock = createLock((char*)CUSTOMERTROLLEYLOCK_STRING,xstrlen(CUSTOMERTROLLEYLOCK_STRING));
+	g_customerTrolleyCV = createCondition((char*)CUSTOMERTROLLEYCV_STRING,xstrlen(CUSTOMERTROLLEYCV_STRING));
 
 
 	for(i=0;i<NO_OF_SALESMAN;i++)
