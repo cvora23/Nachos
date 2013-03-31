@@ -459,7 +459,7 @@ static void initItemInfo()
 static void initCustomerInfo()
 {
     static bool firstCall = true;
-    int i;
+    int i,j;
     if(firstCall)
     {
 		for(i = 0;i<NO_OF_CUSTOMERS;i++)
@@ -472,7 +472,7 @@ static void initCustomerInfo()
 #endif
 			g_customerInfo[i].noOfItems = NO_OF_ITEMS_TO_SHOP;
 
-			for(int j=0;j<g_customerInfo[i].noOfItems;j++)
+			for(j=0;j<g_customerInfo[i].noOfItems;j++)
 			{
 				g_customerInfo[i].pCustomerShoppingList[j].itemNo = 0;
 				g_customerInfo[i].pCustomerShoppingList[j].noOfItems = 0;
@@ -837,7 +837,7 @@ void CustomerThread()
 	    		wait(g_customerDepartmentComplainCV[currentDepartmentNoForItem],
 	    				g_customerDepartmentComplainLock[currentDepartmentNoForItem]);
 
-	        	for(int salesmanIndex=salesManStartForDepartment;
+	        	for(salesmanIndex=salesManStartForDepartment;
 	        			salesmanIndex<salesManEndForDepartment;salesmanIndex++)
 	        	{
 	        		/**
