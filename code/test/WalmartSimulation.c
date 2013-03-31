@@ -465,7 +465,7 @@ static void initCustomerInfo()
 		for(i = 0;i<NO_OF_CUSTOMERS;i++)
 		{
 			g_customerInfo[i].money = Random()%MAX_AMT_PER_CUSTOMER + 1;
-			if(Random%2 == 0)
+			if(Random()%2 == 0)
 			{
 				g_customerInfo[i].type = PRIVILEGED;
 			}
