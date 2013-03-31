@@ -1220,7 +1220,7 @@ void SalesmanThread()
     			g_goodLoaderWaitQueue[0]++;
 
     			wait(g_goodLoaderWaitCV[0],g_goodLoaderWaitLock[0]);
-        		for(int goodLoaderIndex=0;goodLoaderIndex<NO_OF_GOOD_LOADERS;goodLoaderIndex++)
+        		for(goodLoaderIndex=0;goodLoaderIndex<NO_OF_GOOD_LOADERS;goodLoaderIndex++)
         		{
         			acquireLock(g_salesmanGoodsLoaderLock[goodLoaderIndex]);
 
