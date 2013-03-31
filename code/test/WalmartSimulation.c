@@ -1212,9 +1212,9 @@ void SalesmanThread()
     		{
 	    		printStringInt("%s is waiting in SINGLE LINE for GOOD LOADERS as "
 	    				" NO GOODLOADER is free for RESTOCK-ITEM_%d inquiry so "
-	    				"\n",
-	    				g_salesmanInfo[ThreadId].itemToRestock,
-	    				threadName);
+	    				"\n",threadName,
+	    				g_salesmanInfo[ThreadId].itemToRestock
+	    				);
 
     			acquireLock(g_goodLoaderWaitLock[0]);
     			g_goodLoaderWaitQueue[0]++;
@@ -1334,7 +1334,7 @@ void SalesmanThread()
 
     			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptComplainWaitQueue;
 
-        		for(int goodLoaderIndex=0;goodLoaderIndex<NO_OF_GOOD_LOADERS;goodLoaderIndex++)
+        		for(goodLoaderIndex=0;goodLoaderIndex<NO_OF_GOOD_LOADERS;goodLoaderIndex++)
         		{
         			acquireLock(g_salesmanGoodsLoaderLock[goodLoaderIndex]);
 
@@ -1796,7 +1796,7 @@ void ManagerThread()
     		printStringInt("%s has total sale of $ %d\n",threadName,managerSales);
     	}
 
-    	for(int i=0;i<MANAGER_RANDOM_SLEEP_TIME;i++)
+    	for(i=0;i<MANAGER_RANDOM_SLEEP_TIME;i++)
     	{
     		Yield();
     	}
