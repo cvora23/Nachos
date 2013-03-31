@@ -465,7 +465,14 @@ static void initCustomerInfo()
 		for(i = 0;i<NO_OF_CUSTOMERS;i++)
 		{
 			g_customerInfo[i].money = Random()%MAX_AMT_PER_CUSTOMER + 1;
-			g_customerInfo[i].type = CustomerType(Random()%2);
+			if(Random%2 == 0)
+			{
+				g_customerInfo[i].type = PRIVILEGED;
+			}
+			else
+			{
+				g_customerInfo[i].type = NON_PRIVILEGED;
+			}
 #if 0
 			g_customerInfo[i].noOfItems = Random()%MAX_NO_ITEMS_TO_BE_PURCHASED + 1;
 			g_customerInfo[i].pCustomerShoppingList = new CustomerShoppingList[g_customerInfo[i].noOfItems];
