@@ -80,7 +80,7 @@ exec: exec.o start.o
 	$(LD) $(LDFLAGS) start.o exec.o -o exec.coff
 	../bin/coff2noff exec.coff exec
 	
-	WalmartSimulation.o: WalmartSimulation.c
+WalmartSimulation.o: WalmartSimulation.c
 	$(CC) $(CFLAGS) -c WalmartSimulation.c
 WalmartSimulation: WalmartSimulation.o start.o
 	$(LD) $(LDFLAGS) start.o WalmartSimulation.o -o WalmartSimulation.coff
