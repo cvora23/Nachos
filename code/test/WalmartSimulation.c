@@ -424,7 +424,7 @@ int xstrlen(const char* s)
 		s++;
 	}
 
-	return length;
+	return length+1;
 }
 
 void clearCharBuf(char* s)
