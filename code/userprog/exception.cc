@@ -512,7 +512,6 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 	userConditionTable.conditions[conditionId].conditionCounter = 0;
 
 	userConditionTableLock->Release();
-	printf("Condition Id returned is %d \n",conditionId);
 	return conditionId;
 }
 
