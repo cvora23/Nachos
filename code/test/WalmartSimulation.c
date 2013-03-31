@@ -1631,7 +1631,6 @@ void CashierThread()
     		}
     		releaseLock(g_cashierLineLock[ThreadId]);
     	}
-    	print1("Thread ID for g_customerCashierCV is %d\n",g_customerCashierCV[ThreadId]);
     	wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
     	myCustomer = g_cashierInfo[ThreadId].customerId;
 
@@ -2107,7 +2106,7 @@ void main(const char* testOption)
 
 
 
-#if 0
+#if 1
     for(i = 0;i<NO_OF_MANAGERS;i++)
     {
        Fork(ManagerThread);
