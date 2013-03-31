@@ -1956,7 +1956,7 @@ void initLockCvForSimulation()
 	for(i=0;i<NO_OF_MANAGERS;i++)
 	{
         sprintf (lockName,MANAGERCASHIERLOCK_STRING,
-        		xtrlen(MANAGERCASHIERLOCK_STRING),i);
+        		xstrlen(MANAGERCASHIERLOCK_STRING),i);
         g_managerCashierLock = createLock(lockName,xstrlen(lockName));
         clearCharBuf(lockName);
 
@@ -2050,7 +2050,7 @@ void main(const char* testOption)
 	initCustomerShoppingList();
 
 
-    printConfiguration();
+    //printConfiguration();
 
     initSalesManInfo();
 
