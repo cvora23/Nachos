@@ -2030,6 +2030,108 @@ void initLockCvForSimulation()
 
 }
 
+void printLockCvForSimulation()
+{
+	int i;
+
+	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
+	print1("g_salesmanThreadCounterLock = %d \n",g_salesmanThreadCounterLock);
+	print1("g_goodsLoaderThreadCounterLock = %d \n",g_goodsLoaderThreadCounterLock);
+	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
+
+	print1("g_customerTrolleyLock = %d \n",g_customerTrolleyLock);
+	print1("g_customerTrolleyCV = %d \n",g_customerTrolleyCV);
+
+
+	for(i=0;i<NO_OF_MANAGERS;i++)
+	{
+    	print1("g_managerCashierLock = %d \n",g_managerCashierLock);
+
+    	print1("g_managerCashierCV = %d \n",g_managerCashierCV);
+
+    	print1("g_managerCashierInteractionLock = %d \n",g_managerCashierInteractionLock);
+
+    	print1("g_managerCashierInteractionCV = %d \n",g_managerCashierInteractionCV);
+	}
+
+	for(i=0;i<NO_OF_MANAGERS;i++)
+	{
+    	print1("g_managerCustomerInteractionLock = %d \n",g_managerCustomerInteractionLock);
+    	print1("g_managerCustomerInteractionCV = %d \n",g_managerCustomerInteractionCV);
+	}
+
+	for(i=0;i<NO_OF_CASHIERS;i++)
+	{
+    	print2("g_cashierLineLock[%d] = %d \n",i,g_cashierLineLock[i]);
+
+    	print2("g_cashierLineCV[%d] = %d \n",i,g_cashierLineCV[i]);
+
+    	print2("g_cashierPrivilegedLineLock[%d] = %d \n",i,g_cashierPrivilegedLineLock[i]);
+
+    	print2("g_cashierPrivilegedLineCV[%d] = %d \n",i,g_cashierPrivilegedLineCV[i]);
+
+    	print2("g_customerCashierLock[%d] = %d \n",i,g_customerCashierLock[i]);
+
+    	print2("g_customerCashierCV[%d] = %d \n",i,g_customerCashierCV[i]);
+	}
+
+	for(i=0;i<NO_OF_CASHIERS;i++)
+	{
+
+    	print2("g_managerCashierCashLock[%d] = %d \n",i,g_managerCashierCashLock[i]);
+	}
+
+
+	for(i=0;i<NO_OF_SALESMAN;i++)
+	{
+
+    	print2("g_customerSalesmanLock[%d] = %d \n",i,g_customerSalesmanLock[i]);
+
+    	print2("g_customerSalesmanCV[%d] = %d \n",i,g_customerSalesmanCV[i]);
+	}
+
+	for(i=0;i<NO_OF_DEPARTMENT;i++)
+	{
+
+    	print2("g_customerDepartmentLock[%d] = %d \n",i,g_customerDepartmentLock[i]);
+
+    	print2("g_customerDepartmentCV[%d] = %d \n",i,g_customerDepartmentCV[i]);
+	}
+
+	for(i =0;i<NO_OF_SHELFS;i++)
+	{
+
+    	print2("g_shelfAccessLock[%d] = %d \n",i,g_shelfAccessLock[i]);
+	}
+
+	for(i=0;i<NO_OF_DEPARTMENT;i++)
+	{
+
+    	print2("g_customerDepartmentComplainLock[%d] = %d \n",i,g_customerDepartmentComplainLock[i]);
+
+    	print2("g_customerDepartmentComplainCV[%d] = %d \n",i,g_customerDepartmentComplainCV[i]);
+
+	}
+
+	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
+	{
+
+    	print2("g_salesmanGoodsLoaderLock[%d] = %d \n",i,g_salesmanGoodsLoaderLock[i]);
+
+    	print2("g_salesmanGoodsLoaderCV[%d] = %d \n",i,g_salesmanGoodsLoaderCV[i]);
+	}
+
+	for(i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
+	{
+
+    	print2("g_goodLoaderWaitLock[%d] = %d \n",i,g_goodLoaderWaitLock[i]);
+
+    	print2("g_goodLoaderWaitCV[%d] = %d \n",i, g_goodLoaderWaitCV[i]);
+
+	}
+
+}
+
 void main(const char* testOption)
 {
 	int configRetVal;
@@ -2104,8 +2206,9 @@ void main(const char* testOption)
 
     initLockCvForSimulation();
 
+    printLockCVForSimulation();
 
-
+#if 0
 
     for(i = 0;i<NO_OF_MANAGERS;i++)
     {
@@ -2115,7 +2218,7 @@ void main(const char* testOption)
     {
     	Fork(CashierThread);
     }
-#if 1
+
     for(i = 0;i<NO_OF_SALESMAN;i++)
     {
     	Fork(SalesmanThread);
