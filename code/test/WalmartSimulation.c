@@ -1729,6 +1729,7 @@ void ManagerThread()
     	for(i=0;i<NO_OF_CASHIERS;i++)
     	{
     		acquireLock(g_managerCashierCashLock[i]);
+    		print2("Total Sales Money From Cashier %d is %d\n",i,g_cashierInfo[i].totalSalesMoney);
     		g_managerInfo.totalRevenue += g_cashierInfo[i].totalSalesMoney;
     		g_cashierInfo[i].totalSalesMoney = 0;
     		releaseLock(g_managerCashierCashLock[i]);
