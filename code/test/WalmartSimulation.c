@@ -2049,8 +2049,10 @@ void main(const char* testOption)
 	initCustomerInfo();
 	initCustomerShoppingList();
 
+	/**
+	 *     printConfiguration();
+	 */
 
-    //printConfiguration();
 
     initSalesManInfo();
 
