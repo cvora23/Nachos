@@ -571,9 +571,16 @@ static void initCashierInfo()
 	}
 }
 
-void printCashierInfo(int cashierId)
+void printCashierInfo()
 {
-
+	int i;
+	for(i=0;i<NO_OF_CASHIERS;i++)
+	{
+		print2("Cashier %d Status is %d \n",i,g_cashierInfo[i].status);
+		print2("Cashier %d Customer Id is %d \n",i,g_cashierInfo[i].customerId);
+		print2("Cashier %d bill is %d \n",i,g_cashierInfo[i].bill);
+		print2("Cashier %d total sales money is %d \n",i,g_cashierInfo[i].totalSalesMoney);
+	}
 }
 
 static void initManagerInfo()
@@ -2209,6 +2216,7 @@ void main(const char* testOption)
 
     printLockCvForSimulation();
 
+    printCashierInfo();
 
 
 
