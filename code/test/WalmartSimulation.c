@@ -1795,7 +1795,8 @@ void initLockCvForSimulation()
 	char lockName[256];
 	char cvName[256];
 	int i;
-
+    clearCharBuf(lockName);
+    clearCharBuf(cvName);
 
 #if 1
 
