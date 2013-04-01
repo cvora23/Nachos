@@ -1831,7 +1831,7 @@ void initLockCvForSimulation()
 	int i;
 
 
-#if 0
+#if 1
 	/**
 	 * Creating Locks for Thread Counters
 	 */
