@@ -1907,25 +1907,25 @@ void initLockCvForSimulation()
 	{
         sprintf (lockName,MANAGERCASHIERLOCK_STRING,
         		xstrlen(MANAGERCASHIERLOCK_STRING),i);
-        g_managerCashierLock = createLock(lockName,xstrlen(lockName));
+        g_managerCashierLock = createLock(lockName,sizeof(lockName));
     	print1("g_managerCashierLock = %d \n",g_managerCashierLock);
         clearCharBuf(lockName);
 
         sprintf (cvName,MANAGERCASHIERCV_STRING,
         		xstrlen(MANAGERCASHIERCV_STRING),i);
-        g_managerCashierCV = createCondition(cvName,xstrlen(cvName));
+        g_managerCashierCV = createCondition(cvName,sizeof(cvName));
     	print1("g_managerCashierCV = %d \n",g_managerCashierCV);
         clearCharBuf(cvName);
 
         sprintf (lockName,MANAGERCASHIERINTERACTIONLOCK_STRING,
         		xstrlen(MANAGERCASHIERINTERACTIONLOCK_STRING),i);
-        g_managerCashierInteractionLock = createLock(lockName,xstrlen(lockName));
+        g_managerCashierInteractionLock = createLock(lockName,sizeof(lockName));
     	print1("g_managerCashierInteractionLock = %d \n",g_managerCashierInteractionLock);
         clearCharBuf(lockName);
 
         sprintf (cvName,MANAGERCASHIERINTERACTIONCV_STRING,
         		xstrlen(MANAGERCASHIERINTERACTIONCV_STRING), i);
-        g_managerCashierInteractionCV = createCondition(cvName,xstrlen(cvName));
+        g_managerCashierInteractionCV = createCondition(cvName,sizeof(cvName));
     	print1("g_managerCashierInteractionCV = %d \n",g_managerCashierInteractionCV);
         clearCharBuf(cvName);
 	}
@@ -1934,13 +1934,13 @@ void initLockCvForSimulation()
 	{
         sprintf (lockName,MANAGERCUSTOMERINTERACTIONLOCK_STRING,
         		xstrlen(MANAGERCUSTOMERINTERACTIONLOCK_STRING), i);
-        g_managerCustomerInteractionLock = createLock(lockName,xstrlen(lockName));
+        g_managerCustomerInteractionLock = createLock(lockName,sizeof(lockName));
     	print1("g_managerCustomerInteractionLock = %d \n",g_managerCustomerInteractionLock);
         clearCharBuf(lockName);
 
         sprintf (cvName,MANAGERCUSTOMERINTERACTIONCV_STRING,
         		xstrlen(MANAGERCUSTOMERINTERACTIONCV_STRING), i);
-        g_managerCustomerInteractionCV = createCondition(cvName,xstrlen(cvName));
+        g_managerCustomerInteractionCV = createCondition(cvName,sizeof(cvName));
     	print1("g_managerCustomerInteractionCV = %d \n",g_managerCustomerInteractionCV);
         clearCharBuf(cvName);
 	}
@@ -1949,13 +1949,13 @@ void initLockCvForSimulation()
 	{
         sprintf (lockName,CASHIERLINELOCK_STRING,
         		xstrlen(CASHIERLINELOCK_STRING),i);
-        g_cashierLineLock[i] = createLock(lockName,xstrlen(lockName));
+        g_cashierLineLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_cashierLineLock[%d] = %d \n",i,g_cashierLineLock[i]);
         clearCharBuf(lockName);
 
         sprintf (cvName,CASHIERLINECV_STRING,
         		xstrlen(CASHIERLINECV_STRING),i);
-        g_cashierLineCV[i] = createCondition(cvName,xstrlen(cvName));
+        g_cashierLineCV[i] = createCondition(cvName,sizeof(cvName));
     	print2("g_cashierLineCV[%d] = %d \n",i,g_cashierLineCV[i]);
         clearCharBuf(cvName);
 
@@ -1963,13 +1963,13 @@ void initLockCvForSimulation()
 
         sprintf (lockName,CASHIERPRIVILEGEDLINELOCK_STRING,
         		xstrlen(CASHIERPRIVILEGEDLINELOCK_STRING),i);
-        g_cashierPrivilegedLineLock[i] = createLock(lockName,xstrlen(lockName));
+        g_cashierPrivilegedLineLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_cashierPrivilegedLineLock[%d] = %d \n",i,g_cashierPrivilegedLineLock[i]);
         clearCharBuf(lockName);
 
         sprintf (cvName,CASHIERPRIVILEGEDLINECV_STRING,
         		xstrlen(CASHIERPRIVILEGEDLINECV_STRING),i);
-        g_cashierPrivilegedLineCV[i] = createCondition(cvName,xstrlen(cvName));
+        g_cashierPrivilegedLineCV[i] = createCondition(cvName,sizeof(cvName));
     	print2("g_cashierPrivilegedLineCV[%d] = %d \n",i,g_cashierPrivilegedLineCV[i]);
         clearCharBuf(cvName);
 
@@ -1977,13 +1977,13 @@ void initLockCvForSimulation()
 
         sprintf (lockName,CUSTOMERCASHIERLOCK_STRING,
         		xstrlen(CUSTOMERCASHIERLOCK_STRING),i);
-        g_customerCashierLock[i] = createLock(lockName,xstrlen(lockName));
+        g_customerCashierLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_customerCashierLock[%d] = %d \n",i,g_customerCashierLock[i]);
         clearCharBuf(lockName);
 
         sprintf (cvName,CUSTOMERCASHIERCV_STRING,
         		xstrlen(CUSTOMERCASHIERCV_STRING),i);
-        g_customerCashierCV[i] = createCondition(cvName,xstrlen(cvName));
+        g_customerCashierCV[i] = createCondition(cvName,sizeof(cvName));
     	print2("g_customerCashierCV[%d] = %d \n",i,g_customerCashierCV[i]);
         clearCharBuf(cvName);
 	}
@@ -1992,7 +1992,7 @@ void initLockCvForSimulation()
 	{
         sprintf (lockName, MANAGERCASHIERCASHLOCK_STRING,
         		xstrlen(MANAGERCASHIERCASHLOCK_STRING),i);
-        g_managerCashierCashLock[i] = createLock(lockName,xstrlen(lockName));
+        g_managerCashierCashLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_managerCashierCashLock[%d] = %d \n",i,g_managerCashierCashLock[i]);
         clearCharBuf(lockName);
 	}
@@ -2001,12 +2001,12 @@ void initLockCvForSimulation()
 	for(i=0;i<NO_OF_SALESMAN;i++)
 	{
 		sprintf(lockName,CUSTOMERSALESMANLOCK_STRING,xstrlen(CUSTOMERSALESMANLOCK_STRING), i);
-        g_customerSalesmanLock[i] = createLock(lockName,xstrlen(lockName));
+        g_customerSalesmanLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_customerSalesmanLock[%d] = %d \n",i,g_customerSalesmanLock[i]);
         clearCharBuf(lockName);
 
         sprintf (cvName,CUSTOMERSALESMANCV_STRING,xstrlen(CUSTOMERSALESMANCV_STRING), i);
-        g_customerSalesmanCV[i] = createCondition(cvName,xstrlen(cvName));
+        g_customerSalesmanCV[i] = createCondition(cvName,sizeof(cvName));
     	print2("g_customerSalesmanCV[%d] = %d \n",i,g_customerSalesmanCV[i]);
         clearCharBuf(cvName);
 	}
@@ -2014,12 +2014,12 @@ void initLockCvForSimulation()
 	for(i=0;i<NO_OF_DEPARTMENT;i++)
 	{
         sprintf (lockName,CUSTOMERDEPARTMENTLOCK_STRING,xstrlen(CUSTOMERDEPARTMENTLOCK_STRING), i);
-        g_customerDepartmentLock[i] = createLock(lockName,xstrlen(lockName));
+        g_customerDepartmentLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_customerDepartmentLock[%d] = %d \n",i,g_customerDepartmentLock[i]);
         clearCharBuf(lockName);
 
         sprintf (cvName,CUSTOMERDEPARTMENTCV_STRING,xstrlen(CUSTOMERDEPARTMENTCV_STRING), i);
-        g_customerDepartmentCV[i] =  createCondition(cvName,xstrlen(cvName));
+        g_customerDepartmentCV[i] =  createCondition(cvName,sizeof(cvName));
     	print2("g_customerDepartmentCV[%d] = %d \n",i,g_customerDepartmentCV[i]);
         clearCharBuf(cvName);
 
@@ -2029,7 +2029,7 @@ void initLockCvForSimulation()
 	for(i =0;i<NO_OF_SHELFS;i++)
 	{
         sprintf (lockName,SHELFACCESSLOCK_STRING,xstrlen(SHELFACCESSLOCK_STRING), i);
-        g_shelfAccessLock[i] = createLock(lockName,xstrlen(lockName));
+        g_shelfAccessLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_shelfAccessLock[%d] = %d \n",i,g_shelfAccessLock[i]);
         clearCharBuf(lockName);
 	}
@@ -2038,13 +2038,13 @@ void initLockCvForSimulation()
 	{
         sprintf (lockName,CUSTOMERDEPARTMENTCOMPLAINLOCK_STRING,
         		xstrlen(CUSTOMERDEPARTMENTCOMPLAINLOCK_STRING), i);
-        g_customerDepartmentComplainLock[i] = createLock(lockName,xstrlen(lockName));
+        g_customerDepartmentComplainLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_customerDepartmentComplainLock[%d] = %d \n",i,g_customerDepartmentComplainLock[i]);
         clearCharBuf(lockName);
 
         sprintf (cvName,CUSTOMERDEPARTMENTCOMPLAINCV_STRING,
         		xstrlen(CUSTOMERDEPARTMENTCOMPLAINCV_STRING), i);
-        g_customerDepartmentComplainCV[i] = createCondition(cvName,xstrlen(cvName));
+        g_customerDepartmentComplainCV[i] = createCondition(cvName,sizeof(cvName));
     	print2("g_customerDepartmentComplainCV[%d] = %d \n",i,g_customerDepartmentComplainCV[i]);
         clearCharBuf(cvName);
 
@@ -2054,12 +2054,12 @@ void initLockCvForSimulation()
 	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
 	{
         sprintf (lockName,SALESMANGOODLOADERLOCK_STRING,xstrlen(SALESMANGOODLOADERLOCK_STRING), i);
-        g_salesmanGoodsLoaderLock[i] = createLock(lockName,xstrlen(lockName));
+        g_salesmanGoodsLoaderLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_salesmanGoodsLoaderLock[%d] = %d \n",i,g_salesmanGoodsLoaderLock[i]);
         clearCharBuf(lockName);
 
         sprintf (cvName,SALESMANGOODLOADERCV_STRING,xstrlen(SALESMANGOODLOADERCV_STRING), i);
-        g_salesmanGoodsLoaderCV[i] = createCondition(cvName,xstrlen(cvName));
+        g_salesmanGoodsLoaderCV[i] = createCondition(cvName,sizeof(cvName));
     	print2("g_salesmanGoodsLoaderCV[%d] = %d \n",i,g_salesmanGoodsLoaderCV[i]);
         clearCharBuf(cvName);
 	}
@@ -2068,13 +2068,13 @@ void initLockCvForSimulation()
 	{
         sprintf (lockName,GOODLOADERWAITQUEUELOCK_STRING,
         		xstrlen(GOODLOADERWAITQUEUELOCK_STRING),i);
-        g_goodLoaderWaitLock[i] = createLock(lockName,xstrlen(lockName));
+        g_goodLoaderWaitLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_goodLoaderWaitLock[%d] = %d \n",i,g_goodLoaderWaitLock[i]);
         clearCharBuf(lockName);
 
         sprintf (cvName,GOODLOADERWAITQUEUECV_STRING,
         		xstrlen(GOODLOADERWAITQUEUECV_STRING),i);
-        g_goodLoaderWaitCV[i] = createCondition(cvName,xstrlen(cvName));
+        g_goodLoaderWaitCV[i] = createCondition(cvName,sizeof(cvName));
     	print2("g_goodLoaderWaitCV[%d] = %d \n",i, g_goodLoaderWaitCV[i]);
 
         clearCharBuf(cvName);
