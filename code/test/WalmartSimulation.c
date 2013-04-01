@@ -1885,7 +1885,13 @@ void initLockForSimulation()
         		sizeof("customerDepartmentComplainLock"));
     	print2("customerDepartmentComplainLock %d = %d \n",i,g_customerDepartmentComplainLock[i]);
 	}
+	/***
+	 * Some bug here
+	 */
 
+	/**
+	 * Some bug here
+	 */
 	for(i =0;i<NO_OF_SHELFS;i++)
 	{
         g_shelfAccessLock[i] = createLock("shelfAccessLock",sizeof("shelfAccessLock"));
