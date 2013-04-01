@@ -725,7 +725,6 @@ void Print_Syscall(unsigned int vaddr)
 		return ;
 	}
 	printf(printBuf);
-	fflush(stdout);
 }
 
 void PrintString_Syscall(unsigned int vaddr,unsigned int string)
@@ -745,7 +744,6 @@ void PrintString_Syscall(unsigned int vaddr,unsigned int string)
 	}
 
 	printf(printBuf,tempStringBuf);
-	fflush(stdout);
 }
 
 void PrintStringInt_Syscall(unsigned int vaddr,unsigned int string,int var)
@@ -765,7 +763,6 @@ void PrintStringInt_Syscall(unsigned int vaddr,unsigned int string,int var)
 	}
 
 	printf(printBuf,tempStringBuf,var);
-	fflush(stdout);
 }
 
 void PrintStringIntInt_Syscall(unsigned int vaddr,unsigned int string,int var1,int var2)
@@ -785,18 +782,16 @@ void PrintStringIntInt_Syscall(unsigned int vaddr,unsigned int string,int var1,i
 	}
 
 	printf(printBuf,tempStringBuf,var1,var2);
-	fflush(stdout);
 }
 
 void Print1_Syscall(unsigned int vaddr,int arg1)
 {
-	char printBuf[MAX_CHAR_PRINTF] = {0};
+	char printBuf[MAX_CHAR_PRINTF];
 	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1){
 		printf("%s: Bad Virtual address\n",currentThread->getName());
 		return;
 	}
 	printf(printBuf, arg1);
-	fflush(stdout);
 }
 
 void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
@@ -807,7 +802,6 @@ void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
 		return;
 	}
 	printf(printBuf, arg1, arg2);
-	fflush(stdout);
 }
 
 int Scan_Syscall()
