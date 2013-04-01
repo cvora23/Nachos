@@ -290,8 +290,8 @@ typedef struct _ManagerInfo
 
 /*************************************GLOBAL DATA STRUCTS DECLARATION**********************************************/
 
-char 	lockName[256];
-char 	cvName[256];
+char 	lockName[255];
+char 	cvName[255];
 
 /**
  * GLOBAL DATA STRUCTURES
@@ -432,11 +432,17 @@ int xstrlen(char* s)
 
 void clearCharBuf(char* s)
 {
+	int i = 0;
 	while(*s!='\0')
 	{
 		*s = '\0';
 		s++;
 	}
+	for(i =0;i<256;i++)
+	{
+		s[i] = '\0';
+	}
+
 }
 
 /**
