@@ -1835,19 +1835,19 @@ void initLockCvForSimulation()
 	 */
 	g_customerThreadCounterLock = createLock("CustomerThreadCounterLock",
 			sizeof("CustomerThreadCounterLock"));
-	print1("\n g_customerThreadCounterLock = %d \n\n",g_customerThreadCounterLock);
+	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
 
 	g_salesmanThreadCounterLock = createLock("SalesmanThreadCounterLock",
 			sizeof("SalesmanThreadCounterLock"));
-	print1("\n g_salesmanThreadCounterLock = %d \n\n",g_salesmanThreadCounterLock);
+	print1("g_salesmanThreadCounterLock = %d \n",g_salesmanThreadCounterLock);
 
 	g_goodsLoaderThreadCounterLock = createLock("GoodsLoaderThreadCounterLock",
 			sizeof("GoodsLoaderThreadCounterLock"));
-	print1("\n g_goodsLoaderThreadCounterLock = %d \n\n",g_goodsLoaderThreadCounterLock);
+	print1("g_goodsLoaderThreadCounterLock = %d \n",g_goodsLoaderThreadCounterLock);
 
 	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",
 			sizeof("CustomerThreadCounterLock"));
-	print1("\n g_cashierThreadCounterLock = %d \n\n",g_cashierThreadCounterLock);
+	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
 
 
 #if 0
