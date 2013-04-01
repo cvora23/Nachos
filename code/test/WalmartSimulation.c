@@ -1886,6 +1886,10 @@ void initLockCvForSimulation1()
         g_customerCashierLock[i] = createLock("customerCashierLock",sizeof("customerCashierLock"));
     	print2("customerCashierLock %d = %d \n",i,g_customerCashierLock[i]);
 
+
+
+
+
         g_customerCashierCV[i] = createCondition("customerCashierCV",sizeof("customerCashierCV"));
     	print2("customerCashierCV %d = %d \n",i,g_customerCashierCV[i]);
 
