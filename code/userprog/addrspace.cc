@@ -181,7 +181,7 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 
 // first, set up the translation 
     pageTable = new TranslationEntry[numPages];
-    for (int i = 0; i < numPages; i++)
+    for (unsigned int i = 0; i < numPages; i++)
     {
     	mainMemoryAccessLock->Acquire();
 		pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
