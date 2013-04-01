@@ -1995,6 +1995,9 @@ void initLockCvForSimulation()
         clearCharBuf(lockName);
 	}
 
+	clearCharBuf(lockName);
+	clearCharBuf(cvName);
+
 	for(i=0;i<NO_OF_SALESMAN;i++)
 	{
 		sprintf(lockName,"CustomerSalesmanLock",sizeof("CustomerSalesmanLock"), i);
