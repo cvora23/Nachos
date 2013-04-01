@@ -434,13 +434,18 @@ void clearCharBuf(char* s)
 {
 	int i = 0;
 
-#if 1
+#if 0
 	while(*s!='\0')
 	{
 		*s = '\0';
 		s++;
 	}
 #endif
+
+	for(i=0;i<256;i++)
+	{
+		s[i] = '\0';
+	}
 }
 
 /**
