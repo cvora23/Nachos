@@ -249,6 +249,8 @@ void testCase11()
 	unsigned int 		g_cashierThreadCounterLock;
 	unsigned int 		g_customerTrolleyLock;
 	unsigned int 		g_customerTrolleyCV;
+	int 				g_usedTrolleyCount = 0;
+	int 				g_waitForTrolleyCount = 0;
 
 	g_customerThreadCounterLock = createLock("CustomerThreadCounterLock",
 			sizeof("CustomerThreadCounterLock"));
@@ -267,11 +269,7 @@ void testCase11()
 	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
 
 
-	/**
-	 * Locks, CV Customer-Trolley
-	 */
-	g_usedTrolleyCount = 0;
-	g_waitForTrolleyCount = 0;
+
 
 	g_customerTrolleyLock = createLock("CustomerTrolleyLock",sizeof("CustomerTrolleyLock"));
 	print1("g_customerTrolleyLock = %d \n",g_customerTrolleyLock);
