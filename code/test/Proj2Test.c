@@ -241,6 +241,8 @@ void testCase9()
 	Exit(0);
 }
 
+#if 0
+
 void testCase11()
 {
 	unsigned int 		g_customerThreadCounterLock;
@@ -278,6 +280,8 @@ void testCase11()
 	g_customerTrolleyCV = createCondition("CustomerTrolleyCV",sizeof("CustomerTrolleyCV"));
 	print1("g_customerTrolleyCV = %d \n",g_customerTrolleyCV);
 }
+
+#endif
 
 int main()
 {
@@ -349,7 +353,7 @@ int main()
 		break;
 		case 11:
 		{
-			testCase11();
+			//testCase11();
 		}
 		break;
 		default:
