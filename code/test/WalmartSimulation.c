@@ -290,8 +290,8 @@ typedef struct _ManagerInfo
 
 /*************************************GLOBAL DATA STRUCTS DECLARATION**********************************************/
 
-char 	lockName[255];
-char 	cvName[255];
+char 	lockName[256];
+char 	cvName[256];
 
 /**
  * GLOBAL DATA STRUCTURES
