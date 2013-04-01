@@ -96,8 +96,8 @@
 #define MANAGERCASHIERCASHLOCK_STRING					(const char*)"ManagerCashierCashLock"
 #define MANAGERCASHIERLOCK_STRING						(const char*)"ManagerCashierLock"
 #define MANAGERCASHIERCV_STRING							(const char*)"ManagerCashierCV"
-#define MANAGERCASHIERINTERACTIONLOCK_STRING			(const char*)"ManagerCashierLock"
-#define MANAGERCASHIERINTERACTIONCV_STRING				(const char*)"ManagerCashierCV"
+#define MANAGERCASHIERINTERACTIONLOCK_STRING			(const char*)"ManagerCashierInteractionLock"
+#define MANAGERCASHIERINTERACTIONCV_STRING				(const char*)"ManagerCashierInteractionCV"
 #define MANAGERCUSTOMERINTERACTIONLOCK_STRING			(const char*)"ManagerCustomerLock"
 #define MANAGERCUSTOMERINTERACTIONCV_STRING				(const char*)"ManagerCustomerCV"
 
