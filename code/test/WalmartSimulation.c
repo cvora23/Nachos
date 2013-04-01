@@ -1872,7 +1872,7 @@ void initLockCvForSimulation()
 	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
 
 
-#if 0
+#if 1
 	/**
 	 * Locks, CV Customer-Trolley
 	 */
