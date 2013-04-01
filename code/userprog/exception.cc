@@ -785,7 +785,7 @@ void PrintStringIntInt_Syscall(unsigned int vaddr,unsigned int string,int var1,i
 
 void Print1_Syscall(unsigned int vaddr,int arg1)
 {
-	char printBuf[MAX_CHAR_PRINTF];
+	char printBuf[MAX_CHAR_PRINTF] = {0};
 	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1){
 		printf("%s: Bad Virtual address\n",currentThread->getName());
 		return;
