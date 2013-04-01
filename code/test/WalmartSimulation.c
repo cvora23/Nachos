@@ -1831,7 +1831,7 @@ void initLockCvForSimulation()
 	int i;
 
 
-#if 1
+#if 0
 	/**
 	 * Creating Locks for Thread Counters
 	 */
@@ -1857,7 +1857,7 @@ void initLockCvForSimulation()
 	 */
 	g_customerThreadCounterLock = createLock((char*)CUSTOMERTHREADCOUNTER_STRING,
 			xstrlen(CUSTOMERTHREADCOUNTER_STRING));
-	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
+	print1(" \n g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
 
 	g_salesmanThreadCounterLock = createLock((char*)SALESMANTHREADCOUNTER_STRING,
 			xstrlen(SALESMANTHREADCOUNTER_STRING));
