@@ -415,7 +415,7 @@ unsigned int			g_managerCustomerInteractionCV;
 
 /********************************************PROJ1 PROBLEM SIMULATION***********************************************/
 
-int xstrlen(const char* s)
+int xstrlen(char* s)
 {
 	int length = 0;
 	while(*s!='\0')
@@ -1850,8 +1850,65 @@ void initLockCvForSimulation()
 	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",
 			sizeof("CustomerThreadCounterLock"));
 	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
+
+
+	/**
+	 * Locks, CV Customer-Trolley
+	 */
+	g_usedTrolleyCount = 0;
+	g_waitForTrolleyCount = 0;
+
+	g_customerTrolleyLock = createLock("CustomerTrolleyLock",sizeof("CustomerTrolleyLock"));
+	print1("g_customerTrolleyLock = %d \n",g_customerTrolleyLock);
+
+
+	g_customerTrolleyCV = createCondition("CustomerTrolleyCV",sizeof("CustomerTrolleyCV"));
+	print1("g_customerTrolleyCV = %d \n",g_customerTrolleyCV);
+
+
+	for(i=0;i<NO_OF_MANAGERS;i++)
+	{
+        sprintf (lockName,"ManagerCashierLock",
+        		sizeof("ManagerCashierLock"),i);
+        g_managerCashierLock = createLock(lockName,xstrlen(lockName));
+    	print1("g_managerCashierLock = %d \n",g_managerCashierLock);
+        clearCharBuf(lockName);
+
+        sprintf (cvName,"ManagerCashierCV",
+        		sizeof("ManagerCashierCV"),i);
+        g_managerCashierCV = createCondition(cvName,xstrlen(cvName));
+    	print1("g_managerCashierCV = %d \n",g_managerCashierCV);
+        clearCharBuf(cvName);
+
+        sprintf (lockName,"ManagerCashierInteractionLock",
+        		sizeof("ManagerCashierInteractionLock"),i);
+        g_managerCashierInteractionLock = createLock(lockName,xstrlen(lockName));
+    	print1("g_managerCashierInteractionLock = %d \n",g_managerCashierInteractionLock);
+        clearCharBuf(lockName);
+
+        sprintf (cvName,"ManagerCashierInteractionCV",
+        		sizeof("ManagerCashierInteractionCV"), i);
+        g_managerCashierInteractionCV = createCondition(cvName,xstrlen(cvName));
+    	print1("g_managerCashierInteractionCV = %d \n",g_managerCashierInteractionCV);
+        clearCharBuf(cvName);
+
+        sprintf (lockName,"ManagerCustomerLock",
+        		sizeof("ManagerCustomerLock"), i);
+        g_managerCustomerInteractionLock = createLock(lockName,xstrlen(lockName));
+    	print1("g_managerCustomerInteractionLock = %d \n",g_managerCustomerInteractionLock);
+        clearCharBuf(lockName);
+
+        sprintf (cvName,"ManagerCustomerCV",
+        		sizeof("ManagerCustomerCV"), i);
+        g_managerCustomerInteractionCV = createCondition(cvName,xstrlen(cvName));
+    	print1("g_managerCustomerInteractionCV = %d \n",g_managerCustomerInteractionCV);
+        clearCharBuf(cvName);
+	}
+
 #endif
 
+
+#if 0
 	/**
 	 * Creating Locks for Thread Counters
 	 */
@@ -1872,7 +1929,7 @@ void initLockCvForSimulation()
 	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
 
 
-#if 1
+
 	/**
 	 * Locks, CV Customer-Trolley
 	 */
