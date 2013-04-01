@@ -2185,6 +2185,8 @@ void main(const char* testOption)
     print1("Number of Managers = %d \n",NO_OF_MANAGERS);
     print1("Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
 
+    initLockCvForSimulation();
+
 
 #if 0
     /**
@@ -2242,7 +2244,6 @@ void main(const char* testOption)
 
     initManagerInfo();
 
-    initLockCvForSimulation();
 
 
 #if 0
