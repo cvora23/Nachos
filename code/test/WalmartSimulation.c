@@ -1798,25 +1798,6 @@ void initLockCvForSimulation()
 
 
 #if 1
-	/**
-	 * Creating Locks for Thread Counters
-	 */
-	g_customerThreadCounterLock = createLock("CustomerThreadCounterLock",
-			sizeof("CustomerThreadCounterLock"));
-	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
-
-	g_salesmanThreadCounterLock = createLock("SalesmanThreadCounterLock",
-			sizeof("SalesmanThreadCounterLock"));
-	print1("g_salesmanThreadCounterLock = %d \n",g_salesmanThreadCounterLock);
-
-	g_goodsLoaderThreadCounterLock = createLock("GoodsLoaderThreadCounterLock",
-			sizeof("GoodsLoaderThreadCounterLock"));
-	print1("g_goodsLoaderThreadCounterLock = %d \n",g_goodsLoaderThreadCounterLock);
-
-	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",
-			sizeof("CustomerThreadCounterLock"));
-	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
-
 
 	/**
 	 * Locks, CV Customer-Trolley
@@ -2208,6 +2189,25 @@ void main(const char* testOption)
     print1("Number of Customers = %d \n",NO_OF_CUSTOMERS);
     print1("Number of Managers = %d \n",NO_OF_MANAGERS);
     print1("Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
+
+	/**
+	 * Creating Locks for Thread Counters
+	 */
+	g_customerThreadCounterLock = createLock("CustomerThreadCounterLock",
+			sizeof("CustomerThreadCounterLock"));
+	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
+
+	g_salesmanThreadCounterLock = createLock("SalesmanThreadCounterLock",
+			sizeof("SalesmanThreadCounterLock"));
+	print1("g_salesmanThreadCounterLock = %d \n",g_salesmanThreadCounterLock);
+
+	g_goodsLoaderThreadCounterLock = createLock("GoodsLoaderThreadCounterLock",
+			sizeof("GoodsLoaderThreadCounterLock"));
+	print1("g_goodsLoaderThreadCounterLock = %d \n",g_goodsLoaderThreadCounterLock);
+
+	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",
+			sizeof("CustomerThreadCounterLock"));
+	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
 
     initLockCvForSimulation();
 
