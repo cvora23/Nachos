@@ -237,7 +237,7 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
     }
 #endif
 
-    for(int i=0;i<numCodeDataPages;i++)
+    for(unsigned int i=0;i<numCodeDataPages;i++)
     {
     	executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PageSize]),
     			PageSize,(noffH.code.inFileAddr + (i*PageSize)));
