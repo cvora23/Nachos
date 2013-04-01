@@ -565,7 +565,7 @@ void Signal_Syscall(int conditionId,int lockId)
 	if(lockId<0 || lockId>MAX_LOCKS || conditionId<0 || conditionId>MAX_CVS)
 	{
 		printf("Error in Signal System call: lockId = %d or ConditionId = %d out of bounds \n",
-				lockId);
+				lockId,conditionId);
 		userLockTableLock->Release();
 		userConditionTableLock->Release();
 		return;
