@@ -1834,19 +1834,19 @@ void initLockCvForSimulation()
 	 */
 	g_customerThreadCounterLock = createLock((char*)CUSTOMERTHREADCOUNTER_STRING,
 			xstrlen(CUSTOMERTHREADCOUNTER_STRING));
-	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
+	print1("g_customerThreadCounterLock = %d \n\n",g_customerThreadCounterLock);
 
 	g_salesmanThreadCounterLock = createLock((char*)SALESMANTHREADCOUNTER_STRING,
 			xstrlen(SALESMANTHREADCOUNTER_STRING));
-	print1("g_salesmanThreadCounterLock = %d \n",g_salesmanThreadCounterLock);
+	print1("g_salesmanThreadCounterLock = %d \n\n",g_salesmanThreadCounterLock);
 
 	g_goodsLoaderThreadCounterLock = createLock((char*)GOODSLOADERTHREADCOUNTER_STRING,
 			xstrlen(GOODSLOADERTHREADCOUNTER_STRING));
-	print1("g_goodsLoaderThreadCounterLock = %d \n",g_goodsLoaderThreadCounterLock);
+	print1("g_goodsLoaderThreadCounterLock = %d \n\n",g_goodsLoaderThreadCounterLock);
 
 	g_cashierThreadCounterLock = createLock((char*)CASHIERTHREADCOUNTER_STRING,
 			xstrlen(CASHIERTHREADCOUNTER_STRING));
-	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
+	print1("g_cashierThreadCounterLock = %d \n\n",g_cashierThreadCounterLock);
 
 	/**
 	 * Locks, CV Customer-Trolley
