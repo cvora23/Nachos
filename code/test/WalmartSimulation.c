@@ -1797,7 +1797,7 @@ void initLockCvForSimulation()
 {
 	int i;
 
-#if 1
+#if 0
 
 	/**
 	 * Locks, CV Customer-Trolley
@@ -1867,7 +1867,7 @@ void initLockCvForSimulation()
 #endif
 
 
-#if 0
+#if 1
 	/**
 	 * Creating Locks for Thread Counters
 	 */
@@ -2202,6 +2202,7 @@ void main(const char* testOption)
     print1("Number of Managers = %d \n",NO_OF_MANAGERS);
     print1("Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
 
+#if 0
 	/**
 	 * Creating Locks for Thread Counters
 	 */
@@ -2221,6 +2222,7 @@ void main(const char* testOption)
 			sizeof("CustomerThreadCounterLock"));
 	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
 
+#endif
     initLockCvForSimulation();
 
 
