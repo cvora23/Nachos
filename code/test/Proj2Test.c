@@ -241,6 +241,46 @@ void testCase9()
 	Exit(0);
 }
 
+void testCase11()
+{
+	unsigned int 		g_customerThreadCounterLock;
+	unsigned int 		g_salesmanThreadCounterLock;
+	unsigned int 		g_goodsLoaderThreadCounterLock;
+	unsigned int 		g_cashierThreadCounterLock;
+	unsigned int 		g_customerTrolleyLock;
+	unsigned int 		g_customerTrolleyCV;
+
+	g_customerThreadCounterLock = createLock("CustomerThreadCounterLock",
+			sizeof("CustomerThreadCounterLock"));
+	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
+
+	g_salesmanThreadCounterLock = createLock("SalesmanThreadCounterLock",
+			sizeof("SalesmanThreadCounterLock"));
+	print1("g_salesmanThreadCounterLock = %d \n",g_salesmanThreadCounterLock);
+
+	g_goodsLoaderThreadCounterLock = createLock("GoodsLoaderThreadCounterLock",
+			sizeof("GoodsLoaderThreadCounterLock"));
+	print1("g_goodsLoaderThreadCounterLock = %d \n",g_goodsLoaderThreadCounterLock);
+
+	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",
+			sizeof("CustomerThreadCounterLock"));
+	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
+
+
+	/**
+	 * Locks, CV Customer-Trolley
+	 */
+	g_usedTrolleyCount = 0;
+	g_waitForTrolleyCount = 0;
+
+	g_customerTrolleyLock = createLock("CustomerTrolleyLock",sizeof("CustomerTrolleyLock"));
+	print1("g_customerTrolleyLock = %d \n",g_customerTrolleyLock);
+
+
+	g_customerTrolleyCV = createCondition("CustomerTrolleyCV",sizeof("CustomerTrolleyCV"));
+	print1("g_customerTrolleyCV = %d \n",g_customerTrolleyCV);
+}
+
 int main()
 {
 	int testCaseNo;
@@ -306,6 +346,11 @@ int main()
 		case 9:
 		{
 			testCase9();
+		}
+		break;
+		case 9:
+		{
+			testCase11();
 		}
 		break;
 		default:
