@@ -1841,15 +1841,15 @@ void initLockCvForSimulation()
 
 	g_salesmanThreadCounterLock = createLock("SalesmanThreadCounterLock",
 			sizeof("SalesmanThreadCounterLock"));
-	print1("g_salesmanThreadCounterLock = %d \n",g_salesmanThreadCounterLock);
+	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
 
 	g_goodsLoaderThreadCounterLock = createLock("GoodsLoaderThreadCounterLock",
 			sizeof("GoodsLoaderThreadCounterLock"));
-	print1("g_goodsLoaderThreadCounterLock = %d \n",g_goodsLoaderThreadCounterLock);
+	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
 
 	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",
 			sizeof("CustomerThreadCounterLock"));
-	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
+	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
 
 
 	/**
@@ -1870,7 +1870,7 @@ void initLockCvForSimulation()
 	{
         sprintf (lockName,"ManagerCashierLock",
         		sizeof("ManagerCashierLock"),i);
-        g_managerCashierLock = createLock(lockName,xstrlen(lockName));
+        g_managerCashierLock = createLock(lockName,sizeof(lockName));
     	print1("g_managerCashierLock = %d \n",g_managerCashierLock);
         clearCharBuf(lockName);
 
