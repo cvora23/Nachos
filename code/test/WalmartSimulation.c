@@ -1826,7 +1826,7 @@ void initLockCvForSimulation()
         sprintf (cvName,"ManagerCashierCV",
         		sizeof("ManagerCashierCV"),i);
         printString("cvName is %s \n",cvName);
-        g_managerCashierCV = createCondition(cvName,xstrlen(cvName));
+        g_managerCashierCV = createCondition(cvName,sizeof(cvName));
         clearCharBuf(cvName);
         printString("cvName is %s \n",cvName);
     	print1("g_managerCashierCV = %d \n",g_managerCashierCV);
@@ -1834,7 +1834,7 @@ void initLockCvForSimulation()
         sprintf (lockName,"ManagerCashierInteractionLock",
         		sizeof("ManagerCashierInteractionLock"),i);
         printString("lockName is %s \n",lockName);
-        g_managerCashierInteractionLock = createLock(lockName,xstrlen(lockName));
+        g_managerCashierInteractionLock = createLock(lockName,sizeof(lockName));
         clearCharBuf(lockName);
         printString("lockName is %s \n",lockName);
     	print1("g_managerCashierInteractionLock = %d \n",g_managerCashierInteractionLock);
@@ -1842,7 +1842,7 @@ void initLockCvForSimulation()
         sprintf (cvName,"ManagerCashierInteractionCV",
         		sizeof("ManagerCashierInteractionCV"), i);
         printString("cvName is %s \n",cvName);
-        g_managerCashierInteractionCV = createCondition(cvName,xstrlen(cvName));
+        g_managerCashierInteractionCV = createCondition(cvName,sizeof(cvName));
         clearCharBuf(cvName);
         printString("cvName is %s \n",cvName);
     	print1("g_managerCashierInteractionCV = %d \n",g_managerCashierInteractionCV);
@@ -1850,7 +1850,7 @@ void initLockCvForSimulation()
         sprintf (lockName,"ManagerCustomerLock",
         		sizeof("ManagerCustomerLock"), i);
         printString("lockName is %s \n",lockName);
-        g_managerCustomerInteractionLock = createLock(lockName,xstrlen(lockName));
+        g_managerCustomerInteractionLock = createLock(lockName,sizeof(lockName));
         clearCharBuf(lockName);
         printString("lockName is %s \n",lockName);
     	print1("g_managerCustomerInteractionLock = %d \n",g_managerCustomerInteractionLock);
@@ -1858,7 +1858,7 @@ void initLockCvForSimulation()
         sprintf (cvName,"ManagerCustomerCV",
         		sizeof("ManagerCustomerCV"), i);
         printString("cvName is %s \n",cvName);
-        g_managerCustomerInteractionCV = createCondition(cvName,xstrlen(cvName));
+        g_managerCustomerInteractionCV = createCondition(cvName,sizeof(cvName));
         clearCharBuf(cvName);
         printString("cvName is %s \n",cvName);
     	print1("g_managerCustomerInteractionCV = %d \n",g_managerCustomerInteractionCV);
