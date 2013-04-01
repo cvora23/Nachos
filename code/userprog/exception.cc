@@ -718,25 +718,26 @@ void DestroyCondition_Syscall(int conditionId)
 
 void Print_Syscall(unsigned int vaddr)
 {
-	char printBuf[MAX_CHAR_PRINTF];
+	char *printBuf = new char[MAX_CHAR_PRINTF];
 	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
 	{
 		printf("%s: Bad Virtual Address \n",currentThread->getName());
 		return ;
 	}
 	printf(printBuf);
+	delete printBuf;
 }
 
 void PrintString_Syscall(unsigned int vaddr,unsigned int string)
 {
-	char printBuf[MAX_CHAR_PRINTF];
+	char *printBuf = new char[MAX_CHAR_PRINTF];
 	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
 	{
 		printf("%s: Bad Virtual Address \n",currentThread->getName());
 		return ;
 	}
 
-	char tempStringBuf[MAX_CHAR_PRINTF];
+	char *tempStringBuf = new char[MAX_CHAR_PRINTF];
 	if(copyin(string,MAX_CHAR_PRINTF - 1,tempStringBuf) == -1)
 	{
 		printf("%s: Bad Virtual Address \n",currentThread->getName());
@@ -744,18 +745,20 @@ void PrintString_Syscall(unsigned int vaddr,unsigned int string)
 	}
 
 	printf(printBuf,tempStringBuf);
+	delete tempStringBuf;
+	delete printBuf;
 }
 
 void PrintStringInt_Syscall(unsigned int vaddr,unsigned int string,int var)
 {
-	char printBuf[MAX_CHAR_PRINTF];
+	char *printBuf = new char[MAX_CHAR_PRINTF];
 	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
 	{
 		printf("%s: Bad Virtual Address \n",currentThread->getName());
 		return ;
 	}
 
-	char tempStringBuf[MAX_CHAR_PRINTF];
+	char *tempStringBuf = new char[MAX_CHAR_PRINTF];
 	if(copyin(string,MAX_CHAR_PRINTF - 1,tempStringBuf) == -1)
 	{
 		printf("%s: Bad Virtual Address \n",currentThread->getName());
@@ -763,18 +766,20 @@ void PrintStringInt_Syscall(unsigned int vaddr,unsigned int string,int var)
 	}
 
 	printf(printBuf,tempStringBuf,var);
+	delete tempStringBuf;
+	delete printBuf;
 }
 
 void PrintStringIntInt_Syscall(unsigned int vaddr,unsigned int string,int var1,int var2)
 {
-	char printBuf[MAX_CHAR_PRINTF];
+	char *printBuf = new char[MAX_CHAR_PRINTF];
 	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
 	{
 		printf("%s: Bad Virtual Address \n",currentThread->getName());
 		return ;
 	}
 
-	char tempStringBuf[MAX_CHAR_PRINTF];
+	char *tempStringBuf = new char[MAX_CHAR_PRINTF];
 	if(copyin(string,MAX_CHAR_PRINTF - 1,tempStringBuf) == -1)
 	{
 		printf("%s: Bad Virtual Address \n",currentThread->getName());
@@ -782,26 +787,30 @@ void PrintStringIntInt_Syscall(unsigned int vaddr,unsigned int string,int var1,i
 	}
 
 	printf(printBuf,tempStringBuf,var1,var2);
+	delete tempStringBuf;
+	delete printBuf;
 }
 
 void Print1_Syscall(unsigned int vaddr,int arg1)
 {
-	char printBuf[MAX_CHAR_PRINTF];
+	char *printBuf = new char[MAX_CHAR_PRINTF];
 	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1){
 		printf("%s: Bad Virtual address\n",currentThread->getName());
 		return;
 	}
 	printf(printBuf, arg1);
+	delete printBuf;
 }
 
 void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
 {
-	char printBuf[MAX_CHAR_PRINTF];
+	char *printBuf = new char[MAX_CHAR_PRINTF];
 	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1){
 		printf("%s: Bad Virtual address\n",currentThread->getName());
 		return;
 	}
 	printf(printBuf, arg1, arg2);
+	delete printBuf;
 }
 
 int Scan_Syscall()
