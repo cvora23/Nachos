@@ -39,8 +39,8 @@ class AddrSpace {
     unsigned int addrSpaceSize; // Total size of the addrSpace
     int processId;
 
-    int numCodePages;
-    int numCodeDataPages;
+    unsigned int numCodePages;
+    unsigned int numCodeDataPages;
 
     Lock *pageTableLock;
     TranslationEntry *pageTable;	// Assume linear page table translation
