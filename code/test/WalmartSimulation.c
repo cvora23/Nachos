@@ -1081,6 +1081,8 @@ void CustomerThread()
     }
     g_noOfCustomersLeft++;
     releaseLock(g_customerTrolleyLock);
+
+    Exit(0);
 }
 
 void SalesmanThread()
@@ -1818,6 +1820,8 @@ void ManagerThread()
     		Yield();
     	}
     }
+
+    Exit(0);
 }
 
 void initLockCvForSimulation()

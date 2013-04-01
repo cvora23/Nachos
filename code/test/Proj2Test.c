@@ -232,6 +232,15 @@ void testCase8()
 						5,5);
 }
 
+void testCase9()
+{
+	print("Walmart Market Simulation \n\n");
+
+	Exec("../test/WalmartSimulation");
+
+	Exit(0);
+}
+
 int main()
 {
 	int testCaseNo;
@@ -244,6 +253,8 @@ int main()
 	print("6: Sprintf System Call\n");
 	print("7: PrintStringInt System Call\n");
 	print("8: PrintStringIntInt System Call\n");
+	print("9: Simulate Walmart Simulation One Process \n");
+	print("10: Simulate Walmart Simulation 2 Proces \n");
 
 	print("Enter your choice \n");
 	testCaseNo = scan();
@@ -292,12 +303,18 @@ int main()
 			testCase8();
 		}
 		break;
+		case 9:
+		{
+			testCase9();
+		}
+		break;
 		default:
 		{
 			print("Invalid Test Case No\n");
 		}
 		break;
 	}
+	Exit(0);
 }
 
 
