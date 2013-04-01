@@ -2196,7 +2196,7 @@ void printLockCvForSimulation()
 
 void main(const char* testOption)
 {
-#if 0
+#if 1
 	int configRetVal;
 	int i;
 
