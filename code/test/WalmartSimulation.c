@@ -1875,8 +1875,6 @@ void initLockCvForSimulation1()
         g_cashierLineCV[i] = createCondition("cashierLineCV",sizeof("cashierLineCV"));
     	print2("cashierLineCV %d = %d \n",i,g_cashierLineCV[i]);
 
-        g_cashierWaitQueue[i] = 0;
-
         g_cashierPrivilegedLineLock[i] = createLock("cashierPrivilegedLineLock",
         		sizeof("cashierPrivilegedLineLock"));
     	print2("cashierPrivilegedLineLock %d = %d \n",i,g_cashierPrivilegedLineLock[i]);
@@ -1884,8 +1882,6 @@ void initLockCvForSimulation1()
         g_cashierPrivilegedLineCV[i] = createCondition("cashierPrivilegedLineCV",
         		sizeof("cashierPrivilegedLineCV"));
     	print2("cashierPrivilegedLineCV %d = %d \n",i,g_cashierPrivilegedLineCV[i]);
-
-        g_cashierPrivilegedWaitQueue[i] = 0;
 
         g_customerCashierLock[i] = createLock("customerCashierLock",sizeof("customerCashierLock"));
     	print2("customerCashierLock %d = %d \n",i,g_customerCashierLock[i]);
@@ -1895,6 +1891,11 @@ void initLockCvForSimulation1()
 
         g_managerCashierCashLock[i] = createLock("managerCashierCashLock",sizeof("managerCashierCashLock"));
     	print2("managerCashierCashLock %d = %d \n",i,g_managerCashierCashLock[i]);
+
+        g_cashierWaitQueue[i] = 0;
+
+        g_cashierPrivilegedWaitQueue[i] = 0;
+
 	}
 
 
