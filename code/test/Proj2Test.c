@@ -295,6 +295,7 @@ int main()
 	print("8: PrintStringIntInt System Call\n");
 	print("9: Simulate Walmart Simulation One Process \n");
 	print("10: Simulate Walmart Simulation 2 Proces \n");
+	print("11: Print1 System call \n");
 
 	print("Enter your choice \n");
 	testCaseNo = scan();
