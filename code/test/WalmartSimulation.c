@@ -1818,38 +1818,38 @@ void initLockCvForSimulation()
         sprintf (lockName,"ManagerCashierLock",
         		sizeof("ManagerCashierLock"),i);
         g_managerCashierLock = createLock(lockName,sizeof(lockName));
-    	print1("g_managerCashierLock = %d \n",g_managerCashierLock);
         clearCharBuf(lockName);
+    	print1("g_managerCashierLock = %d \n",g_managerCashierLock);
 
         sprintf (cvName,"ManagerCashierCV",
         		sizeof("ManagerCashierCV"),i);
         g_managerCashierCV = createCondition(cvName,xstrlen(cvName));
-    	print1("g_managerCashierCV = %d \n",g_managerCashierCV);
         clearCharBuf(cvName);
+    	print1("g_managerCashierCV = %d \n",g_managerCashierCV);
 
         sprintf (lockName,"ManagerCashierInteractionLock",
         		sizeof("ManagerCashierInteractionLock"),i);
         g_managerCashierInteractionLock = createLock(lockName,xstrlen(lockName));
-    	print1("g_managerCashierInteractionLock = %d \n",g_managerCashierInteractionLock);
         clearCharBuf(lockName);
+    	print1("g_managerCashierInteractionLock = %d \n",g_managerCashierInteractionLock);
 
         sprintf (cvName,"ManagerCashierInteractionCV",
         		sizeof("ManagerCashierInteractionCV"), i);
         g_managerCashierInteractionCV = createCondition(cvName,xstrlen(cvName));
-    	print1("g_managerCashierInteractionCV = %d \n",g_managerCashierInteractionCV);
         clearCharBuf(cvName);
+    	print1("g_managerCashierInteractionCV = %d \n",g_managerCashierInteractionCV);
 
         sprintf (lockName,"ManagerCustomerLock",
         		sizeof("ManagerCustomerLock"), i);
         g_managerCustomerInteractionLock = createLock(lockName,xstrlen(lockName));
-    	print1("g_managerCustomerInteractionLock = %d \n",g_managerCustomerInteractionLock);
         clearCharBuf(lockName);
+    	print1("g_managerCustomerInteractionLock = %d \n",g_managerCustomerInteractionLock);
 
         sprintf (cvName,"ManagerCustomerCV",
         		sizeof("ManagerCustomerCV"), i);
         g_managerCustomerInteractionCV = createCondition(cvName,xstrlen(cvName));
-    	print1("g_managerCustomerInteractionCV = %d \n",g_managerCustomerInteractionCV);
         clearCharBuf(cvName);
+    	print1("g_managerCustomerInteractionCV = %d \n",g_managerCustomerInteractionCV);
 	}
 
 #endif
