@@ -604,7 +604,7 @@ void CustomerThread()
 	g_customerThreadCounter++;
 	releaseLock(g_customerThreadCounterLock);
 
-    sprintf(threadName, CUSTOMER_STRING,xstrlen(CUSTOMER_STRING), ThreadId);
+    sprintf(threadName, "CUSTOMER",sizeof("CUSTOMER"), ThreadId);
     printString("%s enters the SuperMarket !!!!!!! \n",threadName);
 
     /*************************************CUSTOMER-TROLLEY INTERACTION STARTS HERE*********************************************/
@@ -1072,7 +1072,7 @@ void SalesmanThread()
 	g_salesmanThreadCounter++;
 	releaseLock(g_salesmanThreadCounterLock);
 
-    sprintf(threadName, SALESMAN_STRING,xstrlen(SALESMAN_STRING), ThreadId);
+    sprintf(threadName, "SALESMAN",sizeof("SALESMAN"), ThreadId);
     printString( "%s Started !!!!!!! \n",threadName);
     printStringInt("%s will be working for DEPARTMENT_%d \n",
     		threadName,g_salesmanInfo[ThreadId].departmentNo);
@@ -1427,7 +1427,7 @@ void GoodLoaderThread()
 	g_goodsLoaderThreadCounter++;
 	releaseLock(g_goodsLoaderThreadCounterLock);
 
-    sprintf(threadName, GOOD_LOADERS_STRING,xstrlen(GOOD_LOADERS_STRING), ThreadId);
+    sprintf(threadName, "GOODLOADER",sizeof("GOODLOADER"), ThreadId);
     printString( "%s Started !!!!!!! \n",threadName);
 
     while(1)
@@ -1575,7 +1575,7 @@ void CashierThread()
 	g_cashierThreadCounter++;
 	releaseLock(g_cashierThreadCounterLock);
 
-    sprintf(threadName, CASHIER_STRING,xstrlen(CASHIER_STRING), ThreadId);
+    sprintf(threadName, "CASHIER",sizeof("CASHIER"), ThreadId);
     printString( "%s Started !!!!!!! \n",threadName);
 
     while(1)
@@ -1702,7 +1702,7 @@ void ManagerThread()
 	char threadName[256];
 
 
-    sprintf(threadName, MANAGER_STRING,xstrlen(MANAGER_STRING), 0);
+    sprintf(threadName, "MANAGER",sizeof("MANAGER"), 0);
     printString( "%s Started !!!!!!! \n",threadName);
 
     while(!simulationEnd)
