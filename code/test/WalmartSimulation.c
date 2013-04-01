@@ -1909,6 +1909,9 @@ void initLockCvForSimulation()
 
 	for(i=0;i<NO_OF_MANAGERS;i++)
 	{
+		clearCharBuf(lockName);
+		clearCharBuf(cvName);
+
         sprintf (lockName,"ManagerCashierLock",
         		sizeof("ManagerCashierLock"),i);
         g_managerCashierLock = createLock(lockName,sizeof(lockName));
@@ -1948,6 +1951,9 @@ void initLockCvForSimulation()
 
 	for(i=0;i<NO_OF_CASHIERS;i++)
 	{
+		clearCharBuf(lockName);
+		clearCharBuf(cvName);
+
         sprintf (lockName,"CashierLineLock",
         		sizeof("CashierLineLock"),i);
         g_cashierLineLock[i] = createLock(lockName,sizeof(lockName));
@@ -1995,11 +2001,13 @@ void initLockCvForSimulation()
         clearCharBuf(lockName);
 	}
 
-	clearCharBuf(lockName);
-	clearCharBuf(cvName);
+
 
 	for(i=0;i<NO_OF_SALESMAN;i++)
 	{
+		clearCharBuf(lockName);
+		clearCharBuf(cvName);
+
 		sprintf(lockName,"CustomerSalesmanLock",sizeof("CustomerSalesmanLock"), i);
         g_customerSalesmanLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_customerSalesmanLock[%d] = %d \n",i,g_customerSalesmanLock[i]);
@@ -2013,6 +2021,9 @@ void initLockCvForSimulation()
 
 	for(i=0;i<NO_OF_DEPARTMENT;i++)
 	{
+		clearCharBuf(lockName);
+		clearCharBuf(cvName);
+
         sprintf (lockName,"CustomerDepartmentLock",sizeof("CustomerDepartmentLock"), i);
         g_customerDepartmentLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_customerDepartmentLock[%d] = %d \n",i,g_customerDepartmentLock[i]);
@@ -2028,6 +2039,9 @@ void initLockCvForSimulation()
 
 	for(i =0;i<NO_OF_SHELFS;i++)
 	{
+		clearCharBuf(lockName);
+		clearCharBuf(cvName);
+
         sprintf (lockName,"ShelfAccessLock",sizeof("ShelfAccessLock"), i);
         g_shelfAccessLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_shelfAccessLock[%d] = %d \n",i,g_shelfAccessLock[i]);
@@ -2036,6 +2050,9 @@ void initLockCvForSimulation()
 
 	for(i=0;i<NO_OF_DEPARTMENT;i++)
 	{
+		clearCharBuf(lockName);
+		clearCharBuf(cvName);
+
         sprintf (lockName,"CustomerDepartmentComplainLock",
         		sizeof("CustomerDepartmentComplainLock"), i);
         g_customerDepartmentComplainLock[i] = createLock(lockName,sizeof(lockName));
@@ -2053,6 +2070,9 @@ void initLockCvForSimulation()
 
 	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
 	{
+		clearCharBuf(lockName);
+		clearCharBuf(cvName);
+
         sprintf (lockName,"SalesmanGoodLoaderLock",sizeof("SalesmanGoodLoaderLock"), i);
         g_salesmanGoodsLoaderLock[i] = createLock(lockName,sizeof(lockName));
     	print2("g_salesmanGoodsLoaderLock[%d] = %d \n",i,g_salesmanGoodsLoaderLock[i]);
@@ -2066,6 +2086,9 @@ void initLockCvForSimulation()
 
 	for(i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
 	{
+		clearCharBuf(lockName);
+		clearCharBuf(cvName);
+
         sprintf (lockName,"GoodLoaderWaitQueueLock",
         		sizeof("GoodLoaderWaitQueueLock"),i);
         g_goodLoaderWaitLock[i] = createLock(lockName,sizeof(lockName));
