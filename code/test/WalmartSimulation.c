@@ -333,81 +333,81 @@ unsigned int g_cashierThreadCounterLock;
 /**
  * Locks, Condition Variables, Queue Wait Count for Customer-Trolley interaction
  */
-int 				g_usedTrolleyCount;
-int 				g_waitForTrolleyCount;
-unsigned int 		g_customerTrolleyLock;
-unsigned int 		g_customerTrolleyCV;
+int g_usedTrolleyCount;
+int g_waitForTrolleyCount;
+unsigned int g_customerTrolleyLock;
+unsigned int g_customerTrolleyCV;
 
 /**
  * Locks, Condition Variables for Customer-Salesman interaction
  */
-unsigned int 	g_customerSalesmanLock[NO_OF_SALESMAN];
-unsigned int	g_customerSalesmanCV[NO_OF_SALESMAN];
+unsigned int g_customerSalesmanLock[NO_OF_SALESMAN];
+unsigned int g_customerSalesmanCV[NO_OF_SALESMAN];
 
 /**
  * Locks,Condition Variables and Queue Length for Customer-Department Interaction
  */
-unsigned int			g_customerDepartmentLock[NO_OF_DEPARTMENT];
-unsigned int			g_customerDepartmentCV[NO_OF_DEPARTMENT];
-int						g_departmentWaitQueue[NO_OF_DEPARTMENT];
+unsigned int g_customerDepartmentLock[NO_OF_DEPARTMENT];
+unsigned int g_customerDepartmentCV[NO_OF_DEPARTMENT];
+int	g_departmentWaitQueue[NO_OF_DEPARTMENT];
 
 /**
  * Locks for accessing items on the shelf
  */
-unsigned int			g_shelfAccessLock[NO_OF_SHELFS];
+unsigned int g_shelfAccessLock[NO_OF_SHELFS];
 
 /**
  * Locks,Condition Variables and Queue Length for Customer-Department Interaction
  */
-unsigned int			g_customerDepartmentComplainLock[NO_OF_DEPARTMENT];
-unsigned int			g_customerDepartmentComplainCV[NO_OF_DEPARTMENT];
-int						g_departmentComplainWaitQueue[NO_OF_DEPARTMENT];
+unsigned int g_customerDepartmentComplainLock[NO_OF_DEPARTMENT];
+unsigned int g_customerDepartmentComplainCV[NO_OF_DEPARTMENT];
+int	g_departmentComplainWaitQueue[NO_OF_DEPARTMENT];
 
 /**
  * Locks,Condition Variables and Queue Length for Salesman - GoodsLoader Interaction
  */
-unsigned int			g_salesmanGoodsLoaderLock[NO_OF_GOOD_LOADERS];
-unsigned int			g_salesmanGoodsLoaderCV[NO_OF_GOOD_LOADERS];
+unsigned int g_salesmanGoodsLoaderLock[NO_OF_GOOD_LOADERS];
+unsigned int g_salesmanGoodsLoaderCV[NO_OF_GOOD_LOADERS];
 
-unsigned int			g_goodLoaderWaitLock[NO_OF_GOODLOADER_WAIT_QUEUE];
-unsigned int			g_goodLoaderWaitCV[NO_OF_GOODLOADER_WAIT_QUEUE];
-int						g_goodLoaderWaitQueue[NO_OF_GOODLOADER_WAIT_QUEUE];
+unsigned int g_goodLoaderWaitLock[NO_OF_GOODLOADER_WAIT_QUEUE];
+unsigned int g_goodLoaderWaitCV[NO_OF_GOODLOADER_WAIT_QUEUE];
+int	g_goodLoaderWaitQueue[NO_OF_GOODLOADER_WAIT_QUEUE];
 
 /**
  * Locks,Condition Variables and Queue Length for Customer - Cashier Interaction
  */
-unsigned int			g_cashierLineLock[NO_OF_CASHIERS];
-unsigned int			g_cashierLineCV[NO_OF_CASHIERS];
-int						g_cashierWaitQueue[NO_OF_CASHIERS];
+unsigned int g_cashierLineLock[NO_OF_CASHIERS];
+unsigned int g_cashierLineCV[NO_OF_CASHIERS];
+int	g_cashierWaitQueue[NO_OF_CASHIERS];
 
-unsigned int			g_cashierPrivilegedLineLock[NO_OF_CASHIERS];
-unsigned int			g_cashierPrivilegedLineCV[NO_OF_CASHIERS];
-int						g_cashierPrivilegedWaitQueue[NO_OF_CASHIERS];
+unsigned int g_cashierPrivilegedLineLock[NO_OF_CASHIERS];
+unsigned int g_cashierPrivilegedLineCV[NO_OF_CASHIERS];
+int	g_cashierPrivilegedWaitQueue[NO_OF_CASHIERS];
 
-unsigned int			g_customerCashierLock[NO_OF_CASHIERS];
-unsigned int			g_customerCashierCV[NO_OF_CASHIERS];
+unsigned int g_customerCashierLock[NO_OF_CASHIERS];
+unsigned int g_customerCashierCV[NO_OF_CASHIERS];
 
 /**
  * Locks, Condition Variables and Queue Length for Manager - Cashier  Cash Collection Interaction
  */
-unsigned int			g_managerCashierCashLock[NO_OF_CASHIERS];
+unsigned int g_managerCashierCashLock[NO_OF_CASHIERS];
 
 /**
  * Locks, Condition Variables and Queue Length for Manager Interaction
  */
 
-unsigned int			g_managerCashierLock;
-unsigned int			g_managerCashierCV;
-int						g_managerWaitQueueLength;
+unsigned int g_managerCashierLock;
+unsigned int g_managerCashierCV;
+int	g_managerWaitQueueLength;
 
-unsigned int			g_managerCashierInteractionLock;
-unsigned int			g_managerCashierInteractionCV;
+unsigned int g_managerCashierInteractionLock;
+unsigned int g_managerCashierInteractionCV;
 
 /**
  * Locks, Condition Variables for Manager - Customer Interaction
  */
-unsigned int			g_managerCustomerInteractionLock;
-unsigned int			g_managerCustomerInteractionCV;
+unsigned int g_managerCustomerInteractionLock;
+unsigned int g_managerCustomerInteractionCV;
 
 /*************************************GLOBAL DATA STRUCTS DECLARATION**********************************************/
 
@@ -1880,20 +1880,16 @@ void initLockForSimulation()
 	{
         g_customerDepartmentLock[i] = createLock("customerDepartmentLock",sizeof("customerDepartmentLock"));
     	print2("customerDepartmentLock %d = %d \n",i,g_customerDepartmentLock[i]);
+
+        g_customerDepartmentComplainLock[i] = createLock("customerDepartmentComplainLock",
+        		sizeof("customerDepartmentComplainLock"));
+    	print2("customerDepartmentComplainLock %d = %d \n",i,g_customerDepartmentComplainLock[i]);
 	}
 
 	for(i =0;i<NO_OF_SHELFS;i++)
 	{
         g_shelfAccessLock[i] = createLock("shelfAccessLock",sizeof("shelfAccessLock"));
     	print2("shelfAccessLock %d = %d \n",i,g_shelfAccessLock[i]);
-	}
-
-	for(i=0;i<NO_OF_DEPARTMENT;i++)
-	{
-
-        g_customerDepartmentComplainLock[i] = createLock("customerDepartmentComplainLock",
-        		sizeof("customerDepartmentComplainLock"));
-    	print2("customerDepartmentComplainLock %d = %d \n",i,g_customerDepartmentComplainLock[i]);
 	}
 
 	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
