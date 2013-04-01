@@ -2196,7 +2196,6 @@ void printLockCvForSimulation()
 
 void main(const char* testOption)
 {
-#if 1
 	int configRetVal;
 	int i;
 
@@ -2213,7 +2212,7 @@ void main(const char* testOption)
     initLockCvForSimulation();
 
 
-
+#if 0
     /**
      * Check if client wants to repeat the test with same configuration
      */
