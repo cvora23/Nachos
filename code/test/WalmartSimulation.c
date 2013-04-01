@@ -1802,7 +1802,7 @@ void ManagerThread()
     Exit(0);
 }
 
-void initLockCvForSimulaton1()
+void initLockCvForSimulation1()
 {
 	int i;
 
