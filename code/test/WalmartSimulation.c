@@ -1841,15 +1841,15 @@ void initLockCvForSimulation()
 
 	g_salesmanThreadCounterLock = createLock("SalesmanThreadCounterLock",
 			sizeof("SalesmanThreadCounterLock"));
-	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
+	print1("g_salesmanThreadCounterLock = %d \n",g_salesmanThreadCounterLock);
 
 	g_goodsLoaderThreadCounterLock = createLock("GoodsLoaderThreadCounterLock",
 			sizeof("GoodsLoaderThreadCounterLock"));
-	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
+	print1("g_goodsLoaderThreadCounterLock = %d \n",g_goodsLoaderThreadCounterLock);
 
 	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",
 			sizeof("CustomerThreadCounterLock"));
-	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
+	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
 
 
 	/**
