@@ -193,6 +193,12 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 		if(i < numCodeDataPages)
 		{
 			pageTable[i].physicalPage = mainMemoryBitMap->Find();
+			if(pageTable[i].physicalPage == -1)
+			{
+				printf("%s : No Memory available for allocation \n",currentThread->getName());
+		    	mainMemoryAccessLock->Release();
+				interrupt->Halt();
+			}
 		}
 		else
 		{
@@ -234,7 +240,7 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
     for(int i=0;i<numCodeDataPages;i++)
     {
     	executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PageSize]),
-    			PageSize,(noffH.code.inFileAddr + i*PageSize));
+    			PageSize,(noffH.code.inFileAddr + (i*PageSize)));
     	DEBUG('a',"Page copied to PageTable at Physical Addr: 0x%x . Code/Data of size %d "
     			"copied from 0x%x \n",pageTable[i].physicalPage*PageSize,PageSize,
     			(noffH.code.inFileAddr + i*PageSize));

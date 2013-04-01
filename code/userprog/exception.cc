@@ -866,6 +866,12 @@ void Fork_Syscall(unsigned int vaddr)
 
     	tempPageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
     	tempPageTable[i].physicalPage = mainMemoryBitMap->Find();
+    	if(tempPageTable[i].physicalPage == -1)
+    	{
+			printf("%s : No Memory available for allocation \n",currentThread->getName());
+	    	mainMemoryAccessLock->Release();
+			interrupt->Halt();
+    	}
     	tempPageTable[i].valid = TRUE;
     	tempPageTable[i].use = FALSE;
     	tempPageTable[i].dirty = FALSE;
