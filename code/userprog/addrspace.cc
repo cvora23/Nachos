@@ -196,7 +196,7 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 		}
 		else
 		{
-			pageTable[i].physicalPage = -1;
+			pageTable[i].physicalPage = i;
 		}
 		//bzero(machine->mainMemory + pageTable[i].physicalPage* PageSize,PageSize);
 		DEBUG('a',"Initializing PHYSICAL PAGE = %d, VIRTUAL PAGE = %d \n",pageTable[i].physicalPage,i);
