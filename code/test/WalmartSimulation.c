@@ -1829,6 +1829,28 @@ void initLockCvForSimulation()
 	char lockName[256];
 	char cvName[256];
 	int i;
+
+	/**
+	 * Creating Locks for Thread Counters
+	 */
+	g_customerThreadCounterLock = createLock("CustomerThreadCounterLock",
+			sizeof("CustomerThreadCounterLock"));
+	print1("g_customerThreadCounterLock = %d \n\n",g_customerThreadCounterLock);
+
+	g_salesmanThreadCounterLock = createLock("SalesmanThreadCounterLock",
+			sizeof("SalesmanThreadCounterLock"));
+	print1("g_salesmanThreadCounterLock = %d \n\n",g_salesmanThreadCounterLock);
+
+	g_goodsLoaderThreadCounterLock = createLock("GoodsLoaderThreadCounterLock",
+			sizeof("GoodsLoaderThreadCounterLock"));
+	print1("g_goodsLoaderThreadCounterLock = %d \n\n",g_goodsLoaderThreadCounterLock);
+
+	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",
+			sizeof("CustomerThreadCounterLock"));
+	print1("g_cashierThreadCounterLock = %d \n\n",g_cashierThreadCounterLock);
+
+
+#if 0
 	/**
 	 * Creating Locks for Thread Counters
 	 */
@@ -1847,6 +1869,8 @@ void initLockCvForSimulation()
 	g_cashierThreadCounterLock = createLock((char*)CASHIERTHREADCOUNTER_STRING,
 			xstrlen(CASHIERTHREADCOUNTER_STRING));
 	print1("g_cashierThreadCounterLock = %d \n\n",g_cashierThreadCounterLock);
+
+
 
 	/**
 	 * Locks, CV Customer-Trolley
@@ -2040,6 +2064,7 @@ void initLockCvForSimulation()
 
         g_goodLoaderWaitQueue[i] = 0;
 	}
+#endif
 
 }
 
