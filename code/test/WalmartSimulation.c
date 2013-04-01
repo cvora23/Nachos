@@ -439,92 +439,68 @@ void clearCharBuf(char* s)
 /**
  * GLOBAL DATA STRUCTURES INIT FUNCTIONS
  */
-static void initItemInfo()
+void initItemInfo()
 {
-    static bool firstCall = true;
     int i;
-    if(firstCall)
-    {
-		for (i = 0;i<NO_OF_ITEM_TYPES;i++)
-		{
-			g_itemInfo[i].Price = Random()%MAX_PRICE_PER_ITEM + 1;
-			g_itemInfo[i].departmentNo = (int)(i/NO_OF_ITEMS_PER_DEPARTMENT);
-			g_itemInfo[i].shelfNo = i;
-			g_itemInfo[i].noOfItems = Random()%MAX_NO_ITEMS_PER_SHELF + 1;
-		}
-		firstCall = false;
-    }
-}
-
-static void initCustomerInfo()
-{
-    static bool firstCall = true;
-    int i,j;
-    if(firstCall)
-    {
-		for(i = 0;i<NO_OF_CUSTOMERS;i++)
-		{
-			g_customerInfo[i].money = Random()%MAX_AMT_PER_CUSTOMER + 1;
-			if(Random()%2 == 0)
-			{
-				g_customerInfo[i].type = PRIVILEGED;
-			}
-			else
-			{
-				g_customerInfo[i].type = NON_PRIVILEGED;
-			}
-#if 0
-			g_customerInfo[i].noOfItems = Random()%MAX_NO_ITEMS_TO_BE_PURCHASED + 1;
-			g_customerInfo[i].pCustomerShoppingList = new CustomerShoppingList[g_customerInfo[i].noOfItems];
-#endif
-			g_customerInfo[i].noOfItems = NO_OF_ITEMS_TO_SHOP;
-
-			for(j=0;j<g_customerInfo[i].noOfItems;j++)
-			{
-				g_customerInfo[i].pCustomerShoppingList[j].itemNo = 0;
-				g_customerInfo[i].pCustomerShoppingList[j].noOfItems = 0;
-			}
-
-			g_customerInfo[i].hasEnoughMoneyForShopping = false;
-			g_customerInfo[i].isDoneShopping = false;
-		}
-		firstCall = false;
-    }
-}
-
-static void initCustomerShoppingList()
-{
-    static bool firstCall = true;
-    int i,j;
-    if(firstCall)
-    {
-    	for(i = 0;i<NO_OF_CUSTOMERS;i++)
-    	{
-			for(j =0;j<g_customerInfo[i].noOfItems;j++)
-			{
-				g_customerInfo[i].pCustomerShoppingList[j].itemNo = Random()%NO_OF_ITEM_TYPES;
-				g_customerInfo[i].pCustomerShoppingList[j].noOfItems =
-						Random()%MAX_NO_ITEMS_TO_BE_PURCHASED_OF_EACH_TYPE + 1;
-			}
-    	}
-		firstCall = false;
+	for (i = 0;i<NO_OF_ITEM_TYPES;i++)
+	{
+		g_itemInfo[i].Price = Random()%MAX_PRICE_PER_ITEM + 1;
+		g_itemInfo[i].departmentNo = (int)(i/NO_OF_ITEMS_PER_DEPARTMENT);
+		g_itemInfo[i].shelfNo = i;
+		g_itemInfo[i].noOfItems = Random()%MAX_NO_ITEMS_PER_SHELF + 1;
 	}
 }
 
-static void initSalesManInfo()
+void initCustomerInfo()
 {
-    static bool firstCall = true;
-    int i;
-    if(firstCall)
-    {
-    	for(i=0;i<NO_OF_SALESMAN;i++)
-    	{
-    		g_salesmanInfo[i].customerId = -1;
-    		g_salesmanInfo[i].status = salesmanIsBusy;
-    		g_salesmanInfo[i].departmentNo = (int)(i/NO_OF_SALESMAN_PER_DEPARTMENT);
-    		g_salesmanInfo[i].itemToRestock = -1;
-    	}
-		firstCall = false;
+    int i,j;
+	for(i = 0;i<NO_OF_CUSTOMERS;i++)
+	{
+		g_customerInfo[i].money = Random()%MAX_AMT_PER_CUSTOMER + 1;
+		if(Random()%2 == 0)
+		{
+			g_customerInfo[i].type = PRIVILEGED;
+		}
+		else
+		{
+			g_customerInfo[i].type = NON_PRIVILEGED;
+		}
+		g_customerInfo[i].noOfItems = NO_OF_ITEMS_TO_SHOP;
+		for(j=0;j<g_customerInfo[i].noOfItems;j++)
+		{
+			g_customerInfo[i].pCustomerShoppingList[j].itemNo = 0;
+			g_customerInfo[i].pCustomerShoppingList[j].noOfItems = 0;
+		}
+
+		g_customerInfo[i].hasEnoughMoneyForShopping = false;
+		g_customerInfo[i].isDoneShopping = false;
+	}
+}
+
+void initCustomerShoppingList()
+{
+    int i,j;
+	for(i = 0;i<NO_OF_CUSTOMERS;i++)
+	{
+		for(j =0;j<g_customerInfo[i].noOfItems;j++)
+		{
+			g_customerInfo[i].pCustomerShoppingList[j].itemNo = Random()%NO_OF_ITEM_TYPES;
+			g_customerInfo[i].pCustomerShoppingList[j].noOfItems =
+					Random()%MAX_NO_ITEMS_TO_BE_PURCHASED_OF_EACH_TYPE + 1;
+		}
+	}
+
+}
+
+void initSalesManInfo()
+{
+	int i;
+	for(i=0;i<NO_OF_SALESMAN;i++)
+	{
+		g_salesmanInfo[i].customerId = -1;
+		g_salesmanInfo[i].status = salesmanIsBusy;
+		g_salesmanInfo[i].departmentNo = (int)(i/NO_OF_SALESMAN_PER_DEPARTMENT);
+		g_salesmanInfo[i].itemToRestock = -1;
 	}
 }
 
@@ -533,20 +509,17 @@ void printSalesManInfo(int salesManId)
 
 }
 
-static void initGoodLoaderInfo()
+void initGoodLoaderInfo()
 {
-    static bool firstCall = true;
     int i;
-    if(firstCall)
-    {
-    	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
-    	{
-    		g_goodLoaderInfo[i].status = goodLoaderIsBusy;
-    		g_goodLoaderInfo[i].salesmanId = -1;
-    		g_goodLoaderInfo[i].itemToRestock = -1;
-    	}
-		firstCall = false;
+
+	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
+	{
+		g_goodLoaderInfo[i].status = goodLoaderIsBusy;
+		g_goodLoaderInfo[i].salesmanId = -1;
+		g_goodLoaderInfo[i].itemToRestock = -1;
 	}
+
 }
 
 void printGoodLoaderInfo(int goodLoaderId)
@@ -554,21 +527,17 @@ void printGoodLoaderInfo(int goodLoaderId)
 
 }
 
-static void initCashierInfo()
+void initCashierInfo()
 {
-    static bool firstCall = true;
     int i;
-    if(firstCall)
-    {
-    	for(i=0;i<NO_OF_CASHIERS;i++)
-    	{
-    		g_cashierInfo[i].status = cashierIsBusy;
-    		g_cashierInfo[i].customerId = -1;
-    		g_cashierInfo[i].bill = -1;
-    		g_cashierInfo[i].totalSalesMoney = 0;
-    	}
-		firstCall = false;
+	for(i=0;i<NO_OF_CASHIERS;i++)
+	{
+		g_cashierInfo[i].status = cashierIsBusy;
+		g_cashierInfo[i].customerId = -1;
+		g_cashierInfo[i].bill = -1;
+		g_cashierInfo[i].totalSalesMoney = 0;
 	}
+
 }
 
 void printCashierInfo()
@@ -583,12 +552,10 @@ void printCashierInfo()
 	}
 }
 
-static void initManagerInfo()
+void initManagerInfo()
 {
-    static bool firstCall = true;
     int i;
-    if(firstCall)
-    {
+
     	for(i=0;i<NO_OF_MANAGERS;i++)
     	{
     		g_managerInfo.cashierId = -1;
@@ -596,8 +563,7 @@ static void initManagerInfo()
     		g_managerInfo.totalRevenue = 0;
     		g_managerInfo.customerBill = 0;
     	}
-		firstCall = false;
-	}
+
 }
 
 void printManagerInfo(int managerId)
