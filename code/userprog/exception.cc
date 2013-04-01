@@ -331,6 +331,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 	userLockTable.locks[lockId].lockCounter = 0;
 
 	userLockTableLock->Release();
+	delete buf;
 	return lockId;
 }
 
@@ -512,6 +513,7 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 	userConditionTable.conditions[conditionId].conditionCounter = 0;
 
 	userConditionTableLock->Release();
+	delete buf;
 	return conditionId;
 }
 
