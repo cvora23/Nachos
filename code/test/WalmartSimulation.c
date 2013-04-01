@@ -290,6 +290,9 @@ typedef struct _ManagerInfo
 
 /*************************************GLOBAL DATA STRUCTS DECLARATION**********************************************/
 
+char 	lockName[256];
+char 	cvName[256];
+
 /**
  * GLOBAL DATA STRUCTURES
  */
@@ -1792,11 +1795,7 @@ void ManagerThread()
 
 void initLockCvForSimulation()
 {
-	char lockName[256];
-	char cvName[256];
 	int i;
-    clearCharBuf(lockName);
-    clearCharBuf(cvName);
 
 #if 1
 
