@@ -68,10 +68,10 @@
 #define GOOD_LOADERS_STRING								(const char*)"GOODLOADER"
 #define CUSTOMER_STRING									(const char*)"CUSTOMER"
 
-#define CUSTOMERTHREADCOUNTER_STRING					(const char*)"CustomerThreadCounterLock"
-#define SALESMANTHREADCOUNTER_STRING					(const char*)"SalesmanThreadCounterLock"
-#define GOODSLOADERTHREADCOUNTER_STRING					(const char*)"GoodsLoaderThreadCounterLock"
-#define CASHIERTHREADCOUNTER_STRING						(const char*)"CustomerThreadCounterLock"
+#define CUSTOMERTHREADCOUNTER_STRING					"CustomerThreadCounterLock"
+#define SALESMANTHREADCOUNTER_STRING					"SalesmanThreadCounterLock"
+#define GOODSLOADERTHREADCOUNTER_STRING					"GoodsLoaderThreadCounterLock"
+#define CASHIERTHREADCOUNTER_STRING						"CustomerThreadCounterLock"
 
 #define PRINTLOCK_STRING								(const char*)"PrintLock"
 #define CUSTOMERTROLLEYLOCK_STRING						(const char*)"CustomerTrolleyLock"
