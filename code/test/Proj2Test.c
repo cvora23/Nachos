@@ -258,7 +258,7 @@ int main()
 	Print("11: Print1 System call \n");
 
 	Print("Enter your choice \n");
-	testCaseNo = scan();
+	testCaseNo = Scan();
 
 	Print("\n\n");
 
