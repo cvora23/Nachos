@@ -174,6 +174,8 @@ int g_salesmanThreadCounter = 0;
 int g_goodsLoaderThreadCounter = 0;
 int g_cashierThreadCounter = 0;
 
+unsigned int printLock;
+
 unsigned int g_customerThreadCounterLock;
 unsigned int g_salesmanThreadCounterLock;
 unsigned int g_goodsLoaderThreadCounterLock;
@@ -1239,7 +1241,9 @@ void CashierThread()
 	g_cashierThreadCounter++;
 	releaseLock(g_cashierThreadCounterLock);
 
+	acquireLock(printLock);
     print1( "CASHIER %d Started !!!!!!! \n",ThreadId);
+    releaseLock(printLock);
 
     while(1)
     {
@@ -1278,7 +1282,10 @@ void CashierThread()
     		}
     		releaseLock(g_cashierLineLock[ThreadId]);
     	}
+    	acquireLock(printLock);
 		print2("Cashier %d total sales money is %d \n",ThreadId,g_cashierInfo[ThreadId].totalSalesMoney);
+		releaseLock(printLock);
+
     	wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
     	myCustomer = g_cashierInfo[ThreadId].customerId;
 
@@ -1288,14 +1295,17 @@ void CashierThread()
           	currentItemNoCountFromShoppingList = g_customerInfo[myCustomer].pCustomerShoppingList[i].noOfItems;
           	currentItemNoPriceFromShoppingList = g_itemInfo[currentItemNoFromShoppingList].Price;
           	totalBill +=  currentItemNoPriceFromShoppingList * currentItemNoCountFromShoppingList ;
+        	acquireLock(printLock);
           	print2("CASHIER %d got ITEM_%d from trolley\n",ThreadId,currentItemNoFromShoppingList);
+          	releaseLock(printLock);
     	}
 
     	g_cashierInfo[ThreadId].bill = totalBill;
 
     	signal(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
-
+    	acquireLock(printLock);
     	print3("CASHIER %d tells CUSTOMER_%d total cost is $ %d\n",ThreadId,myCustomer,totalBill);
+    	releaseLock(printLock);
 
     	wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
 
@@ -1314,18 +1324,19 @@ void CashierThread()
     		releaseLock(g_managerCashierLock);
 
     		signal(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
-
+        	acquireLock(printLock);
     		print2("CASHIER %d informs Manager that CUSTOMER_%d does not have enough money\n",
     				ThreadId,myCustomer);
+        	releaseLock(printLock);
 
     		wait(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
 
     		releaseLock(g_managerCashierInteractionLock);
 
         	signal(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
-
+        	acquireLock(printLock);
         	print2("CASHIER %d asks CUSTOMER_%d to wait for Manager\n",ThreadId,myCustomer);
-
+        	releaseLock(printLock);
         	wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
 
     	}
@@ -1334,14 +1345,14 @@ void CashierThread()
     		acquireLock(g_managerCashierCashLock[ThreadId]);
     		g_cashierInfo[ThreadId].totalSalesMoney += totalBill;
     		releaseLock(g_managerCashierCashLock[ThreadId]);
-
+        	acquireLock(printLock);
     		print3("CASHIER %d got money $ %d from CUSTOMER_%d\n",ThreadId,totalBill,myCustomer);
-
+        	releaseLock(printLock);
         	signal(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
-
+        	acquireLock(printLock);
         	print2("CASHIER %d gave the receipt to CUSTOMER_%d and tells him to leave\n",
         			ThreadId,myCustomer);
-
+        	releaseLock(printLock);
         	wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
     	}
 
@@ -1360,7 +1371,9 @@ void ManagerThread()
 	int currentItemNoToRemovePrice = 0;
 	int i;
 
+	acquireLock(printLock);
 	print1( "MANAGER %d Started !!!!!!! \n",ThreadId);
+	releaseLock(printLock);
 
     while(!simulationEnd)
     {
@@ -1369,7 +1382,9 @@ void ManagerThread()
     	for(i=0;i<NO_OF_CASHIERS;i++)
     	{
     		acquireLock(g_managerCashierCashLock[i]);
+    		acquireLock(printLock);
     		print2("Total Sales Money From CASHIER %d is %d\n",i,g_cashierInfo[i].totalSalesMoney);
+    		releaseLock(printLock);
     		g_managerInfo.totalRevenue += g_cashierInfo[i].totalSalesMoney;
     		g_cashierInfo[i].totalSalesMoney = 0;
     		releaseLock(g_managerCashierCashLock[i]);
@@ -1377,7 +1392,10 @@ void ManagerThread()
 
     	g_managerInfo.totalRevenue += managerSales;
     	managerSales = 0;
+
+    	acquireLock(printLock);
     	print1("Total Sale of the entire store until now is $ %d \n",g_managerInfo.totalRevenue);
+    	releaseLock(printLock);
 
     	acquireLock(g_managerCashierLock);
     	if(g_managerWaitQueueLength == 0)
@@ -1400,7 +1418,9 @@ void ManagerThread()
 
     		wait(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
 
+    		acquireLock(printLock);
     		print2("MANAGER %d got a call from CASHIER_%d\n",ThreadId,g_managerInfo.cashierId);
+    		releaseLock(printLock);
 
     		signal(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
 
@@ -1424,8 +1444,10 @@ void ManagerThread()
     			currentItemNoToRemoveCount =
     					g_customerInfo[g_managerInfo.customerId].pCustomerShoppingList[itemRemoveCounter].noOfItems;
 
+    			acquireLock(printLock);
     			print3("MANAGER %d removes ITEM_%d from trolley of CUSTOMER_%d\n",
     					ThreadId,currentItemNoToRemove,g_managerInfo.customerId);
+    			releaseLock(printLock);
 
     			g_managerInfo.customerBill -= currentItemNoToRemovePrice * currentItemNoToRemoveCount;
 
@@ -1438,11 +1460,15 @@ void ManagerThread()
 
     		signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
 
+    		acquireLock(printLock);
     		print2("MANAGER %d gives receipt to CUSTOMER_%d \n",ThreadId,g_managerInfo.customerId);
+    		releaseLock(printLock);
 
     		releaseLock(g_managerCustomerInteractionLock);
 
+    		acquireLock(printLock);
     		print2("MANAGER %d has total sale of $ %d\n",ThreadId,managerSales);
+    		releaseLock(printLock);
     	}
 
     	for(i=0;i<MANAGER_RANDOM_SLEEP_TIME;i++)
@@ -1558,6 +1584,8 @@ void initCvForSimulation()
 void printLockForSimulation()
 {
 	int i;
+
+	acquireLock(printLock);
 	print1("customerThreadCounterLock = %u \n",g_customerThreadCounterLock);
 	print1("salesmanThreadCounterLock = %u \n",g_salesmanThreadCounterLock);
 	print1("goodsLoaderThreadCounterLock = %u \n",g_goodsLoaderThreadCounterLock);
@@ -1591,14 +1619,14 @@ void printLockForSimulation()
 	{
     	print2("salesmanGoodsLoaderLock %d = %u \n",i,g_salesmanGoodsLoaderLock[i]);
 	}
+	releaseLock(printLock);
 
 }
 
 void printCvForSimulation()
 {
 	int i;
-
-	g_customerTrolleyCV = createCondition((char*)"CustomerTrolleyCV",sizeof("CustomerTrolleyCV"));
+	acquireLock(printLock);
 	print1("customerTrolleyCV = %u \n",g_customerTrolleyCV);
 
 	for(i=0;i<NO_OF_MANAGERS;i++)
@@ -1635,6 +1663,7 @@ void printCvForSimulation()
 	{
     	print2("goodLoaderWaitCV %d = %u \n",i, g_goodLoaderWaitCV[i]);
 	}
+	realeaseLock(printLock);
 }
 
 void main(const char* testOption)
@@ -1642,6 +1671,9 @@ void main(const char* testOption)
 	int configRetVal;
 	int i;
 
+	printLock = createLock("printLock",sizeof("printLock"));
+
+	acquireLock(printLock);
     print( "Entering Assign 1 Problem 2 !!!!!!! \n");
     print( "Starting to initialize all the Threads for Problem 2 !!!!!!! \n");
 
@@ -1651,6 +1683,7 @@ void main(const char* testOption)
     print1("Number of Customers = %d \n",NO_OF_CUSTOMERS);
     print1("Number of Managers = %d \n",NO_OF_MANAGERS);
     print1("Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
+    releaseLock(printLock);
 
     initLockForSimulation();
 	initCvForSimulation();
