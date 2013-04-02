@@ -1171,7 +1171,7 @@ void GoodLoaderThread()
     int mySalesman = -1;
     int ThreadId;
     int i;
-	char string[] = "GOODSLOADER %d Started !!!!!!!\n";
+	char string[3] = {'h','i','\0'};
 
 	Acquire(g_goodsLoaderThreadCounterLock);
 	ThreadId = g_goodsLoaderThreadCounter;
