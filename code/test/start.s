@@ -130,53 +130,53 @@ Yield:
 	j	$31
 	.end Yield
 
-    .globl createLock
-    .ent    createLock
-createLock:
+    .globl CreateLock
+    .ent    CreateLock
+CreateLock:
     addiu $2,$0,SC_CreateLock
     syscall
     j   $31
-    .end createLock
+    .end CreateLock
 
-    .globl acquireLock
-    .ent    acquireLock
-acquireLock:
+    .globl Acquire
+    .ent    Acquire
+Acquire:
     addiu $2,$0,SC_AcquireLock
     syscall
     j   $31
-    .end acquireLock
+    .end Acquire
 
-    .globl releaseLock
-    .ent    releaseLock
-releaseLock:
+    .globl Release
+    .ent    Release
+Release:
     addiu $2,$0,SC_ReleaseLock
     syscall
     j   $31
-    .end releaseLock
+    .end Release
 
-    .globl destroyLock
-    .ent    destroyLock
-destroyLock:
+    .globl DestroyLock
+    .ent    DestroyLock
+DestroyLock:
     addiu $2,$0,SC_DestroyLock
     syscall
     j   $31
-    .end destroyLock
+    .end DestroyLock
 
-    .globl createCondition
-    .ent    createCondition
-createCondition:
+    .globl CreateCondition
+    .ent    CreateCondition
+CreateCondition:
     addiu $2,$0,SC_CreateCondition
     syscall
     j   $31
-    .end createCondition
+    .end CreateCondition
 
-    .globl destroyCondition
-    .ent    destroyCondition
-destroyCondition:
+    .globl DestroyCondition
+    .ent    DestroyCondition
+DestroyCondition:
     addiu $2,$0,SC_DestroyCondition
     syscall
     j   $31
-    .end destroyCondition
+    .end DestroyCondition
 
     .globl Signal
     .ent    Signal
@@ -194,21 +194,21 @@ Wait:
     j   $31
     .end Wait
 
-    .globl broadcast
-    .ent    broadcast
-broadcast:
+    .globl Broadcast
+    .ent    Broadcast
+Broadcast:
     addiu $2,$0,SC_Broadcast
     syscall
     j   $31
-    .end broadcast
+    .end Broadcast
 
-    .globl print
-    .ent    print
-print:
+    .globl Print
+    .ent    Print
+Print:
     addiu $2,$0,SC_Print
     syscall
     j   $31
-    .end print
+    .end Print
 
     .globl printString
     .ent    printString
@@ -234,29 +234,29 @@ printStringIntInt:
     j   $31
     .end printStringIntInt
 
-    .globl print1
-    .ent    print1
-print1:
+    .globl Print1
+    .ent    Print1
+Print1:
     addiu $2,$0,SC_Print1
     syscall
     j   $31
-    .end print1
+    .end Print1
 
-    .globl print2
-    .ent    print2
-print2:
+    .globl Print2
+    .ent    Print2
+Print2:
     addiu $2,$0,SC_Print2
     syscall
     j   $31
-    .end print2
+    .end Print2
 
-    .globl print3
-    .ent    print3
-print3:
+    .globl Print3
+    .ent    Print3
+Print3:
     addiu $2,$0,SC_Print3
     syscall
     j   $31
-    .end print3
+    .end Print3
 
     .globl sprintf
     .ent    sprintf
@@ -266,21 +266,21 @@ sprintf:
     j   $31
     .end sprintf
 
-    .globl scan
-    .ent    scan
-scan:
+    .globl Scan
+    .ent    Scan
+Scan:
     addiu $2,$0,SC_Scan
     syscall
     j   $31
-    .end scan
+    .end Scan
 
-    .globl Random
-    .ent    Random
-Random:
+    .globl GetRand
+    .ent    GetRand
+GetRand:
     addiu $2,$0,SC_GetRand
     syscall
     j   $31
-    .end Random
+    .end GetRand
 
 /* dummy function to keep gcc happy */
         .globl  __main

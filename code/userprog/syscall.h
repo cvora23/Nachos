@@ -144,31 +144,31 @@ void Fork(void (*func)());
  */
 void Yield();
 
-int createLock(char* lockName,int lockNameLen);
+int CreateLock(char* lockName,int lockNameLen);
 
-void acquireLock(int LockId);
+void Acquire(int LockId);
 
-void releaseLock(int LockId);
+void Release(int LockId);
 
-void detroyLock(int LockId);
+void DestroyLock(int LockId);
 
-int createCondition(char* conditionName,int conditionNameLen);
+int CreateCondition(char* conditionName,int conditionNameLen);
 
 void Signal(int conditionId,int lockId);
 
 void Wait(int conditionId,int lockId);
 
-void broadcast(int conditionId,int lockId);
+void Broadcast(int conditionId,int lockId);
 
-void destroyCondition(int conditionId);
+void DestroyCondition(int conditionId);
 
-void print(char* buf);
+void Print(char* buf);
 
-void print1(char* buf,int arg1);
+void Print1(char* buf,int arg1);
 
-void print2(char* buf,int arg1,int arg2);
+void Print2(char* buf,int arg1,int arg2);
 
-void print3(char* buf,int arg1,int arg2,int arg3);
+void Print3(char* buf,int arg1,int arg2,int arg3);
 
 void printString(char* buf,char* string);
 
@@ -178,9 +178,9 @@ void printStringIntInt(char* buf,char* string,int var1,int var2);
 
 void sprintf(char* outBuf,const char* arg1,int arg1Len,int arg2);
 
-int scan();
+int Scan();
 
-int Random();
+int GetRand();
 
 #endif /* IN_ASM */
 
