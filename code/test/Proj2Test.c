@@ -245,7 +245,7 @@ void testCase12()
 {
 	Print("Jigar Market Simulation \n\n");
 
-	Exec("../test/Problem2",25);
+	Exec("../test/Problem2",16);
 
 	Exit(0);
 }
