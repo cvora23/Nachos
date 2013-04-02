@@ -207,31 +207,6 @@ void testCase5()
 	Exit(0);
 }
 
-void testCase6()
-{
-	char lockName[256];
-	Print("SPRINTF SYSTEM CALL TEST \n");
-	Print("--------------------------------------------------------\n");
-
-#if 1
-    sprintf(lockName, CUSTOMERSALESMANLOCK_STRING,21, 1);
-    printString("Lock Name returned after sprintf test is %s \n",lockName);
-
-#endif
-
-}
-
-void testCase7()
-{
-	printStringInt("%s has found ITEM_%d  in the trolley \n",CUSTOMERSALESMANLOCK_STRING,5);
-}
-
-void testCase8()
-{
-	printStringIntInt("%s has found ITEM_%d and placed ITEM_%d in the trolley \n",CUSTOMERSALESMANLOCK_STRING,
-						5,5);
-}
-
 void testCase9()
 {
 	Print("Walmart Market Simulation \n\n");
@@ -300,17 +275,23 @@ int main()
 		break;
 		case 6:
 		{
+#if 0
 			testCase6();
+#endif
 		}
 		break;
 		case 7:
 		{
+#if 0
 			testCase7();
+#endif
 		}
 		break;
 		case 8:
 		{
+#if 0
 			testCase8();
+#endif
 		}
 		break;
 		case 9:
