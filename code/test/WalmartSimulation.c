@@ -174,6 +174,7 @@ int g_salesmanThreadCounter = 0;
 int g_goodsLoaderThreadCounter = 0;
 int g_cashierThreadCounter = 0;
 
+/*****************************************LOCKS**************************************************************/
 unsigned int printLock;
 
 unsigned int g_customerThreadCounterLock;
@@ -181,55 +182,82 @@ unsigned int g_salesmanThreadCounterLock;
 unsigned int g_goodsLoaderThreadCounterLock;
 unsigned int g_cashierThreadCounterLock;
 
-int g_usedTrolleyCount = 0;
-int g_waitForTrolleyCount = 0;
 unsigned int g_customerTrolleyLock;
-unsigned int g_customerTrolleyCV;
+
+unsigned int g_managerCashierLock;
+unsigned int g_managerCashierInteractionLock;
+unsigned int g_managerCustomerInteractionLock;
+
+unsigned int g_cashierLineLock[NO_OF_CASHIERS];
+unsigned int g_cashierPrivilegedLineLock[NO_OF_CASHIERS];
+unsigned int g_customerCashierLock[NO_OF_CASHIERS];
+unsigned int g_managerCashierCashLock[NO_OF_CASHIERS];
 
 unsigned int g_customerSalesmanLock[NO_OF_SALESMAN];
-unsigned int g_customerSalesmanCV[NO_OF_SALESMAN];
-
 
 unsigned int g_customerDepartmentLock[NO_OF_DEPARTMENT];
-unsigned int g_customerDepartmentCV[NO_OF_DEPARTMENT];
-int	g_departmentWaitQueue[NO_OF_DEPARTMENT];
-
+unsigned int g_customerDepartmentComplainLock[NO_OF_DEPARTMENT];
 
 unsigned int g_shelfAccessLock[NO_OF_SHELFS];
 
-unsigned int g_customerDepartmentComplainLock[NO_OF_DEPARTMENT];
-unsigned int g_customerDepartmentComplainCV[NO_OF_DEPARTMENT];
-int	g_departmentComplainWaitQueue[NO_OF_DEPARTMENT];
-
 unsigned int g_salesmanGoodsLoaderLock[NO_OF_GOOD_LOADERS];
-unsigned int g_salesmanGoodsLoaderCV[NO_OF_GOOD_LOADERS];
-
 unsigned int g_goodLoaderWaitLock[NO_OF_GOODLOADER_WAIT_QUEUE];
-unsigned int g_goodLoaderWaitCV[NO_OF_GOODLOADER_WAIT_QUEUE];
-int	g_goodLoaderWaitQueue[NO_OF_GOODLOADER_WAIT_QUEUE];
 
-unsigned int g_cashierLineLock[NO_OF_CASHIERS];
+/*****************************************LOCKS**************************************************************/
+
+/*****************************************CVS**************************************************************/
+
+unsigned int g_customerTrolleyCV;
+
+unsigned int g_managerCashierCV;
+unsigned int g_managerCashierInteractionCV;
+unsigned int g_managerCustomerInteractionCV;
+
 unsigned int g_cashierLineCV[NO_OF_CASHIERS];
-int	g_cashierWaitQueue[NO_OF_CASHIERS];
-
-unsigned int g_cashierPrivilegedLineLock[NO_OF_CASHIERS];
 unsigned int g_cashierPrivilegedLineCV[NO_OF_CASHIERS];
-int	g_cashierPrivilegedWaitQueue[NO_OF_CASHIERS];
-
-unsigned int g_customerCashierLock[NO_OF_CASHIERS];
 unsigned int g_customerCashierCV[NO_OF_CASHIERS];
 
-unsigned int g_managerCashierCashLock[NO_OF_CASHIERS];
+unsigned int g_customerSalesmanCV[NO_OF_SALESMAN];
 
-unsigned int g_managerCashierLock;
-unsigned int g_managerCashierCV;
+unsigned int g_customerDepartmentCV[NO_OF_DEPARTMENT];
+unsigned int g_customerDepartmentComplainCV[NO_OF_DEPARTMENT];
+
+unsigned int g_salesmanGoodsLoaderCV[NO_OF_GOOD_LOADERS];
+
+unsigned int g_goodLoaderWaitCV[NO_OF_GOODLOADER_WAIT_QUEUE];
+
+/*****************************************CVS**************************************************************/
+
+/*****************************************WAIT Q's**************************************************************/
+
+
+int	g_cashierWaitQueue[NO_OF_CASHIERS];
+int	g_cashierPrivilegedWaitQueue[NO_OF_CASHIERS];
+
+int	g_departmentWaitQueue[NO_OF_DEPARTMENT];
+int	g_departmentComplainWaitQueue[NO_OF_DEPARTMENT];
+
+int	g_goodLoaderWaitQueue[NO_OF_GOODLOADER_WAIT_QUEUE];
+
+/*****************************************WAIT Q's**************************************************************/
+
+
+
+
+int g_usedTrolleyCount = 0;
+int g_waitForTrolleyCount = 0;
+
+
+
+
+
+
+
+
+
 int	g_managerWaitQueueLength = 0;
 
-unsigned int g_managerCashierInteractionLock;
-unsigned int g_managerCashierInteractionCV;
 
-unsigned int g_managerCustomerInteractionLock;
-unsigned int g_managerCustomerInteractionCV;
 
 /*************************************GLOBAL DATA STRUCTS DECLARATION**********************************************/
 
@@ -1488,9 +1516,12 @@ void initLockForSimulation()
 	g_salesmanThreadCounterLock = createLock("SalesmanThreadCounterLock",sizeof("SalesmanThreadCounterLock"));
 	g_goodsLoaderThreadCounterLock = createLock("GoodsLoaderThreadCounterLock",sizeof("GoodsLoaderThreadCounterLock"));
 	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",sizeof("CustomerThreadCounterLock"));
+
 	g_customerTrolleyLock = createLock("CustomerTrolleyLock",sizeof("CustomerTrolleyLock"));
+
     g_managerCashierLock = createLock("managerCashierLock",sizeof("managerCashierLock"));
     g_managerCashierInteractionLock = createLock("managerCashierInteractionLock",sizeof("managerCashierInteractionLock"));
+
     g_managerCustomerInteractionLock = createLock("managerCustomerInteractionLock",sizeof("managerCustomerInteractionLock"));
 
 	for(i=0;i<NO_OF_CASHIERS;i++)
@@ -1526,6 +1557,11 @@ void initLockForSimulation()
 	{
         g_salesmanGoodsLoaderLock[i] = createLock("salesmanGoodsLoaderLock",sizeof("salesmanGoodsLoaderLock"));
 	}
+
+	for(i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
+	{
+		g_goodLoaderWaitLock[i] = createLock("goodLoaderWaitLock",sizeof("goodLoaderWaitLock"));
+	}
 }
 
 void initCvForSimulation()
@@ -1549,12 +1585,6 @@ void initCvForSimulation()
         g_customerCashierCV[i] = createCondition("customerCashierCV",sizeof("customerCashierCV"));
 	}
 
-	for(i=0;i<NO_OF_CASHIERS;i++)
-	{
-
-        g_cashierWaitQueue[i] = 0;
-        g_cashierPrivilegedWaitQueue[i] = 0;
-	}
 
 	for(i=0;i<NO_OF_SALESMAN;i++)
 	{
@@ -1570,11 +1600,6 @@ void initCvForSimulation()
         		sizeof("customerDepartmentComplainCV"));
 	}
 
-	for(i=0;i<NO_OF_DEPARTMENT;i++)
-	{
-        g_departmentWaitQueue[i] = 0;
-        g_departmentComplainWaitQueue[i] = 0;
-	}
 
 	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
 	{
@@ -1586,6 +1611,25 @@ void initCvForSimulation()
 	{
 
         g_goodLoaderWaitCV[i] = createCondition("goodLoaderWaitCV",sizeof("goodLoaderWaitCV"));
+	}
+
+}
+
+void initWaitQueueForSimulation()
+{
+	int i;
+
+	for(i=0;i<NO_OF_CASHIERS;i++)
+	{
+
+        g_cashierWaitQueue[i] = 0;
+        g_cashierPrivilegedWaitQueue[i] = 0;
+	}
+
+	for(i=0;i<NO_OF_DEPARTMENT;i++)
+	{
+        g_departmentWaitQueue[i] = 0;
+        g_departmentComplainWaitQueue[i] = 0;
 	}
 
 	for(i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
