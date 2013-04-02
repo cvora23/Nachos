@@ -1802,13 +1802,10 @@ void main(const char* testOption)
     initCashierInfo();
     initManagerInfo();
 
-
     for(i = 0;i<NO_OF_GOOD_LOADERS;i++)
     {
     	Fork(GoodLoaderThread);
     }
-
-
 
 
 #if 0
