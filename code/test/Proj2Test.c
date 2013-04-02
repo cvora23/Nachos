@@ -241,7 +241,7 @@ void testCase9()
 	Exit(0);
 }
 
-void testCase11()
+void testCase12()
 {
 	Print("Jigar Market Simulation \n\n");
 
@@ -323,6 +323,11 @@ int main()
 #if 0
 			testCase11();
 #endif
+		}
+		break;
+		case 12:
+		{
+			testCase12();
 		}
 		break;
 		default:
