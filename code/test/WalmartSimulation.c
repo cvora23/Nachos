@@ -1716,18 +1716,15 @@ void main(const char* testOption)
 
     initManagerInfo();
 
-
-
-    for(i = 0;i<NO_OF_MANAGERS;i++)
-    {
-       Fork(ManagerThread);
-    }
-
-
-#if 0
     for(i = 0;i<NO_OF_CASHIERS;i++)
     {
     	Fork(CashierThread);
+    }
+
+#if 0
+    for(i = 0;i<NO_OF_MANAGERS;i++)
+    {
+       Fork(ManagerThread);
     }
 
     for(i = 0;i<NO_OF_GOOD_LOADERS;i++)
