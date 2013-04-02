@@ -1116,27 +1116,6 @@ void ExceptionHandler(ExceptionType which) {
 	    }
 	    break;
 
-	    case SC_PrintString:
-	    {
-	    	DEBUG('a',"PrintString syscall \n");
-	    	PrintString_Syscall(arg1,arg2);
-	    }
-	    break;
-
-	    case SC_PrintStringInt:
-	    {
-	    	DEBUG('a',"PrintStringInt syscall \n");
-	    	PrintStringInt_Syscall(arg1,arg2,arg3);
-	    }
-	    break;
-
-	    case SC_PrintStringIntInt:
-	    {
-	    	DEBUG('a',"PrintStringIntInt syscall \n");
-	    	PrintStringIntInt_Syscall(arg1,arg2,arg3,arg4);
-	    }
-	    break;
-
 	    case SC_Print1:
 	    {
 	    	DEBUG('a',"Print1 syscall \n");
@@ -1158,12 +1137,6 @@ void ExceptionHandler(ExceptionType which) {
 	    }
 	    break;
 
-	    case SC_Sprintf:
-	    {
-	    	DEBUG('a',"Sprintf syscall\n");
-	    	Sprintf_Syscall(arg1,arg2,arg3,arg4);
-	    }
-	    break;
 	    case SC_Scan:
 	    {
 	    	DEBUG('a',"Scan syscall \n");
