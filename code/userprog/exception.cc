@@ -37,7 +37,8 @@ int copyin(unsigned int vaddr, int len, char *buf) {
     int n=0;			// The number of bytes copied in
     int *paddr = new int;
 
-    while ( n >= 0 && n < len) {
+    while ( n >= 0 && n < len)
+    {
       result = machine->ReadMem( vaddr, 1, paddr );
       while(!result) // FALL 09 CHANGES
 	  {
@@ -46,11 +47,11 @@ int copyin(unsigned int vaddr, int len, char *buf) {
       
       buf[n++] = *paddr;
      
-      if ( !result ) {
-	//translation failed
-	return -1;
+      if ( !result )
+      {
+    	  //translation failed
+    	  return -1;
       }
-
       vaddr++;
     }
 
@@ -673,33 +674,33 @@ void DestroyCondition_Syscall(int conditionId)
 
 void Print_Syscall(unsigned int vaddr)
 {
-	char printBuf[MAX_CHAR_PRINTF];
-	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
+	char printBuf[MAX_CHAR_PRINTF+1];
+	if(copyin(vaddr,MAX_CHAR_PRINTF,printBuf) == -1)
 	{
 		printf("%s: Bad Virtual Address \n",currentThread->getName());
 		return ;
 	}
-	printBuf[MAX_CHAR_PRINTF-1] = '\0';
+	printBuf[MAX_CHAR_PRINTF] = '\0';
 	printf(printBuf);
 }
 
 void Print1_Syscall(unsigned int vaddr,int arg1)
 {
-	char printBuf[MAX_CHAR_PRINTF];
-	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1)
+	char printBuf[MAX_CHAR_PRINTF+1];
+	if(copyin(vaddr, MAX_CHAR_PRINTF, printBuf)==-1)
 	{
 		printf("%s: Bad Virtual address\n",currentThread->getName());
 		return;
 	}
-	printBuf[MAX_CHAR_PRINTF-1] = '\0';
+	printBuf[MAX_CHAR_PRINTF] = '\0';
 	printf(printBuf, arg1);
 
 }
 
 void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
 {
-	char printBuf[MAX_CHAR_PRINTF];
-	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1)
+	char printBuf[MAX_CHAR_PRINTF+1];
+	if(copyin(vaddr, MAX_CHAR_PRINTF , printBuf)==-1)
 	{
 		printf("%s: Bad Virtual address\n",currentThread->getName());
 		return;

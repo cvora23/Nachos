@@ -1177,7 +1177,7 @@ void GoodLoaderThread()
 	g_goodsLoaderThreadCounter++;
 	Release(g_goodsLoaderThreadCounterLock);
 
-	Print1( "GOODSLOADER %d Started !!!!!!! \n",ThreadId);
+	Print1("GOODSLOADER %d Started !!!!!!!\n",ThreadId);
 
     while(1)
     {
@@ -1770,7 +1770,8 @@ void main(const char* testOption)
 
 	printLock = CreateLock("printLock",sizeof("printLock"));
 
-	Acquire(printLock);
+	/**
+	 *	Acquire(printLock);
     Print("Entering Assign 1 Problem 2 !!!!!!! \n");
     Print("Starting to initialize all the Threads for Problem 2 !!!!!!! \n");
 
@@ -1781,21 +1782,28 @@ void main(const char* testOption)
     Print1("Number of Managers = %d \n",NO_OF_MANAGERS);
     Print1("Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
     Release(printLock);
+	 */
+
 
 	initItemInfo();
 	initCustomerInfo();
 	initCustomerShoppingList();
 
 	Acquire(printLock);
-	printConfiguration();
+	/**
+	 *	printConfiguration();
+	 */
 	Release(printLock);
 
     initLockForSimulation();
 	initCvForSimulation();
 	initWaitQueueForSimulation();
 
-	printLockForSimulation();
-	printCvForSimulation();
+	/**
+	 *	printLockForSimulation();
+		printCvForSimulation();
+	 */
+
 
     initSalesManInfo();
     initGoodLoaderInfo();
