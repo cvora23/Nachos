@@ -1477,10 +1477,6 @@ void GoodLoaderThread()
 
     		releaseLock(g_shelfAccessLock[g_goodLoaderInfo[ThreadId].itemToRestock]);
 
-    		/**
-    		 * Walking time from re stocking room to shelf
-    		 */
-
     		for(i=0;i<goodsLoaderWalkingTime;i++)
     		{
     			Yield();
@@ -1524,19 +1520,12 @@ void GoodLoaderThread()
     				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo);
     				print1("to re stock ITEM_%d \n",g_goodLoaderInfo[ThreadId].itemToRestock);
 
-    		/**
-    		 * BEFORE SIGNALING BACK TO SALESMAN RESTOCK THE ITEM
-    		 */
-
     		acquireLock(g_shelfAccessLock[g_goodLoaderInfo[ThreadId].itemToRestock]);
 
     		g_itemInfo[g_goodLoaderInfo[ThreadId].itemToRestock].noOfItems = MAX_NO_ITEMS_PER_SHELF;
 
     		releaseLock(g_shelfAccessLock[g_goodLoaderInfo[ThreadId].itemToRestock]);
 
-    		/**
-    		 * Walking time from re stocking room to shelf
-    		 */
 
     		for(i=0;i<goodsLoaderWalkingTime;i++)
     		{
@@ -1643,9 +1632,6 @@ void CashierThread()
 
     	if(g_customerInfo[myCustomer].hasEnoughMoneyForShopping == false)
     	{
-    		/**
-    		 * REPORT CUSTOMER DOES NOT HAVE ENOUGH MONEY TO MANAGER
-    		 */
     		acquireLock(g_managerCashierLock);
 
     		g_managerWaitQueueLength++;
@@ -1807,9 +1793,7 @@ void initLockForSimulation()
 	int i;
 
 #if 1
-	/**
-	 * Creating Locks for Thread Counters
-	 */
+
 	g_customerThreadCounterLock = createLock("CustomerThreadCounterLock",
 			sizeof("CustomerThreadCounterLock"));
 	print1("customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
@@ -1826,11 +1810,6 @@ void initLockForSimulation()
 			sizeof("CustomerThreadCounterLock"));
 	print1("cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
 
-
-
-	/**
-	 * Locks, CV Customer-Trolley
-	 */
 	g_usedTrolleyCount = 0;
 	g_waitForTrolleyCount = 0;
 
@@ -1951,10 +1930,6 @@ void initCvForSimulation()
 
 	for(i=0;i<NO_OF_SALESMAN;i++)
 	{
-
-        g_customerSalesmanLock[i] = createLock("customerSalesmanLock",sizeof("customerSalesmanLock"));
-    	print2("customerSalesmanLock %d = %d \n",i,g_customerSalesmanLock[i]);
-
         g_customerSalesmanCV[i] = createCondition("customerSalesmanCV",sizeof("customerSalesmanCV"));
     	print2("customerSalesmanCV %d = %d \n",i,g_customerSalesmanCV[i]);
 	}
@@ -1990,7 +1965,6 @@ void initCvForSimulation()
 
         g_goodLoaderWaitQueue[i] = 0;
 	}
-
 
 }
 
@@ -2113,28 +2087,7 @@ void main(const char* testOption)
     print1("Number of Managers = %d \n",NO_OF_MANAGERS);
     print1("Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
 
-#if 0
-	/**
-	 * Creating Locks for Thread Counters
-	 */
-	g_customerThreadCounterLock = createLock("CustomerThreadCounterLock",
-			sizeof("CustomerThreadCounterLock"));
-	print1("g_customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
-
-	g_salesmanThreadCounterLock = createLock("SalesmanThreadCounterLock",
-			sizeof("SalesmanThreadCounterLock"));
-	print1("g_salesmanThreadCounterLock = %d \n",g_salesmanThreadCounterLock);
-
-	g_goodsLoaderThreadCounterLock = createLock("GoodsLoaderThreadCounterLock",
-			sizeof("GoodsLoaderThreadCounterLock"));
-	print1("g_goodsLoaderThreadCounterLock = %d \n",g_goodsLoaderThreadCounterLock);
-
-	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",
-			sizeof("CustomerThreadCounterLock"));
-	print1("g_cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
-
-#endif
-	initLockForSimulation();
+    initLockForSimulation();
 	initCvForSimulation();
 
 
@@ -2180,11 +2133,6 @@ void main(const char* testOption)
 	initItemInfo();
 	initCustomerInfo();
 	initCustomerShoppingList();
-
-	/**
-	 *     printConfiguration();
-	 */
-
 
     initSalesManInfo();
 
