@@ -241,6 +241,15 @@ void testCase9()
 	Exit(0);
 }
 
+void testCase11()
+{
+	Print("Jigar Market Simulation \n\n");
+
+	Exec("../test/Problem2",25);
+
+	Exit(0);
+}
+
 int main()
 {
 	int testCaseNo;
@@ -256,7 +265,7 @@ int main()
 	Print("9: Simulate Walmart Simulation One Process \n");
 	Print("10: Simulate Walmart Simulation 2 Proces \n");
 	Print("11: Print1 System call \n");
-
+	Print("12: Simulate Jigar Simulation One Process \n");
 	Print("Enter your choice \n");
 	testCaseNo = Scan();
 
