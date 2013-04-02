@@ -405,7 +405,7 @@ void CustomerThread()
     else
     {
     	g_waitForTrolleyCount++;
-    	wait(g_customerTrolleyCV,g_customerTrolleyLock);
+    	Wait(g_customerTrolleyCV,g_customerTrolleyLock);
     	g_waitForTrolleyCount--;
     	g_usedTrolleyCount++;
     }
@@ -467,7 +467,7 @@ void CustomerThread()
     		print2("CUSTOMER %d gets in line for the DEPARTMENT_%d \n",ThreadId,
     				currentDepartmentNoForItem);
 
-    		wait(g_customerDepartmentCV[currentDepartmentNoForItem],g_customerDepartmentLock[currentDepartmentNoForItem]);
+    		Wait(g_customerDepartmentCV[currentDepartmentNoForItem],g_customerDepartmentLock[currentDepartmentNoForItem]);
 
         	for(salesmanIndex=salesManStartForDepartment;
         			salesmanIndex<salesManEndForDepartment;salesmanIndex++)
@@ -491,11 +491,11 @@ void CustomerThread()
 		print3("CUSTOMER %d is interacting with SALESMAN_%d from DEPARTMENT_%d \n",
 				ThreadId,mySalesMan,currentDepartmentNoForItem);
 
-    	signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
+    	Signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
 
-    	wait(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
+    	Wait(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
 
-    	signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
+    	Signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
 
     	releaseLock(g_customerSalesmanLock[mySalesMan]);
 
@@ -549,7 +549,7 @@ void CustomerThread()
 
 	    		g_departmentComplainWaitQueue[currentDepartmentNoForItem]++;
 
-	    		wait(g_customerDepartmentComplainCV[currentDepartmentNoForItem],
+	    		Wait(g_customerDepartmentComplainCV[currentDepartmentNoForItem],
 	    				g_customerDepartmentComplainLock[currentDepartmentNoForItem]);
 
 	        	for(salesmanIndex=salesManStartForDepartment;
@@ -574,14 +574,14 @@ void CustomerThread()
 	    	print2("CUSTOMER %d is asking for assistance from SALESMAN_%d \n",
 	    			ThreadId,mySalesMan);
 
-	    	signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
+	    	Signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
 
-	    	wait(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
+	    	Wait(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
 
 	    	print3("CUSTOMER %d has received assistance about re stocking of ITEM_%d from SALESMAN_%d \n",
 	    			ThreadId,currentItemNoFromShoppingList,mySalesMan);
 
-	    	signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
+	    	Signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
 
 			g_itemInfo[currentItemNoFromShoppingList].noOfItems -= currentItemNoCountFromShoppingList;
 
@@ -650,14 +650,14 @@ void CustomerThread()
     		acquireLock(g_cashierPrivilegedLineLock[myCashier]);
     	    releaseLock(g_customerCashierLock[myCashier]);
     	    g_cashierPrivilegedWaitQueue[myCashier]++;
-    	    wait(g_cashierPrivilegedLineCV[myCashier],g_cashierPrivilegedLineLock[myCashier]);
+    	    Wait(g_cashierPrivilegedLineCV[myCashier],g_cashierPrivilegedLineLock[myCashier]);
     	}
     	else
     	{
     		acquireLock(g_cashierLineLock[myCashier]);
     	    releaseLock(g_customerCashierLock[myCashier]);
     	    g_cashierWaitQueue[myCashier]++;
-    	    wait(g_cashierLineCV[myCashier],g_cashierLineLock[myCashier]);
+    	    Wait(g_cashierLineCV[myCashier],g_cashierLineLock[myCashier]);
     	}
 
     	acquireLock(g_customerCashierLock[myCashier]);
@@ -674,9 +674,9 @@ void CustomerThread()
     	}
     }
 
-    signal(g_customerCashierCV[myCashier],g_customerCashierLock[myCashier]);
+    Signal(g_customerCashierCV[myCashier],g_customerCashierLock[myCashier]);
 
-    wait(g_customerCashierCV[myCashier],g_customerCashierLock[myCashier]);
+    Wait(g_customerCashierCV[myCashier],g_customerCashierLock[myCashier]);
 
     myBill = g_cashierInfo[myCashier].bill;
 
@@ -693,9 +693,9 @@ void CustomerThread()
     			ThreadId,myBill);
     }
 
-    signal(g_customerCashierCV[myCashier],g_customerCashierLock[myCashier]);
+    Signal(g_customerCashierCV[myCashier],g_customerCashierLock[myCashier]);
 
-    wait(g_customerCashierCV[myCashier],g_customerCashierLock[myCashier]);
+    Wait(g_customerCashierCV[myCashier],g_customerCashierLock[myCashier]);
 
     if(g_customerInfo[ThreadId].hasEnoughMoneyForShopping == true)
     {
@@ -706,7 +706,7 @@ void CustomerThread()
 	print2("CUSTOMER %d signaled CASHIER_%d that I am leaving\n",
 			ThreadId,myCashier);
 
-    signal(g_customerCashierCV[myCashier],g_customerCashierLock[myCashier]);
+    Signal(g_customerCashierCV[myCashier],g_customerCashierLock[myCashier]);
 
     acquireLock(g_managerCustomerInteractionLock);
 
@@ -722,16 +722,16 @@ void CustomerThread()
     	g_managerInfo.customerBill = myBill;
     	g_managerInfo.customerId = ThreadId;
 
-    	signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+    	Signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
 
-    	wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+    	Wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
     	while(myBill<=g_customerInfo[ThreadId].hasEnoughMoneyForShopping)
     	{
-    		signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+    		Signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
     		print2("CUSTOMER %d tells MANAGER to remove ITEM_%d from trolley\n",
     				ThreadId,
     				g_customerInfo[ThreadId].pCustomerShoppingList[currentItemNoCountToRemoveFromTrolley].itemNo);
-        	wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+        	Wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
         	myBill = g_managerInfo.customerBill;
         	currentItemNoCountToRemoveFromTrolley++;
     	}
@@ -741,8 +741,8 @@ void CustomerThread()
     	print2("CUSTOMER %d pays $ %d MANAGER after removing items and is waiting for receipt from MANAGER\n",
     			ThreadId,myBill);
 
-		signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
-    	wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+		Signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+    	Wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
 
     	print1("CUSTOMER %d got receipt from MANAGER and is now leaving\n",ThreadId);
 
@@ -762,7 +762,7 @@ void CustomerThread()
     g_usedTrolleyCount--;
     if(g_waitForTrolleyCount>0)
     {
-    	signal(g_customerTrolleyCV,g_customerTrolleyLock);
+    	Signal(g_customerTrolleyCV,g_customerTrolleyLock);
     }
     g_noOfCustomersLeft++;
     releaseLock(g_customerTrolleyLock);
@@ -803,7 +803,7 @@ void SalesmanThread()
 
     		g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptWaitQueue;
 
-    		signal(g_customerDepartmentCV[myDepartmentNo],g_customerDepartmentLock[myDepartmentNo]);
+    		Signal(g_customerDepartmentCV[myDepartmentNo],g_customerDepartmentLock[myDepartmentNo]);
 
     		print2("%SALESMAN %d signaling someone waiting in DEPARTMENT_%d WAIT QUEUE\n",ThreadId,
     				myDepartmentNo);
@@ -813,12 +813,12 @@ void SalesmanThread()
     		print2("SALESMAN %d waiting for response from UNKNOWN CUSTOMER now in DEPARTMENT_%d WAIT QUEUE \n",
     				ThreadId,myDepartmentNo);
 
-    		wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
+    		Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
     		print3("SALESMAN %d GOT INITIAL RESPONSE from CUSTOMER_%d now in DEPARTMENT_%d WAIT QUEUE\n",
     				ThreadId,g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
 
-    		signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
+    		Signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
     		print3("SALESMAN %d SENDING RESPONSE to CUSTOMER_%d now in DEPARTMENT_%d WAIT QUEUE \n",
     				ThreadId,g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
@@ -827,7 +827,7 @@ void SalesmanThread()
     		print3("SALESMAN %d welcomes CUSTOMER_%d to DEPARTMENT_%d \n",
     				ThreadId,g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
 
-    		wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
+    		Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
     		print2("SALESMAN %d GOT FINAL RESPONSE from CUSTOMER_%d now \n",ThreadId,g_salesmanInfo[ThreadId].customerId);
 
@@ -852,7 +852,7 @@ void SalesmanThread()
 
     		g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptComplainWaitQueue;
 
-    		signal(g_customerDepartmentComplainCV[myDepartmentNo],g_customerDepartmentComplainLock[myDepartmentNo]);
+    		Signal(g_customerDepartmentComplainCV[myDepartmentNo],g_customerDepartmentComplainLock[myDepartmentNo]);
 
     		print2("SALESMAN %d signaling someone waiting in DEPARTMENT_%d COMPLAIN WAIT QUEUE \n",ThreadId,
     				myDepartmentNo);
@@ -862,7 +862,7 @@ void SalesmanThread()
     		print2("SALESMAN %d waiting for response from UNKNOWN CUSTOMER now in DEPARTMENT_%d COMPLAIN WAIT QUEUE \n",
     				ThreadId,myDepartmentNo);
 
-    		wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
+    		Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
     		print3("SALESMAN %d is informed by CUSTOMER_%d that ITEM_%d is out of stock \n",
     				ThreadId,
@@ -898,7 +898,7 @@ void SalesmanThread()
     			acquireLock(g_goodLoaderWaitLock[0]);
     			g_goodLoaderWaitQueue[0]++;
 
-    			wait(g_goodLoaderWaitCV[0],g_goodLoaderWaitLock[0]);
+    			Wait(g_goodLoaderWaitCV[0],g_goodLoaderWaitLock[0]);
         		for(goodLoaderIndex=0;goodLoaderIndex<NO_OF_GOOD_LOADERS;goodLoaderIndex++)
         		{
         			acquireLock(g_salesmanGoodsLoaderLock[goodLoaderIndex]);
@@ -920,12 +920,12 @@ void SalesmanThread()
 
     		g_goodLoaderInfo[myGoodsLoader].itemToRestock = g_salesmanInfo[ThreadId].itemToRestock;
 
-    		signal(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
+    		Signal(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
 
     		print3("SALESMAN %d informs GOOD LOADER_%d that ITEM_%d is out of stock \n",
     				ThreadId,myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
 
-    		wait(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
+    		Wait(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
 
     		print3("SALESMAN %d is informed by the GOOD LOADER_%d that ITEM_%d is re stocked \n",
     				ThreadId,myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
@@ -934,7 +934,7 @@ void SalesmanThread()
 
     		/**************************END INTERACTING WITH GOODS LOADER NOW ***************************/
 
-    		signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
+    		Signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
     		print3("SALESMAN %d SENDING RESPONSE to CUSTOMER_%d now in DEPARTMENT_%d COMPLAIN WAIT QUEUE \n",
     				ThreadId,g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
@@ -943,7 +943,7 @@ void SalesmanThread()
     				ThreadId,g_salesmanInfo[ThreadId].customerId,
     				g_salesmanInfo[ThreadId].itemToRestock);
 
-    		wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
+    		Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
     		print2("SALESMAN %d GOT FINAL RESPONSE from CUSTOMER_%d now \n",ThreadId,g_salesmanInfo[ThreadId].customerId);
 
@@ -976,7 +976,7 @@ void SalesmanThread()
 
     		releaseLock(g_customerDepartmentLock[myDepartmentNo]);
 
-    		wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
+    		Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
     		print2("SALESMAN %d GOT INITIAL RESPONSE from CUSTOMER_%d in NO WAIT QUEUE\n",
     				ThreadId,g_salesmanInfo[ThreadId].customerId);
@@ -990,7 +990,7 @@ void SalesmanThread()
 
     			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptWaitQueue;
 
-    			signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
+    			Signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
         		print2("SALESMAN %d SENDING RESPONSE to CUSTOMER_%d in NO WAIT QUEUE \n",
         				ThreadId,g_salesmanInfo[ThreadId].customerId);
@@ -998,7 +998,7 @@ void SalesmanThread()
         		print3("SALESMAN %d welcomes CUSTOMER_%d to DEPARTMENT_%d \n",
         				ThreadId,g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
 
-    			wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
+    			Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
         		print2("SALESMAN %d GOT FINAL RESPONSE from CUSTOMER_%d in NO WAIT QUEUE \n",
         				ThreadId,g_salesmanInfo[ThreadId].customerId);
@@ -1041,7 +1041,7 @@ void SalesmanThread()
         			acquireLock(g_goodLoaderWaitLock[0]);
         			g_goodLoaderWaitQueue[0]++;
 
-        			wait(g_goodLoaderWaitCV[0],g_goodLoaderWaitLock[0]);
+        			Wait(g_goodLoaderWaitCV[0],g_goodLoaderWaitLock[0]);
 
             		for(goodLoaderIndex=0;goodLoaderIndex<NO_OF_GOOD_LOADERS;goodLoaderIndex++)
             		{
@@ -1064,7 +1064,7 @@ void SalesmanThread()
 
         		g_goodLoaderInfo[myGoodsLoader].itemToRestock = g_salesmanInfo[ThreadId].itemToRestock;
 
-        		signal(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
+        		Signal(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
 
         		print2("SALESMAN %d SENDING RESPONSE to CUSTOMER_%d now in NO WAIT QUEUE \n",
         				ThreadId,g_salesmanInfo[ThreadId].customerId);
@@ -1072,20 +1072,20 @@ void SalesmanThread()
         		print3("SALESMAN %d informs GOOD LOADER_%d that ITEM_%d is out of stock \n",
         				ThreadId,myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
 
-        		wait(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
+        		Wait(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
 
         		print3("SALESMAN %d is informed by the GOOD LOADER_%d that ITEM_%d is re stocked \n",
         				ThreadId,myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
 
         		releaseLock(g_salesmanGoodsLoaderLock[myGoodsLoader]);
 
-        		signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
+        		Signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
         		print3("SALESMAN %d informs the CUSTOMER_%d that ITEM_%d is re stocked \n",
         				ThreadId,g_salesmanInfo[ThreadId].customerId,
         				g_salesmanInfo[ThreadId].itemToRestock);
 
-        		wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
+        		Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
         		print2("SALESMAN %d GOT FINAL RESPONSE from CUSTOMER_%d now \n",ThreadId,g_salesmanInfo[ThreadId].customerId);
 
@@ -1134,13 +1134,13 @@ void GoodLoaderThread()
 
     		g_goodLoaderInfo[ThreadId].status = goodLoaderSignalToSalesman;
 
-    		signal(g_goodLoaderWaitCV[0],g_goodLoaderWaitLock[0]);
+    		Signal(g_goodLoaderWaitCV[0],g_goodLoaderWaitLock[0]);
 
     		print1("GOODSLOADER %d signaling someone waiting in GOOD LOADERS WAIT QUEUE\n",ThreadId);
 
     		releaseLock(g_goodLoaderWaitLock[0]);
 
-    		wait(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
+    		Wait(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
 
     		print3("GOODSLOADER %d is informed by SALESMAN_%d of DEPARTMENT_%d ",
     				ThreadId,g_goodLoaderInfo[ThreadId].salesmanId,
@@ -1160,7 +1160,7 @@ void GoodLoaderThread()
     					g_goodLoaderInfo[ThreadId].itemToRestock);
     		}
 
-    		signal(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
+    		Signal(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
 
     		print3("GOODSLOADER %d has re stocked ITEM_%d in DEPARTMENT_%d \n",
     				ThreadId,
@@ -1186,7 +1186,7 @@ void GoodLoaderThread()
     		g_goodLoaderInfo[ThreadId].status = goodLoaderIsFree;
 
     		releaseLock(g_goodLoaderWaitLock[0]);
-    		wait(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
+    		Wait(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
 
     		print3("GOODSLOADER %d is informed by SALESMAN_%d of DEPARTMENT_%d ",
     				ThreadId,g_goodLoaderInfo[ThreadId].salesmanId,
@@ -1207,7 +1207,7 @@ void GoodLoaderThread()
     					g_goodLoaderInfo[ThreadId].itemToRestock);
     		}
 
-    		signal(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
+    		Signal(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
 
     		print3("GOODSLOADER %d has re stocked ITEM_%d in DEPARTMENT_%d \n",
     				ThreadId,
@@ -1242,7 +1242,7 @@ void CashierThread()
 	releaseLock(g_cashierThreadCounterLock);
 
 	acquireLock(printLock);
-    print1( "CASHIER %d Started !!!!!!! \n",ThreadId);
+    print1( "CASHIER %d Started \n",ThreadId);
     releaseLock(printLock);
 
     while(1)
@@ -1258,7 +1258,7 @@ void CashierThread()
     	{
     		g_cashierPrivilegedWaitQueue[ThreadId]--;
     		g_cashierInfo[ThreadId].status = cashierSignalToCustomer;
-    		signal(g_cashierPrivilegedLineCV[ThreadId],g_cashierPrivilegedLineLock[ThreadId]);
+    		Signal(g_cashierPrivilegedLineCV[ThreadId],g_cashierPrivilegedLineLock[ThreadId]);
     		acquireLock(g_customerCashierLock[ThreadId]);
     		releaseLock(g_cashierPrivilegedLineLock[ThreadId]);
     	}
@@ -1272,7 +1272,7 @@ void CashierThread()
     		{
     			g_cashierWaitQueue[ThreadId]--;
         		g_cashierInfo[ThreadId].status = cashierSignalToCustomer;
-        		signal(g_cashierLineCV[ThreadId],g_cashierLineLock[ThreadId]);
+        		Signal(g_cashierLineCV[ThreadId],g_cashierLineLock[ThreadId]);
         		acquireLock(g_customerCashierLock[ThreadId]);
     		}
     		else
@@ -1286,7 +1286,7 @@ void CashierThread()
 		print2("Cashier %d total sales money is %d \n",ThreadId,g_cashierInfo[ThreadId].totalSalesMoney);
 		releaseLock(printLock);
 
-    	wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
+    	Wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
     	myCustomer = g_cashierInfo[ThreadId].customerId;
 
     	for(i=0;i<g_customerInfo[myCustomer].noOfItems;i++)
@@ -1302,12 +1302,12 @@ void CashierThread()
 
     	g_cashierInfo[ThreadId].bill = totalBill;
 
-    	signal(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
+    	Signal(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
     	acquireLock(printLock);
     	print3("CASHIER %d tells CUSTOMER_%d total cost is $ %d\n",ThreadId,myCustomer,totalBill);
     	releaseLock(printLock);
 
-    	wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
+    	Wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
 
     	if(g_customerInfo[myCustomer].hasEnoughMoneyForShopping == false)
     	{
@@ -1315,7 +1315,7 @@ void CashierThread()
 
     		g_managerWaitQueueLength++;
 
-    		wait(g_managerCashierCV,g_managerCashierLock);
+    		Wait(g_managerCashierCV,g_managerCashierLock);
 
     		g_managerInfo.cashierId = ThreadId;
 
@@ -1323,21 +1323,21 @@ void CashierThread()
 
     		releaseLock(g_managerCashierLock);
 
-    		signal(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
+    		Signal(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
         	acquireLock(printLock);
     		print2("CASHIER %d informs Manager that CUSTOMER_%d does not have enough money\n",
     				ThreadId,myCustomer);
         	releaseLock(printLock);
 
-    		wait(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
+    		Wait(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
 
     		releaseLock(g_managerCashierInteractionLock);
 
-        	signal(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
+        	Signal(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
         	acquireLock(printLock);
         	print2("CASHIER %d asks CUSTOMER_%d to wait for Manager\n",ThreadId,myCustomer);
         	releaseLock(printLock);
-        	wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
+        	Wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
 
     	}
     	else
@@ -1348,12 +1348,12 @@ void CashierThread()
         	acquireLock(printLock);
     		print3("CASHIER %d got money $ %d from CUSTOMER_%d\n",ThreadId,totalBill,myCustomer);
         	releaseLock(printLock);
-        	signal(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
+        	Signal(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
         	acquireLock(printLock);
         	print2("CASHIER %d gave the receipt to CUSTOMER_%d and tells him to leave\n",
         			ThreadId,myCustomer);
         	releaseLock(printLock);
-        	wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
+        	Wait(g_customerCashierCV[ThreadId],g_customerCashierLock[ThreadId]);
     	}
 
     	releaseLock(g_customerCashierLock[ThreadId]);
@@ -1372,7 +1372,7 @@ void ManagerThread()
 	int i;
 
 	acquireLock(printLock);
-	print1( "MANAGER %d Started !!!!!!! \n",ThreadId);
+	print1( "MANAGER %d Started  \n",ThreadId);
 	releaseLock(printLock);
 
     while(!simulationEnd)
@@ -1408,7 +1408,7 @@ void ManagerThread()
     	}
     	else
     	{
-    		signal(g_managerCashierCV,g_managerCashierLock);
+    		Signal(g_managerCashierCV,g_managerCashierLock);
 
     		g_managerWaitQueueLength--;
 
@@ -1416,23 +1416,23 @@ void ManagerThread()
 
     		releaseLock(g_managerCashierLock);
 
-    		wait(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
+    		Wait(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
 
     		acquireLock(printLock);
     		print2("MANAGER %d got a call from CASHIER_%d\n",ThreadId,g_managerInfo.cashierId);
     		releaseLock(printLock);
 
-    		signal(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
+    		Signal(g_managerCashierInteractionCV,g_managerCashierInteractionLock);
 
     		acquireLock(g_managerCustomerInteractionLock);
 
     		releaseLock(g_managerCashierInteractionLock);
 
-    		wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+    		Wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
 
-    		signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+    		Signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
 
-    		wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+    		Wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
 
     		while(g_customerInfo[g_managerInfo.customerId].isDoneShopping != true)
     		{
@@ -1451,14 +1451,14 @@ void ManagerThread()
 
     			g_managerInfo.customerBill -= currentItemNoToRemovePrice * currentItemNoToRemoveCount;
 
-        		signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+        		Signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
 
-        		wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+        		Wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
     		}
 
     		managerSales += g_managerInfo.customerBill;
 
-    		signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+    		Signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
 
     		acquireLock(printLock);
     		print2("MANAGER %d gives receipt to CUSTOMER_%d \n",ThreadId,g_managerInfo.customerId);
@@ -1547,6 +1547,11 @@ void initCvForSimulation()
         g_cashierPrivilegedLineCV[i] = createCondition("cashierPrivilegedLineCV",
         		sizeof("cashierPrivilegedLineCV"));
         g_customerCashierCV[i] = createCondition("customerCashierCV",sizeof("customerCashierCV"));
+	}
+
+	for(i=0;i<NO_OF_CASHIERS;i++)
+	{
+
         g_cashierWaitQueue[i] = 0;
         g_cashierPrivilegedWaitQueue[i] = 0;
 	}
@@ -1563,6 +1568,10 @@ void initCvForSimulation()
         g_customerDepartmentCV[i] =  createCondition("customerDepartmentCV",sizeof("customerDepartmentCV"));
         g_customerDepartmentComplainCV[i] = createCondition("customerDepartmentComplainCV",
         		sizeof("customerDepartmentComplainCV"));
+	}
+
+	for(i=0;i<NO_OF_DEPARTMENT;i++)
+	{
         g_departmentWaitQueue[i] = 0;
         g_departmentComplainWaitQueue[i] = 0;
 	}
@@ -1577,6 +1586,10 @@ void initCvForSimulation()
 	{
 
         g_goodLoaderWaitCV[i] = createCondition("goodLoaderWaitCV",sizeof("goodLoaderWaitCV"));
+	}
+
+	for(i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
+	{
         g_goodLoaderWaitQueue[i] = 0;
 	}
 }

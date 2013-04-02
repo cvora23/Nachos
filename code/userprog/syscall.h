@@ -154,9 +154,9 @@ void detroyLock(int LockId);
 
 int createCondition(char* conditionName,int conditionNameLen);
 
-void signal(int conditionId,int lockId);
+void Signal(int conditionId,int lockId);
 
-void wait(int conditionId,int lockId);
+void Wait(int conditionId,int lockId);
 
 void broadcast(int conditionId,int lockId);
 
