@@ -1536,82 +1536,81 @@ void initLockForSimulation()
 
 	g_customerThreadCounterLock = createLock("CustomerThreadCounterLock",
 			sizeof("CustomerThreadCounterLock"));
-	print1("customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
+	print1("customerThreadCounterLock = %u \n",g_customerThreadCounterLock);
 
 	g_salesmanThreadCounterLock = createLock("SalesmanThreadCounterLock",
 			sizeof("SalesmanThreadCounterLock"));
-	print1("salesmanThreadCounterLock = %d \n",g_salesmanThreadCounterLock);
+	print1("salesmanThreadCounterLock = %u \n",g_salesmanThreadCounterLock);
 
 	g_goodsLoaderThreadCounterLock = createLock("GoodsLoaderThreadCounterLock",
 			sizeof("GoodsLoaderThreadCounterLock"));
-	print1("goodsLoaderThreadCounterLock = %d \n",g_goodsLoaderThreadCounterLock);
+	print1("goodsLoaderThreadCounterLock = %u \n",g_goodsLoaderThreadCounterLock);
 
 	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",
 			sizeof("CustomerThreadCounterLock"));
-	print1("cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
+	print1("cashierThreadCounterLock = %u \n",g_cashierThreadCounterLock);
 
 	g_customerTrolleyLock = createLock("CustomerTrolleyLock",sizeof("CustomerTrolleyLock"));
-	print1("customerTrolleyLock = %d \n",g_customerTrolleyLock);
+	print1("customerTrolleyLock = %u \n",g_customerTrolleyLock);
 
 
 	for(i=0;i<NO_OF_MANAGERS;i++)
 	{
         g_managerCashierLock = createLock("managerCashierLock",sizeof("managerCashierLock"));
-    	print1("managerCashierLock = %d \n",g_managerCashierLock);
+    	print1("managerCashierLock = %u \n",g_managerCashierLock);
 
         g_managerCashierInteractionLock = createLock("managerCashierInteractionLock",
         		sizeof("managerCashierInteractionLock"));
-    	print1("managerCashierInteractionLock = %d \n",g_managerCashierInteractionLock);
+    	print1("managerCashierInteractionLock = %u \n",g_managerCashierInteractionLock);
 
         g_managerCustomerInteractionLock = createLock("managerCustomerInteractionLock",
         		sizeof("managerCustomerInteractionLock"));
-    	print1("managerCustomerInteractionLock = %d \n",g_managerCustomerInteractionLock);
+    	print1("managerCustomerInteractionLock = %u \n",g_managerCustomerInteractionLock);
 	}
 
 	for(i=0;i<NO_OF_CASHIERS;i++)
 	{
         g_cashierLineLock[i] = createLock("cashierLineLock",sizeof("cashierLineLock"));
-    	print2("cashierLineLock %d = %d \n",i,g_cashierLineLock[i]);
+    	print2("cashierLineLock %d = %u \n",i,g_cashierLineLock[i]);
 
         g_cashierPrivilegedLineLock[i] = createLock("cashierPrivilegedLineLock",
         		sizeof("cashierPrivilegedLineLock"));
-    	print2("cashierPrivilegedLineLock %d = %d \n",i,g_cashierPrivilegedLineLock[i]);
+    	print2("cashierPrivilegedLineLock %d = %u \n",i,g_cashierPrivilegedLineLock[i]);
 
         g_customerCashierLock[i] = createLock("customerCashierLock",sizeof("customerCashierLock"));
-    	print2("customerCashierLock %d = %d \n",i,g_customerCashierLock[i]);
+    	print2("customerCashierLock %d = %u \n",i,g_customerCashierLock[i]);
 
         g_managerCashierCashLock[i] = createLock("managerCashierCashLock",sizeof("managerCashierCashLock"));
-    	print2("managerCashierCashLock %d = %d \n",i,g_managerCashierCashLock[i]);
+    	print2("managerCashierCashLock %d = %u \n",i,g_managerCashierCashLock[i]);
 
 	}
 
 	for(i=0;i<NO_OF_SALESMAN;i++)
 	{
-
         g_customerSalesmanLock[i] = createLock("customerSalesmanLock",sizeof("customerSalesmanLock"));
-    	print2("customerSalesmanLock %d = %d \n",i,g_customerSalesmanLock[i]);
+    	print2("customerSalesmanLock %d = %u \n",i,g_customerSalesmanLock[i]);
 	}
 
 	for(i=0;i<NO_OF_DEPARTMENT;i++)
 	{
         g_customerDepartmentLock[i] = createLock("customerDepartmentLock",sizeof("customerDepartmentLock"));
-    	print2("customerDepartmentLock %d = %d \n",i,g_customerDepartmentLock[i]);
+    	print2("customerDepartmentLock %d = %u \n",i,g_customerDepartmentLock[i]);
 
         g_customerDepartmentComplainLock[i] = createLock("customerDepartmentComplainLock",
         		sizeof("customerDepartmentComplainLock"));
-    	print2("customerDepartmentComplainLock %d = %d \n",i,g_customerDepartmentComplainLock[i]);
+    	print2("customerDepartmentComplainLock %d = %u \n",i,g_customerDepartmentComplainLock[i]);
 	}
 
 	for(i =0;i<NO_OF_SHELFS;i++)
 	{
         g_shelfAccessLock[i] = createLock("shelfAccessLock",sizeof("shelfAccessLock"));
-    	print2("shelfAccessLock %d = %d \n",i,g_shelfAccessLock[i]);
+    	print2("shelfAccessLock %d = %u \n",i,g_shelfAccessLock[i]);
 	}
 
 	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
 	{
         g_salesmanGoodsLoaderLock[i] = createLock("salesmanGoodsLoaderLock",sizeof("salesmanGoodsLoaderLock"));
-    	print2("salesmanGoodsLoaderLock %d = %d \n",i,g_salesmanGoodsLoaderLock[i]);
+    	print2("salesmanGoodsLoaderLock %d = %u \n",i,g_salesmanGoodsLoaderLock[i]);
 	}
 }
 
@@ -1620,34 +1619,34 @@ void initCvForSimulation()
 	int i;
 
 	g_customerTrolleyCV = createCondition((char*)"CustomerTrolleyCV",sizeof("CustomerTrolleyCV"));
-	print1("customerTrolleyCV = %d \n",g_customerTrolleyCV);
+	print1("customerTrolleyCV = %u \n",g_customerTrolleyCV);
 
 	for(i=0;i<NO_OF_MANAGERS;i++)
 	{
 
         g_managerCashierCV = createCondition("managerCashierCV",sizeof("managerCashierCV"));
-    	print1("managerCashierCV = %d \n",g_managerCashierCV);
+    	print1("managerCashierCV = %u \n",g_managerCashierCV);
 
         g_managerCashierInteractionCV = createCondition("managerCashierInteractionCV",
         		sizeof("managerCashierInteractionCV"));
-    	print1("managerCashierInteractionCV = %d \n",g_managerCashierInteractionCV);
+    	print1("managerCashierInteractionCV = %u \n",g_managerCashierInteractionCV);
 
         g_managerCustomerInteractionCV = createCondition("managerCustomerInteractionCV",
         		sizeof("managerCustomerInteractionCV"));
-    	print1("managerCustomerInteractionCV = %d \n",g_managerCustomerInteractionCV);
+    	print1("managerCustomerInteractionCV = %u \n",g_managerCustomerInteractionCV);
 	}
 
 	for(i=0;i<NO_OF_CASHIERS;i++)
 	{
         g_cashierLineCV[i] = createCondition("cashierLineCV",sizeof("cashierLineCV"));
-    	print2("cashierLineCV %d = %d \n",i,g_cashierLineCV[i]);
+    	print2("cashierLineCV %d = %u \n",i,g_cashierLineCV[i]);
 
         g_cashierPrivilegedLineCV[i] = createCondition("cashierPrivilegedLineCV",
         		sizeof("cashierPrivilegedLineCV"));
-    	print2("cashierPrivilegedLineCV %d = %d \n",i,g_cashierPrivilegedLineCV[i]);
+    	print2("cashierPrivilegedLineCV %d = %u \n",i,g_cashierPrivilegedLineCV[i]);
 
         g_customerCashierCV[i] = createCondition("customerCashierCV",sizeof("customerCashierCV"));
-    	print2("customerCashierCV %d = %d \n",i,g_customerCashierCV[i]);
+    	print2("customerCashierCV %d = %u \n",i,g_customerCashierCV[i]);
 
         g_cashierWaitQueue[i] = 0;
 
@@ -1660,13 +1659,13 @@ void initCvForSimulation()
 	for(i=0;i<NO_OF_SALESMAN;i++)
 	{
         g_customerSalesmanCV[i] = createCondition("customerSalesmanCV",sizeof("customerSalesmanCV"));
-    	print2("customerSalesmanCV %d = %d \n",i,g_customerSalesmanCV[i]);
+    	print2("customerSalesmanCV %d = %u \n",i,g_customerSalesmanCV[i]);
 	}
 
 	for(i=0;i<NO_OF_DEPARTMENT;i++)
 	{
         g_customerDepartmentCV[i] =  createCondition("customerDepartmentCV",sizeof("customerDepartmentCV"));
-    	print2("customerDepartmentCV %d = %d \n",i,g_customerDepartmentCV[i]);
+    	print2("customerDepartmentCV %d = %u \n",i,g_customerDepartmentCV[i]);
 
         g_departmentWaitQueue[i] = 0;
 	}
@@ -1676,7 +1675,7 @@ void initCvForSimulation()
 
         g_customerDepartmentComplainCV[i] = createCondition("customerDepartmentComplainCV",
         		sizeof("customerDepartmentComplainCV"));
-    	print2("customerDepartmentComplainCV %d = %d \n",i,g_customerDepartmentComplainCV[i]);
+    	print2("customerDepartmentComplainCV %d = %u \n",i,g_customerDepartmentComplainCV[i]);
 
         g_departmentComplainWaitQueue[i] = 0;
 	}
@@ -1684,13 +1683,13 @@ void initCvForSimulation()
 	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
 	{
         g_salesmanGoodsLoaderCV[i] = createCondition("salesmanGoodsLoaderCV",sizeof("salesmanGoodsLoaderCV"));
-    	print2("salesmanGoodsLoaderCV %d = %d \n",i,g_salesmanGoodsLoaderCV[i]);
+    	print2("salesmanGoodsLoaderCV %d = %u \n",i,g_salesmanGoodsLoaderCV[i]);
 	}
 
 	for(i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
 	{
         g_goodLoaderWaitCV[i] = createCondition("goodLoaderWaitCV",sizeof("goodLoaderWaitCV"));
-    	print2("goodLoaderWaitCV %d = %d \n",i, g_goodLoaderWaitCV[i]);
+    	print2("goodLoaderWaitCV %d = %u \n",i, g_goodLoaderWaitCV[i]);
 
         g_goodLoaderWaitQueue[i] = 0;
 	}
