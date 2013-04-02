@@ -12,30 +12,30 @@ void testCase1()
 {
 	int lockId = -1;
 	int i;
-	print("CREATE LOCK SYSTEM CALL TEST\n\n");
+	Print("CREATE LOCK SYSTEM CALL TEST\n\n");
 
-	print("PASSING LOCK NAME LENGTH > MAX_LOCK_NAME \n\n");
-	lockId = createLock((char*)"LockName",400);
-	print("------------------------------------------------------\n");
+	Print("PASSING LOCK NAME LENGTH > MAX_LOCK_NAME \n\n");
+	lockId = CreateLock((char*)"LockName",400);
+	Print("------------------------------------------------------\n");
 
-	print("PASSING LOCK NAME LENGTH < 0 \n\n");
-	lockId = createLock((char*)"LockName",-4);
-	print("------------------------------------------------------\n");
+	Print("PASSING LOCK NAME LENGTH < 0 \n\n");
+	lockId = CreateLock((char*)"LockName",-4);
+	Print("------------------------------------------------------\n");
 
-	print("PASSING INVALID VIRTUAL ADDR \n\n");
-	lockId = createLock((char*)0xdeadbeef,10);
-	print("------------------------------------------------------\n");
+	Print("PASSING INVALID VIRTUAL ADDR \n\n");
+	lockId = CreateLock((char*)0xdeadbeef,10);
+	Print("------------------------------------------------------\n");
 
-	print("CREATING MORE number of locks than MAX_LOCKS = 500 \n\n");
+	Print("CREATING MORE number of locks than MAX_LOCKS = 500 \n\n");
 	for(i = 0;i<501;i++)
 	{
-		lockId = createLock((char*)"LockNo",10);
+		lockId = CreateLock((char*)"LockNo",10);
 	}
-	print("------------------------------------------------------\n");
+	Print("------------------------------------------------------\n");
 
-	print("CREATING LOCK SUCCESS CASE \n");
-	lockId = createLock((char*)"LockNo",10);
-	print("------------------------------------------------------\n");
+	Print("CREATING LOCK SUCCESS CASE \n");
+	lockId = CreateLock((char*)"LockNo",10);
+	Print("------------------------------------------------------\n");
 
 }
 
@@ -43,32 +43,32 @@ void testCase2()
 {
 	int lockId = -1;
 
-	print("DESTROY LOCK SYSTEM CALL TEST\n\n");
+	Print("DESTROY LOCK SYSTEM CALL TEST\n\n");
 
-	print("PASSING LOCK ID > MAX_LOCK to destroy \n\n");
-	destroyLock(1000);
-	print("------------------------------------------------------\n");
+	Print("PASSING LOCK ID > MAX_LOCK to destroy \n\n");
+	DestroyLock(1000);
+	Print("------------------------------------------------------\n");
 
-	print("PASSING LOCK ID < 0 to destroy \n\n");
-	destroyLock(-1);
-	print("------------------------------------------------------\n");
+	Print("PASSING LOCK ID < 0 to destroy \n\n");
+	DestroyLock(-1);
+	Print("------------------------------------------------------\n");
 
-	print("TRYING TO DESTROY A LOCK NOT EVEN CREATED \n\n");
-	destroyLock(0);
-	print("------------------------------------------------------\n");
+	Print("TRYING TO DESTROY A LOCK NOT EVEN CREATED \n\n");
+	DestroyLock(0);
+	Print("------------------------------------------------------\n");
 
-	print("TRYING TO DESTROY A LOCK ALREADY IN USE \n\n");
-	lockId = createLock((char*)"LockName",10);
-	acquireLock(lockId);
-	destroyLock(lockId);
-	releaseLock(lockId);
-	print("------------------------------------------------------\n");
+	Print("TRYING TO DESTROY A LOCK ALREADY IN USE \n\n");
+	lockId = CreateLock((char*)"LockName",10);
+	Acquire(lockId);
+	DestroyLock(lockId);
+	Release(lockId);
+	Print("------------------------------------------------------\n");
 
 
-	print("DESTROYING LOCK SUCCESS CASE \n");
-	lockId = createLock((char*)"LockName",10);
-	destroyLock(lockId);
-	print("------------------------------------------------------\n");
+	Print("DESTROYING LOCK SUCCESS CASE \n");
+	lockId = CreateLock((char*)"LockName",10);
+	DestroyLock(lockId);
+	Print("------------------------------------------------------\n");
 
 }
 
@@ -76,74 +76,74 @@ void testCase3()
 {
 	int lockId = -1;
 
-	print("ACQUIRE LOCK SYSTEM CALL TEST\n\n");
+	Print("ACQUIRE LOCK SYSTEM CALL TEST\n\n");
 
-	print("PASSING LOCK ID > MAX_LOCK to acquire \n\n");
-	acquireLock(1000);
-	print("------------------------------------------------------\n");
+	Print("PASSING LOCK ID > MAX_LOCK to acquire \n\n");
+	Acquire(1000);
+	Print("------------------------------------------------------\n");
 
-	print("PASSING LOCK ID < 0 to acquire \n\n");
-	acquireLock(-1);
-	print("------------------------------------------------------\n");
+	Print("PASSING LOCK ID < 0 to acquire \n\n");
+	Acquire(-1);
+	Print("------------------------------------------------------\n");
 
-	print("TRYING TO acquire A LOCK NOT EVEN CREATED \n\n");
-	acquireLock(0);
-	print("------------------------------------------------------\n");
+	Print("TRYING TO acquire A LOCK NOT EVEN CREATED \n\n");
+	Acquire(0);
+	Print("------------------------------------------------------\n");
 
-	print("TRYING TO acquire A LOCK already destroyed \n\n");
-	lockId = createLock((char*)"LockName",10);
-	destroyLock(lockId);
-	acquireLock(lockId);
-	print("------------------------------------------------------\n");
+	Print("TRYING TO acquire A LOCK already destroyed \n\n");
+	lockId = CreateLock((char*)"LockName",10);
+	DestroyLock(lockId);
+	Acquire(lockId);
+	Print("------------------------------------------------------\n");
 
 
-	print("ACQUIRING LOCK SUCCESS CASE \n");
-	lockId = createLock((char*)"LockName",10);
-	acquireLock(lockId);
-	releaseLock(lockId);
-	destroyLock(lockId);
-	print("------------------------------------------------------\n");
+	Print("ACQUIRING LOCK SUCCESS CASE \n");
+	lockId = CreateLock((char*)"LockName",10);
+	Acquire(lockId);
+	Release(lockId);
+	DestroyLock(lockId);
+	Print("------------------------------------------------------\n");
 }
 
 void testCase4()
 {
 	int lockId = -1;
 
-	print("RELEASE LOCK SYSTEM CALL TEST\n\n");
+	Print("RELEASE LOCK SYSTEM CALL TEST\n\n");
 
-	print("PASSING LOCK ID > MAX_LOCK to release \n\n");
-	releaseLock(1000);
-	print("------------------------------------------------------\n");
+	Print("PASSING LOCK ID > MAX_LOCK to release \n\n");
+	Release(1000);
+	Print("------------------------------------------------------\n");
 
-	print("PASSING LOCK ID < 0 to release \n\n");
-	releaseLock(-1);
-	print("------------------------------------------------------\n");
+	Print("PASSING LOCK ID < 0 to release \n\n");
+	Release(-1);
+	Print("------------------------------------------------------\n");
 
-	print("TRYING TO release A LOCK NOT EVEN CREATED \n\n");
-	releaseLock(0);
-	print("------------------------------------------------------\n");
+	Print("TRYING TO release A LOCK NOT EVEN CREATED \n\n");
+	Release(0);
+	Print("------------------------------------------------------\n");
 
-	print("RELEASE LOCK SUCCESS CASE \n");
-	lockId = createLock((char*)"LockName",10);
-	acquireLock(lockId);
-	releaseLock(lockId);
-	destroyLock(lockId);
-	print("------------------------------------------------------\n");
+	Print("RELEASE LOCK SUCCESS CASE \n");
+	lockId = CreateLock((char*)"LockName",10);
+	Acquire(lockId);
+	Release(lockId);
+	DestroyLock(lockId);
+	Print("------------------------------------------------------\n");
 }
 
 int main()
 {
 	int testCaseNo;
 
-	print("1 : CreateLock system call \n");
-	print("2 : DestroyLock system call \n");
-	print("3 : AcquireLock system call \n");
-	print("4 : ReleaseLock system call \n");
+	Print("1 : CreateLock system call \n");
+	Print("2 : DestroyLock system call \n");
+	Print("3 : AcquireLock system call \n");
+	Print("4 : ReleaseLock system call \n");
 
-	print("Enter your choice \n");
-	testCaseNo = scan();
+	Print("Enter your choice \n");
+	testCaseNo = Scan();
 
-	print("\n\n");
+	Print("\n\n");
 
 	switch(testCaseNo)
 	{
@@ -169,7 +169,7 @@ int main()
 		break;
 		default:
 		{
-			print("Invalid Test Case No\n");
+			Print("Invalid Test Case No\n");
 		}
 		break;
 	}
