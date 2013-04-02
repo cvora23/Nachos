@@ -1771,8 +1771,8 @@ void main(const char* testOption)
 	printLock = CreateLock("printLock",sizeof("printLock"));
 
 	Acquire(printLock);
-    print( "Entering Assign 1 Problem 2 !!!!!!! \n");
-    print( "Starting to initialize all the Threads for Problem 2 !!!!!!! \n");
+    Print("Entering Assign 1 Problem 2 !!!!!!! \n");
+    Print("Starting to initialize all the Threads for Problem 2 !!!!!!! \n");
 
     Print1("Number of Cashiers = %d \n",NO_OF_CASHIERS);
     Print1("Number of Good Loaders = %d \n",NO_OF_GOOD_LOADERS);
