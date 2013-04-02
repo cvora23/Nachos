@@ -53,7 +53,7 @@ void testfunc()
 	threadID=threadID+1;
 	print2("Thread : %d is waiting on lockId : %d \n",myID,lockNumber1);
 	threadsWaiting=threadsWaiting+1;
-	wait(cvNumber1,lockNumber1);
+	Wait(cvNumber1,lockNumber1);
 	print1("Thread %d Coming Out of Wait\n",myID);
 	releaseLock(lockNumber1);
 	Exit(0);
@@ -66,7 +66,7 @@ void testfunc1()
 	myID=threadID;
 	threadID=threadID+1;
 	print1("Thread : %d to send Signal\n",myID);
-	signal(cvNumber1,lockNumber1);
+	Signal(cvNumber1,lockNumber1);
 	threadsWaiting=threadsWaiting-1;
 	releaseLock(lockNumber1);
 	Exit(0);
@@ -96,14 +96,14 @@ void testCase2()
 	print("WAIT/SIGNAL/BROADCAST SYSTEM CALL TEST \n");
 
 	print(" WAITING on invalid LOCK/CONDITION .. Passing -VE CONDITION ID and LOCK ID\n");
-	wait(negativeCVId,negativeLockId);
+	Wait(negativeCVId,negativeLockId);
 	print(" WAITING on invalid LOCK/CONDITION .. Passing CONDITION ID > MAX_CVS and LOCK ID > MAX_LOCKS\n");
-	wait(hugeCVId,hugeLockId);
+	Wait(hugeCVId,hugeLockId);
 
 	print(" SIGNAL on invalid LOCK/CONDITION .. Passing -VE CONDITION ID and LOCK ID\n");
-	signal(negativeCVId,negativeLockId);
+	Signal(negativeCVId,negativeLockId);
 	print(" SIGNAL on invalid LOCK/CONDITION .. Passing CONDITION ID > MAX_CVS and LOCK ID > MAX_LOCKS\n");
-	signal(hugeCVId,hugeLockId);
+	Signal(hugeCVId,hugeLockId);
 
 	print(" BROADCAST on invalid LOCK/CONDITION .. Passing -VE CONDITION ID and LOCK ID\n");
 	broadcast(negativeCVId,negativeLockId);
