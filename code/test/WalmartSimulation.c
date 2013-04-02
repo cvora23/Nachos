@@ -1177,7 +1177,10 @@ void GoodLoaderThread()
 	g_goodsLoaderThreadCounter++;
 	Release(g_goodsLoaderThreadCounterLock);
 
-	Print1("GOODSLOADER %d Started !!!!!!!\n",ThreadId);
+	Acquire(printLock);
+	char string[] = "GOODSLOADER %d Started !!!!!!!\n";
+	Print1(string,ThreadId);
+	Release(printLock);
 
     while(1)
     {
