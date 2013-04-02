@@ -1815,7 +1815,10 @@ void main(const char* testOption)
     {
     	Fork(CashierThread);
     }
-
+    for(i = 0;i<NO_OF_SALESMAN;i++)
+    {
+    	Fork(SalesmanThread);
+    }
 
 #if 0
     for(i = 0;i<NO_OF_CUSTOMERS;i++)
@@ -1828,10 +1831,6 @@ void main(const char* testOption)
     	Fork(GoodLoaderThread);
     }
 
-    for(i = 0;i<NO_OF_SALESMAN;i++)
-    {
-    	Fork(SalesmanThread);
-    }
 
 #endif
 
