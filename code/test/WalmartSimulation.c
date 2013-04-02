@@ -1802,13 +1802,10 @@ void main(const char* testOption)
     initCashierInfo();
     initManagerInfo();
 
-    for(i = 0;i<NO_OF_CUSTOMERS;i++)
-    {
-    	Fork(CustomerThread);
-    }
 
 
-#if 0
+
+
     for(i = 0;i<NO_OF_MANAGERS;i++)
     {
        Fork(ManagerThread);
@@ -1817,6 +1814,13 @@ void main(const char* testOption)
     for(i = 0;i<NO_OF_CASHIERS;i++)
     {
     	Fork(CashierThread);
+    }
+
+
+#if 0
+    for(i = 0;i<NO_OF_CUSTOMERS;i++)
+    {
+    	Fork(CustomerThread);
     }
 
     for(i = 0;i<NO_OF_GOOD_LOADERS;i++)
