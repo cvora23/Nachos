@@ -1898,7 +1898,6 @@ void main(const char* testOption)
 
     initManagerInfo();
 
-#if 0
 
     for(i = 0;i<NO_OF_MANAGERS;i++)
     {
@@ -1909,6 +1908,8 @@ void main(const char* testOption)
     	Fork(CashierThread);
     }
 
+
+#if 0
 
     for(i = 0;i<NO_OF_GOOD_LOADERS;i++)
     {
