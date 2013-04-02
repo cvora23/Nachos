@@ -1143,7 +1143,7 @@ void SalesmanThread()
         		print2("SALESMAN %d SENDING RESPONSE to CUSTOMER_%d now in NO WAIT QUEUE \n",
         				ThreadId,g_salesmanInfo[ThreadId].customerId);
 
-        		printStringIntInt("%s informs GOOD LOADER_%d that ITEM_%d is out of stock \n",
+        		print3("SALESMAN %d informs GOOD LOADER_%d that ITEM_%d is out of stock \n",
         				ThreadId,myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
 
         		wait(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
@@ -1518,7 +1518,7 @@ void ManagerThread()
 
     		releaseLock(g_managerCustomerInteractionLock);
 
-    		printStringInt("MANAGER %d has total sale of $ %d\n",ThreadId,managerSales);
+    		print2("MANAGER %d has total sale of $ %d\n",ThreadId,managerSales);
     	}
 
     	for(i=0;i<MANAGER_RANDOM_SLEEP_TIME;i++)
