@@ -250,6 +250,14 @@ print2:
     j   $31
     .end print2
 
+    .globl print3
+    .ent    print3
+print3:
+    addiu $2,$0,SC_Print3
+    syscall
+    j   $31
+    .end print3
+
     .globl sprintf
     .ent    sprintf
 sprintf:

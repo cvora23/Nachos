@@ -813,6 +813,17 @@ void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
 	delete printBuf;
 }
 
+void Print3_Syscall(unsigned int vaddr,int arg1,int arg2,int arg3)
+{
+	char *printBuf = new char[MAX_CHAR_PRINTF];
+	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1){
+		printf("%s: Bad Virtual address\n",currentThread->getName());
+		return;
+	}
+	printf(printBuf, arg1, arg2,arg3);
+	delete printBuf;
+}
+
 int Scan_Syscall()
 {
 	int scanVal;
@@ -1236,17 +1247,25 @@ void ExceptionHandler(ExceptionType which) {
 
 	    case SC_Print1:
 	    {
-	    	DEBUG('a',"Print syscall \n");
+	    	DEBUG('a',"Print1 syscall \n");
 	    	Print1_Syscall(arg1,arg2);
 	    }
 	    break;
 
 	    case SC_Print2:
 	    {
-	    	DEBUG('a',"Print syscall \n");
+	    	DEBUG('a',"Print2 syscall \n");
 	    	Print2_Syscall(arg1,arg2,arg3);
 	    }
 	    break;
+
+	    case SC_Print3:
+	    {
+	    	DEBUG('a',"Print3 syscall \n");
+	    	Print3_Syscall(arg1,arg2,arg3,arg4);
+	    }
+	    break;
+
 	    case SC_Sprintf:
 	    {
 	    	DEBUG('a',"Sprintf syscall\n");
