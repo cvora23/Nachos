@@ -240,28 +240,60 @@ int	g_departmentComplainWaitQueue[NO_OF_DEPARTMENT];
 int	g_goodLoaderWaitQueue[NO_OF_GOODLOADER_WAIT_QUEUE];
 
 /*****************************************WAIT Q's**************************************************************/
-
-
-
-
 int g_usedTrolleyCount = 0;
 int g_waitForTrolleyCount = 0;
-
-
-
-
-
-
-
-
-
 int	g_managerWaitQueueLength = 0;
-
-
 
 /*************************************GLOBAL DATA STRUCTS DECLARATION**********************************************/
 
 /********************************************PROJ1 PROBLEM SIMULATION***********************************************/
+
+void printItemInfo()
+{
+	for (int i = 0;i<NO_OF_ITEM_TYPES;i++)
+	{
+		print1("Item id is = %d \n",i);
+		print2("Item %d Price is = %d \n",i,g_itemInfo[i].Price);
+		print2("Item %d is in Department = %d \n",i,g_itemInfo[i].departmentNo);
+		print2("Item %d is in Shelf = %d \n",i,g_itemInfo[i].shelfNo);
+		print2("Item %d Total Stock no = %d \n",i,g_itemInfo[i].noOfItems);
+	}
+}
+
+void printCustomerShoppingList(int customerId)
+{
+	print1("Customer %d shopping list is as follows : \n",customerId);
+	for(int j =0;j<g_customerInfo[customerId].noOfItems;j++)
+	{
+		print1("Item Type: %d\n",
+				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo);
+		print2("No of Items of Item Type:%d ===== %d\n",
+				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo,
+				g_customerInfo[customerId].pCustomerShoppingList[j].noOfItems);
+	}
+}
+
+void printCustomerInfo()
+{
+	for(int customerId=0;customerId<NO_OF_CUSTOMERS;customerId++)
+	{
+		print1("Customer ID is %d\n",
+				customerId);
+		print2("Customer %d is of type %d \n",
+				customerId,g_customerInfo[customerId].type);
+		print2("Customer %d can spend %d amount on shopping \n",
+				customerId,g_customerInfo[customerId].money);
+		print2("Customer %d will purchase %d items today for shopping \n",
+				customerId,g_customerInfo[customerId].noOfItems);
+		printCustomerShoppingList(customerId);
+	}
+}
+
+void printConfiguration()
+{
+	printItemInfo();
+	printCustomerInfo();
+}
 
 void initItemInfo()
 {
@@ -1747,22 +1779,23 @@ void main(const char* testOption)
     print1("Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
     releaseLock(printLock);
 
-    initLockForSimulation();
-	initCvForSimulation();
-
-	printLockForSimulation();
-	printCvForSimulation();
 
 	initItemInfo();
 	initCustomerInfo();
 	initCustomerShoppingList();
 
+	printConfiguration();
+
+    initLockForSimulation();
+	initCvForSimulation();
+	initWaitQueueForSimulation();
+
+	printLockForSimulation();
+	printCvForSimulation();
+
     initSalesManInfo();
-
     initGoodLoaderInfo();
-
     initCashierInfo();
-
     initManagerInfo();
 
     for(i = 0;i<NO_OF_CUSTOMERS;i++)
