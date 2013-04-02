@@ -1782,7 +1782,6 @@ void main(const char* testOption)
     print1("Number of DepartmentSalesmen = %d \n",NO_OF_SALESMAN);
     releaseLock(printLock);
 
-
 	initItemInfo();
 	initCustomerInfo();
 	initCustomerShoppingList();
