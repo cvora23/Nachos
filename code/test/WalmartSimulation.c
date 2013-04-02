@@ -225,8 +225,8 @@ unsigned int g_salesmanThreadCounterLock;
 unsigned int g_goodsLoaderThreadCounterLock;
 unsigned int g_cashierThreadCounterLock;
 
-int g_usedTrolleyCount;
-int g_waitForTrolleyCount;
+int g_usedTrolleyCount = 0;
+int g_waitForTrolleyCount = 0;
 unsigned int g_customerTrolleyLock;
 unsigned int g_customerTrolleyCV;
 
@@ -267,7 +267,7 @@ unsigned int g_managerCashierCashLock[NO_OF_CASHIERS];
 
 unsigned int g_managerCashierLock;
 unsigned int g_managerCashierCV;
-int	g_managerWaitQueueLength;
+int	g_managerWaitQueueLength = 0;
 
 unsigned int g_managerCashierInteractionLock;
 unsigned int g_managerCashierInteractionCV;
@@ -1534,8 +1534,6 @@ void initLockForSimulation()
 {
 	int i;
 
-#if 1
-
 	g_customerThreadCounterLock = createLock("CustomerThreadCounterLock",
 			sizeof("CustomerThreadCounterLock"));
 	print1("customerThreadCounterLock = %d \n",g_customerThreadCounterLock);
@@ -1551,9 +1549,6 @@ void initLockForSimulation()
 	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",
 			sizeof("CustomerThreadCounterLock"));
 	print1("cashierThreadCounterLock = %d \n",g_cashierThreadCounterLock);
-
-	g_usedTrolleyCount = 0;
-	g_waitForTrolleyCount = 0;
 
 	g_customerTrolleyLock = createLock("CustomerTrolleyLock",sizeof("CustomerTrolleyLock"));
 	print1("customerTrolleyLock = %d \n",g_customerTrolleyLock);
@@ -1618,14 +1613,6 @@ void initLockForSimulation()
         g_salesmanGoodsLoaderLock[i] = createLock("salesmanGoodsLoaderLock",sizeof("salesmanGoodsLoaderLock"));
     	print2("salesmanGoodsLoaderLock %d = %d \n",i,g_salesmanGoodsLoaderLock[i]);
 	}
-
-	for(i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
-	{
-        g_goodLoaderWaitCV[i] = createCondition("goodLoaderWaitCV",sizeof("goodLoaderWaitCV"));
-    	print2("goodLoaderWaitCV %d = %d \n",i, g_goodLoaderWaitCV[i]);
-
-	}
-#endif
 }
 
 void initCvForSimulation()
@@ -1707,7 +1694,6 @@ void initCvForSimulation()
 
         g_goodLoaderWaitQueue[i] = 0;
 	}
-
 }
 
 void main(const char* testOption)
