@@ -57,46 +57,6 @@
 #define NO_OF_CUSTOMERS									30
 #endif
 
-#define MANAGER_STRING									(const char*)"MANAGER"
-#define CASHIER_STRING									(const char*)"CASHIER"
-#define DEPARTMENT_STRING								(const char*)"DEPARTMENT"
-#define SALESMAN_STRING									(const char*)"SALESMAN"
-#define GOOD_LOADERS_STRING								(const char*)"GOODLOADER"
-#define CUSTOMER_STRING									(const char*)"CUSTOMER"
-
-#define CUSTOMERTHREADCOUNTER_STRING					(const char*)"CustomerThreadCounterLock"
-#define SALESMANTHREADCOUNTER_STRING					(const char*)"SalesmanThreadCounterLock"
-#define GOODSLOADERTHREADCOUNTER_STRING					(const char*)"GoodsLoaderThreadCounterLock"
-#define CASHIERTHREADCOUNTER_STRING						(const char*)"CustomerThreadCounterLock"
-
-#define PRINTLOCK_STRING								(const char*)"PrintLock"
-#define CUSTOMERTROLLEYLOCK_STRING						(const char*)"CustomerTrolleyLock"
-#define CUSTOMERTROLLEYCV_STRING						(const char*)"CustomerTrolleyCV"
-#define CUSTOMERSALESMANLOCK_STRING						(const char*)"CustomerSalesmanLock"
-#define CUSTOMERSALESMANCV_STRING						(const char*)"CustomerSalesmanCV"
-#define CUSTOMERDEPARTMENTLOCK_STRING					(const char*)"CustomerDepartmentLock"
-#define CUSTOMERDEPARTMENTCV_STRING						(const char*)"CustomerDepartmentCV"
-#define SHELFACCESSLOCK_STRING							(const char*)"ShelfAccessLock"
-#define CUSTOMERDEPARTMENTCOMPLAINLOCK_STRING			(const char*)"CustomerDepartmentComplainLock"
-#define CUSTOMERDEPARTMENTCOMPLAINCV_STRING				(const char*)"CustomerDepartmentComplainCV"
-#define SALESMANGOODLOADERLOCK_STRING					(const char*)"SalesmanGoodLoaderLock"
-#define SALESMANGOODLOADERCV_STRING						(const char*)"SalesmanGoodLoderCV"
-#define GOODLOADERWAITQUEUELOCK_STRING					(const char*)"GoodLoaderWaitQueueLock"
-#define GOODLOADERWAITQUEUECV_STRING					(const char*)"GoodLoaderWaitQueueCV"
-#define	CASHIERLINELOCK_STRING							(const char*)"CashierLineLock"
-#define CASHIERLINECV_STRING							(const char*)"CashierLineCV"
-#define CASHIERPRIVILEGEDLINELOCK_STRING				(const char*)"CashierPrivilegedLineLock"
-#define CASHIERPRIVILEGEDLINECV_STRING					(const char*)"CashierPrivilegedLineCV"
-#define CUSTOMERCASHIERLOCK_STRING						(const char*)"CustomerCashierLock"
-#define CUSTOMERCASHIERCV_STRING						(const char*)"CustomerCashierCV"
-#define MANAGERCASHIERCASHLOCK_STRING					(const char*)"ManagerCashierCashLock"
-#define MANAGERCASHIERLOCK_STRING						(const char*)"ManagerCashierLock"
-#define MANAGERCASHIERCV_STRING							(const char*)"ManagerCashierCV"
-#define MANAGERCASHIERINTERACTIONLOCK_STRING			(const char*)"ManagerCashierInteractionLock"
-#define MANAGERCASHIERINTERACTIONCV_STRING				(const char*)"ManagerCashierInteractionCV"
-#define MANAGERCUSTOMERINTERACTIONLOCK_STRING			(const char*)"ManagerCustomerLock"
-#define MANAGERCUSTOMERINTERACTIONCV_STRING				(const char*)"ManagerCustomerCV"
-
 /*************************************DEFINES DECLARATION**********************************************/
 
 /*************************************GLOBAL DATA STRUCTS DEFINITION**********************************************/
@@ -194,12 +154,6 @@ typedef struct _ManagerInfo
 
 /*************************************GLOBAL DATA STRUCTS DEFINITION**********************************************/
 
-
-/*************************************GLOBAL DATA STRUCTS DECLARATION**********************************************/
-
-char 	lockName[256];
-char 	cvName[256];
-
 ItemInfo 		g_itemInfo[NO_OF_ITEM_TYPES];
 
 CustomerInfo 	g_customerInfo[NO_OF_CUSTOMERS];
@@ -278,36 +232,6 @@ unsigned int g_managerCustomerInteractionCV;
 /*************************************GLOBAL DATA STRUCTS DECLARATION**********************************************/
 
 /********************************************PROJ1 PROBLEM SIMULATION***********************************************/
-
-int xstrlen(char* s)
-{
-	int length = 0;
-	while(*s!='\0')
-	{
-		length++;
-		s++;
-	}
-
-	return length;
-}
-
-void clearCharBuf(char* s)
-{
-	int i = 0;
-
-#if 0
-	while(*s!='\0')
-	{
-		*s = '\0';
-		s++;
-	}
-#endif
-
-	for(i=0;i<256;i++)
-	{
-		s[i] = '\0';
-	}
-}
 
 void initItemInfo()
 {
@@ -1534,83 +1458,47 @@ void initLockForSimulation()
 {
 	int i;
 
-	g_customerThreadCounterLock = createLock("CustomerThreadCounterLock",
-			sizeof("CustomerThreadCounterLock"));
-	print1("customerThreadCounterLock = %u \n",g_customerThreadCounterLock);
-
-	g_salesmanThreadCounterLock = createLock("SalesmanThreadCounterLock",
-			sizeof("SalesmanThreadCounterLock"));
-	print1("salesmanThreadCounterLock = %u \n",g_salesmanThreadCounterLock);
-
-	g_goodsLoaderThreadCounterLock = createLock("GoodsLoaderThreadCounterLock",
-			sizeof("GoodsLoaderThreadCounterLock"));
-	print1("goodsLoaderThreadCounterLock = %u \n",g_goodsLoaderThreadCounterLock);
-
-	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",
-			sizeof("CustomerThreadCounterLock"));
-	print1("cashierThreadCounterLock = %u \n",g_cashierThreadCounterLock);
-
+	g_customerThreadCounterLock = createLock("CustomerThreadCounterLock",sizeof("CustomerThreadCounterLock"));
+	g_salesmanThreadCounterLock = createLock("SalesmanThreadCounterLock",sizeof("SalesmanThreadCounterLock"));
+	g_goodsLoaderThreadCounterLock = createLock("GoodsLoaderThreadCounterLock",sizeof("GoodsLoaderThreadCounterLock"));
+	g_cashierThreadCounterLock = createLock("CustomerThreadCounterLock",sizeof("CustomerThreadCounterLock"));
 	g_customerTrolleyLock = createLock("CustomerTrolleyLock",sizeof("CustomerTrolleyLock"));
-	print1("customerTrolleyLock = %u \n",g_customerTrolleyLock);
-
-
-	for(i=0;i<NO_OF_MANAGERS;i++)
-	{
-        g_managerCashierLock = createLock("managerCashierLock",sizeof("managerCashierLock"));
-    	print1("managerCashierLock = %u \n",g_managerCashierLock);
-
-        g_managerCashierInteractionLock = createLock("managerCashierInteractionLock",
-        		sizeof("managerCashierInteractionLock"));
-    	print1("managerCashierInteractionLock = %u \n",g_managerCashierInteractionLock);
-
-        g_managerCustomerInteractionLock = createLock("managerCustomerInteractionLock",
-        		sizeof("managerCustomerInteractionLock"));
-    	print1("managerCustomerInteractionLock = %u \n",g_managerCustomerInteractionLock);
-	}
+    g_managerCashierLock = createLock("managerCashierLock",sizeof("managerCashierLock"));
+    g_managerCashierInteractionLock = createLock("managerCashierInteractionLock",sizeof("managerCashierInteractionLock"));
+    g_managerCustomerInteractionLock = createLock("managerCustomerInteractionLock",sizeof("managerCustomerInteractionLock"));
 
 	for(i=0;i<NO_OF_CASHIERS;i++)
 	{
-        g_cashierLineLock[i] = createLock("cashierLineLock",sizeof("cashierLineLock"));
-    	print2("cashierLineLock %d = %u \n",i,g_cashierLineLock[i]);
 
+        g_cashierLineLock[i] = createLock("cashierLineLock",sizeof("cashierLineLock"));
         g_cashierPrivilegedLineLock[i] = createLock("cashierPrivilegedLineLock",
         		sizeof("cashierPrivilegedLineLock"));
-    	print2("cashierPrivilegedLineLock %d = %u \n",i,g_cashierPrivilegedLineLock[i]);
-
         g_customerCashierLock[i] = createLock("customerCashierLock",sizeof("customerCashierLock"));
-    	print2("customerCashierLock %d = %u \n",i,g_customerCashierLock[i]);
-
         g_managerCashierCashLock[i] = createLock("managerCashierCashLock",sizeof("managerCashierCashLock"));
-    	print2("managerCashierCashLock %d = %u \n",i,g_managerCashierCashLock[i]);
-
 	}
 
 	for(i=0;i<NO_OF_SALESMAN;i++)
 	{
+
         g_customerSalesmanLock[i] = createLock("customerSalesmanLock",sizeof("customerSalesmanLock"));
-    	print2("customerSalesmanLock %d = %u \n",i,g_customerSalesmanLock[i]);
 	}
 
 	for(i=0;i<NO_OF_DEPARTMENT;i++)
 	{
         g_customerDepartmentLock[i] = createLock("customerDepartmentLock",sizeof("customerDepartmentLock"));
-    	print2("customerDepartmentLock %d = %u \n",i,g_customerDepartmentLock[i]);
-
         g_customerDepartmentComplainLock[i] = createLock("customerDepartmentComplainLock",
         		sizeof("customerDepartmentComplainLock"));
-    	print2("customerDepartmentComplainLock %d = %u \n",i,g_customerDepartmentComplainLock[i]);
 	}
 
 	for(i =0;i<NO_OF_SHELFS;i++)
 	{
+
         g_shelfAccessLock[i] = createLock("shelfAccessLock",sizeof("shelfAccessLock"));
-    	print2("shelfAccessLock %d = %u \n",i,g_shelfAccessLock[i]);
 	}
 
 	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
 	{
         g_salesmanGoodsLoaderLock[i] = createLock("salesmanGoodsLoaderLock",sizeof("salesmanGoodsLoaderLock"));
-    	print2("salesmanGoodsLoaderLock %d = %u \n",i,g_salesmanGoodsLoaderLock[i]);
 	}
 }
 
@@ -1619,79 +1507,133 @@ void initCvForSimulation()
 	int i;
 
 	g_customerTrolleyCV = createCondition((char*)"CustomerTrolleyCV",sizeof("CustomerTrolleyCV"));
-	print1("customerTrolleyCV = %u \n",g_customerTrolleyCV);
-
-	for(i=0;i<NO_OF_MANAGERS;i++)
-	{
-
-        g_managerCashierCV = createCondition("managerCashierCV",sizeof("managerCashierCV"));
-    	print1("managerCashierCV = %u \n",g_managerCashierCV);
-
-        g_managerCashierInteractionCV = createCondition("managerCashierInteractionCV",
+    g_managerCashierCV = createCondition("managerCashierCV",sizeof("managerCashierCV"));
+    g_managerCashierInteractionCV = createCondition("managerCashierInteractionCV",
         		sizeof("managerCashierInteractionCV"));
-    	print1("managerCashierInteractionCV = %u \n",g_managerCashierInteractionCV);
-
-        g_managerCustomerInteractionCV = createCondition("managerCustomerInteractionCV",
+    g_managerCustomerInteractionCV = createCondition("managerCustomerInteractionCV",
         		sizeof("managerCustomerInteractionCV"));
-    	print1("managerCustomerInteractionCV = %u \n",g_managerCustomerInteractionCV);
-	}
+
 
 	for(i=0;i<NO_OF_CASHIERS;i++)
 	{
-        g_cashierLineCV[i] = createCondition("cashierLineCV",sizeof("cashierLineCV"));
-    	print2("cashierLineCV %d = %u \n",i,g_cashierLineCV[i]);
 
+        g_cashierLineCV[i] = createCondition("cashierLineCV",sizeof("cashierLineCV"));
         g_cashierPrivilegedLineCV[i] = createCondition("cashierPrivilegedLineCV",
         		sizeof("cashierPrivilegedLineCV"));
-    	print2("cashierPrivilegedLineCV %d = %u \n",i,g_cashierPrivilegedLineCV[i]);
-
         g_customerCashierCV[i] = createCondition("customerCashierCV",sizeof("customerCashierCV"));
-    	print2("customerCashierCV %d = %u \n",i,g_customerCashierCV[i]);
-
         g_cashierWaitQueue[i] = 0;
-
         g_cashierPrivilegedWaitQueue[i] = 0;
-
 	}
-
-
 
 	for(i=0;i<NO_OF_SALESMAN;i++)
 	{
+
         g_customerSalesmanCV[i] = createCondition("customerSalesmanCV",sizeof("customerSalesmanCV"));
-    	print2("customerSalesmanCV %d = %u \n",i,g_customerSalesmanCV[i]);
 	}
 
 	for(i=0;i<NO_OF_DEPARTMENT;i++)
 	{
+
         g_customerDepartmentCV[i] =  createCondition("customerDepartmentCV",sizeof("customerDepartmentCV"));
-    	print2("customerDepartmentCV %d = %u \n",i,g_customerDepartmentCV[i]);
-
-        g_departmentWaitQueue[i] = 0;
-	}
-
-	for(i=0;i<NO_OF_DEPARTMENT;i++)
-	{
-
         g_customerDepartmentComplainCV[i] = createCondition("customerDepartmentComplainCV",
         		sizeof("customerDepartmentComplainCV"));
-    	print2("customerDepartmentComplainCV %d = %u \n",i,g_customerDepartmentComplainCV[i]);
-
+        g_departmentWaitQueue[i] = 0;
         g_departmentComplainWaitQueue[i] = 0;
 	}
 
 	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
 	{
+
         g_salesmanGoodsLoaderCV[i] = createCondition("salesmanGoodsLoaderCV",sizeof("salesmanGoodsLoaderCV"));
+	}
+
+	for(i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
+	{
+
+        g_goodLoaderWaitCV[i] = createCondition("goodLoaderWaitCV",sizeof("goodLoaderWaitCV"));
+        g_goodLoaderWaitQueue[i] = 0;
+	}
+}
+
+void printLockForSimulation()
+{
+	int i;
+	print1("customerThreadCounterLock = %u \n",g_customerThreadCounterLock);
+	print1("salesmanThreadCounterLock = %u \n",g_salesmanThreadCounterLock);
+	print1("goodsLoaderThreadCounterLock = %u \n",g_goodsLoaderThreadCounterLock);
+	print1("cashierThreadCounterLock = %u \n",g_cashierThreadCounterLock);
+	print1("customerTrolleyLock = %u \n",g_customerTrolleyLock);
+	print1("managerCashierLock = %u \n",g_managerCashierLock);
+	print1("managerCashierInteractionLock = %u \n",g_managerCashierInteractionLock);
+	print1("managerCustomerInteractionLock = %u \n",g_managerCustomerInteractionLock);
+
+	for(i=0;i<NO_OF_CASHIERS;i++)
+	{
+    	print2("cashierLineLock %d = %u \n",i,g_cashierLineLock[i]);
+    	print2("cashierPrivilegedLineLock %d = %u \n",i,g_cashierPrivilegedLineLock[i]);
+    	print2("customerCashierLock %d = %u \n",i,g_customerCashierLock[i]);
+    	print2("managerCashierCashLock %d = %u \n",i,g_managerCashierCashLock[i]);
+	}
+	for(i=0;i<NO_OF_SALESMAN;i++)
+	{
+    	print2("customerSalesmanLock %d = %u \n",i,g_customerSalesmanLock[i]);
+	}
+	for(i=0;i<NO_OF_DEPARTMENT;i++)
+	{
+    	print2("customerDepartmentLock %d = %u \n",i,g_customerDepartmentLock[i]);
+    	print2("customerDepartmentComplainLock %d = %u \n",i,g_customerDepartmentComplainLock[i]);
+	}
+	for(i =0;i<NO_OF_SHELFS;i++)
+	{
+		print2("shelfAccessLock %d = %u \n",i,g_shelfAccessLock[i]);
+	}
+	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
+	{
+    	print2("salesmanGoodsLoaderLock %d = %u \n",i,g_salesmanGoodsLoaderLock[i]);
+	}
+
+}
+
+void printCvForSimulation()
+{
+	int i;
+
+	g_customerTrolleyCV = createCondition((char*)"CustomerTrolleyCV",sizeof("CustomerTrolleyCV"));
+	print1("customerTrolleyCV = %u \n",g_customerTrolleyCV);
+
+	for(i=0;i<NO_OF_MANAGERS;i++)
+	{
+    	print1("managerCashierCV = %u \n",g_managerCashierCV);
+    	print1("managerCashierInteractionCV = %u \n",g_managerCashierInteractionCV);
+    	print1("managerCustomerInteractionCV = %u \n",g_managerCustomerInteractionCV);
+	}
+
+	for(i=0;i<NO_OF_CASHIERS;i++)
+	{
+    	print2("cashierLineCV %d = %u \n",i,g_cashierLineCV[i]);
+    	print2("cashierPrivilegedLineCV %d = %u \n",i,g_cashierPrivilegedLineCV[i]);
+    	print2("customerCashierCV %d = %u \n",i,g_customerCashierCV[i]);
+	}
+
+	for(i=0;i<NO_OF_SALESMAN;i++)
+	{
+    	print2("customerSalesmanCV %d = %u \n",i,g_customerSalesmanCV[i]);
+	}
+
+	for(i=0;i<NO_OF_DEPARTMENT;i++)
+	{
+    	print2("customerDepartmentCV %d = %u \n",i,g_customerDepartmentCV[i]);
+    	print2("customerDepartmentComplainCV %d = %u \n",i,g_customerDepartmentComplainCV[i]);
+	}
+
+	for(i=0;i<NO_OF_GOOD_LOADERS;i++)
+	{
     	print2("salesmanGoodsLoaderCV %d = %u \n",i,g_salesmanGoodsLoaderCV[i]);
 	}
 
 	for(i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
 	{
-        g_goodLoaderWaitCV[i] = createCondition("goodLoaderWaitCV",sizeof("goodLoaderWaitCV"));
     	print2("goodLoaderWaitCV %d = %u \n",i, g_goodLoaderWaitCV[i]);
-
-        g_goodLoaderWaitQueue[i] = 0;
 	}
 }
 
@@ -1712,6 +1654,9 @@ void main(const char* testOption)
 
     initLockForSimulation();
 	initCvForSimulation();
+
+	printLockForSimulation();
+	printCvForSimulation();
 
 	initItemInfo();
 	initCustomerInfo();
