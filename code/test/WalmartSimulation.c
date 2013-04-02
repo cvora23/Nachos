@@ -1716,15 +1716,21 @@ void main(const char* testOption)
 
     initManagerInfo();
 
-    for(i = 0;i<NO_OF_CASHIERS;i++)
+    for(i = 0;i<NO_OF_CUSTOMERS;i++)
     {
-    	Fork(CashierThread);
+    	Fork(CustomerThread);
     }
+
 
 #if 0
     for(i = 0;i<NO_OF_MANAGERS;i++)
     {
        Fork(ManagerThread);
+    }
+
+    for(i = 0;i<NO_OF_CASHIERS;i++)
+    {
+    	Fork(CashierThread);
     }
 
     for(i = 0;i<NO_OF_GOOD_LOADERS;i++)
@@ -1737,10 +1743,6 @@ void main(const char* testOption)
     	Fork(SalesmanThread);
     }
 
-    for(i = 0;i<NO_OF_CUSTOMERS;i++)
-    {
-    	Fork(CustomerThread);
-    }
 #endif
 
 }
