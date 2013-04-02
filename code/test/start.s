@@ -178,21 +178,21 @@ destroyCondition:
     j   $31
     .end destroyCondition
 
-    .globl signal
-    .ent    signal
-signal:
+    .globl Signal
+    .ent    Signal
+Signal:
     addiu $2,$0,SC_Signal
     syscall
     j   $31
-    .end signal
+    .end Signal
 
-    .globl wait
-    .ent    wait
-wait:
+    .globl Wait
+    .ent    Wait
+Wait:
     addiu $2,$0,SC_Wait
     syscall
     j   $31
-    .end wait
+    .end Wait
 
     .globl broadcast
     .ent    broadcast
