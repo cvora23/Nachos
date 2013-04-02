@@ -1663,7 +1663,7 @@ void printCvForSimulation()
 	{
     	print2("goodLoaderWaitCV %d = %u \n",i, g_goodLoaderWaitCV[i]);
 	}
-	realeaseLock(printLock);
+	releaseLock(printLock);
 }
 
 void main(const char* testOption)
