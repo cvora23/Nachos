@@ -209,7 +209,7 @@ void testCase5()
 
 void testCase9()
 {
-	Print("Walmart Market Simulation \n\n");
+	Print("Walmart Market Simulation \n");
 
 	Exec("../test/WalmartSimulation",25);
 
