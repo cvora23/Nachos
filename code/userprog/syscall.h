@@ -170,14 +170,6 @@ void Print2(char* buf,int arg1,int arg2);
 
 void Print3(char* buf,int arg1,int arg2,int arg3);
 
-void printString(char* buf,char* string);
-
-void printStringInt(char* buf,char* string,int var1);
-
-void printStringIntInt(char* buf,char* string,int var1,int var2);
-
-void sprintf(char* outBuf,const char* arg1,int arg1Len,int arg2);
-
 int Scan();
 
 int GetRand();

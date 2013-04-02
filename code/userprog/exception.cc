@@ -81,51 +81,6 @@ int copyout(unsigned int vaddr, int len, char *buf) {
     return n;
 }
 
-void Sprintf_Syscall(unsigned int textToCreate,unsigned int textPassed,unsigned int lenTextPassed,int intPassed)
-{
-	/**
-	 * Creating a known template buffer
-	 */
-	char templateBuf[] = "%s_%d";
-
-	/**
-	 * Validating textToCreate
-	 */
-	char sprintBuf[MAX_CHAR_SPRINTF];
-	if(copyin(textToCreate,MAX_CHAR_SPRINTF-1,sprintBuf) == -1)
-	{
-		printf("%s: Bad Virtual Address \n",currentThread->getName());
-		return ;
-	}
-	sprintBuf[MAX_CHAR_SPRINTF] = '\0';
-
-	/**
-	 * Validating textPassed
-	 */
-	char *tempTextPassedBuf = new char[lenTextPassed];
-	if(tempTextPassedBuf == NULL)
-	{
-		printf("Sprintf_Syscall  ERROR: Unable to allocate memory of the heap for tempTextPassed buffer\n");
-		return;
-	}
-	if(copyin(textPassed,lenTextPassed-1,tempTextPassedBuf) == -1)
-	{
-		printf("%s: Bad Virtual Address \n",currentThread->getName());
-		return ;
-	}
-	tempTextPassedBuf[lenTextPassed] = '\0';
-
-	/**
-	 * Calling actual sprintf function
-	 */
-	sprintf(sprintBuf,"%s_%d",tempTextPassedBuf,intPassed);
-
-	/**
-	 * Finally copyout the sprintBuf to textToCreate
-	 */
-	copyout(textToCreate,MAX_CHAR_SPRINTF,sprintBuf);
-}
-
 void Create_Syscall(unsigned int vaddr, int len) {
     // Create the file with the name in the user buffer pointed to by
     // vaddr.  The file name is at most MAXFILENAME chars long.  No
@@ -725,69 +680,6 @@ void Print_Syscall(unsigned int vaddr)
 		return ;
 	}
 	printf(printBuf);
-	delete printBuf;
-}
-
-void PrintString_Syscall(unsigned int vaddr,unsigned int string)
-{
-	char *printBuf = new char[MAX_CHAR_PRINTF];
-	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
-	{
-		printf("%s: Bad Virtual Address \n",currentThread->getName());
-		return ;
-	}
-
-	char *tempStringBuf = new char[MAX_CHAR_PRINTF];
-	if(copyin(string,MAX_CHAR_PRINTF - 1,tempStringBuf) == -1)
-	{
-		printf("%s: Bad Virtual Address \n",currentThread->getName());
-		return ;
-	}
-
-	printf(printBuf,tempStringBuf);
-	delete tempStringBuf;
-	delete printBuf;
-}
-
-void PrintStringInt_Syscall(unsigned int vaddr,unsigned int string,int var)
-{
-	char *printBuf = new char[MAX_CHAR_PRINTF];
-	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
-	{
-		printf("%s: Bad Virtual Address \n",currentThread->getName());
-		return ;
-	}
-
-	char *tempStringBuf = new char[MAX_CHAR_PRINTF];
-	if(copyin(string,MAX_CHAR_PRINTF - 1,tempStringBuf) == -1)
-	{
-		printf("%s: Bad Virtual Address \n",currentThread->getName());
-		return ;
-	}
-
-	printf(printBuf,tempStringBuf,var);
-	delete tempStringBuf;
-	delete printBuf;
-}
-
-void PrintStringIntInt_Syscall(unsigned int vaddr,unsigned int string,int var1,int var2)
-{
-	char *printBuf = new char[MAX_CHAR_PRINTF];
-	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
-	{
-		printf("%s: Bad Virtual Address \n",currentThread->getName());
-		return ;
-	}
-
-	char *tempStringBuf = new char[MAX_CHAR_PRINTF];
-	if(copyin(string,MAX_CHAR_PRINTF - 1,tempStringBuf) == -1)
-	{
-		printf("%s: Bad Virtual Address \n",currentThread->getName());
-		return ;
-	}
-
-	printf(printBuf,tempStringBuf,var1,var2);
-	delete tempStringBuf;
 	delete printBuf;
 }
 

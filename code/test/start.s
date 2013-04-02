@@ -210,30 +210,6 @@ Print:
     j   $31
     .end Print
 
-    .globl printString
-    .ent    printString
-printString:
-    addiu $2,$0,SC_PrintString
-    syscall
-    j   $31
-    .end printString
-
-    .globl printStringInt
-    .ent    printStringInt
-printStringInt:
-    addiu $2,$0,SC_PrintStringInt
-    syscall
-    j   $31
-    .end printStringInt
-
-    .globl printStringIntInt
-    .ent    printStringIntInt
-printStringIntInt:
-    addiu $2,$0,SC_PrintStringIntInt
-    syscall
-    j   $31
-    .end printStringIntInt
-
     .globl Print1
     .ent    Print1
 Print1:
@@ -257,14 +233,6 @@ Print3:
     syscall
     j   $31
     .end Print3
-
-    .globl sprintf
-    .ent    sprintf
-sprintf:
-    addiu $2,$0,SC_Sprintf
-    syscall
-    j   $31
-    .end sprintf
 
     .globl Scan
     .ent    Scan
