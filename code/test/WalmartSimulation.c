@@ -1701,8 +1701,8 @@ void main(const char* testOption)
     initLockForSimulation();
 	initCvForSimulation();
 
-	/* printLockForSimulation(); */
-	/* printCvForSimulation(); */
+	printLockForSimulation();
+	printCvForSimulation();
 
 	initItemInfo();
 	initCustomerInfo();
