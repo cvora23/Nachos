@@ -250,7 +250,8 @@ int	g_managerWaitQueueLength = 0;
 
 void printItemInfo()
 {
-	for (int i = 0;i<NO_OF_ITEM_TYPES;i++)
+	int i;
+	for (i = 0;i<NO_OF_ITEM_TYPES;i++)
 	{
 		print1("Item id is = %d \n",i);
 		print2("Item %d Price is = %d \n",i,g_itemInfo[i].Price);
@@ -262,8 +263,9 @@ void printItemInfo()
 
 void printCustomerShoppingList(int customerId)
 {
+	int j;
 	print1("Customer %d shopping list is as follows : \n",customerId);
-	for(int j =0;j<g_customerInfo[customerId].noOfItems;j++)
+	for(j=0;j<g_customerInfo[customerId].noOfItems;j++)
 	{
 		print1("Item Type: %d\n",
 				g_customerInfo[customerId].pCustomerShoppingList[j].itemNo);
@@ -275,7 +277,8 @@ void printCustomerShoppingList(int customerId)
 
 void printCustomerInfo()
 {
-	for(int customerId=0;customerId<NO_OF_CUSTOMERS;customerId++)
+	int customerId;
+	for(customerId=0;customerId<NO_OF_CUSTOMERS;customerId++)
 	{
 		print1("Customer ID is %d\n",
 				customerId);
@@ -1784,7 +1787,9 @@ void main(const char* testOption)
 	initCustomerInfo();
 	initCustomerShoppingList();
 
+	acquireLock(printLock);
 	printConfiguration();
+	releaseLock(printLock);
 
     initLockForSimulation();
 	initCvForSimulation();
