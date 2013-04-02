@@ -1676,6 +1676,11 @@ void printLockForSimulation()
 	{
     	print2("salesmanGoodsLoaderLock %d = %u \n",i,g_salesmanGoodsLoaderLock[i]);
 	}
+	for(i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
+	{
+		print2("goodLoaderWaitLock %d = %u \n",i,g_goodLoaderWaitLock[i]);
+	}
+
 	releaseLock(printLock);
 
 }
