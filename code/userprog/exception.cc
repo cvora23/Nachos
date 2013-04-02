@@ -286,7 +286,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 	userLockTable.locks[lockId].lockCounter = 0;
 
 	userLockTableLock->Release();
-	delete buf;
+	delete [] buf;
 	return lockId;
 }
 
@@ -468,7 +468,7 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 	userConditionTable.conditions[conditionId].conditionCounter = 0;
 
 	userConditionTableLock->Release();
-	delete buf;
+	delete [] buf;
 	return conditionId;
 }
 
@@ -673,47 +673,51 @@ void DestroyCondition_Syscall(int conditionId)
 
 void Print_Syscall(unsigned int vaddr)
 {
-	char *printBuf = new char[MAX_CHAR_PRINTF];
+	char printBuf[MAX_CHAR_PRINTF];
 	if(copyin(vaddr,MAX_CHAR_PRINTF - 1,printBuf) == -1)
 	{
 		printf("%s: Bad Virtual Address \n",currentThread->getName());
 		return ;
 	}
+	printBuf[MAX_CHAR_PRINTF-1] = '\0';
 	printf(printBuf);
-	delete printBuf;
 }
 
 void Print1_Syscall(unsigned int vaddr,int arg1)
 {
-	char *printBuf = new char[MAX_CHAR_PRINTF];
-	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1){
+	char printBuf[MAX_CHAR_PRINTF];
+	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1)
+	{
 		printf("%s: Bad Virtual address\n",currentThread->getName());
 		return;
 	}
+	printBuf[MAX_CHAR_PRINTF-1] = '\0';
 	printf(printBuf, arg1);
-	delete printBuf;
+
 }
 
 void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
 {
-	char *printBuf = new char[MAX_CHAR_PRINTF];
-	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1){
+	char printBuf[MAX_CHAR_PRINTF];
+	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1)
+	{
 		printf("%s: Bad Virtual address\n",currentThread->getName());
 		return;
 	}
+	printBuf[MAX_CHAR_PRINTF-1] = '\0';
 	printf(printBuf, arg1, arg2);
-	delete printBuf;
 }
 
 void Print3_Syscall(unsigned int vaddr,int arg1,int arg2,int arg3)
 {
-	char *printBuf = new char[MAX_CHAR_PRINTF];
-	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1){
+	char printBuf[MAX_CHAR_PRINTF];
+	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1)
+	{
 		printf("%s: Bad Virtual address\n",currentThread->getName());
 		return;
 	}
+	printBuf[MAX_CHAR_PRINTF-1] = '\0';
 	printf(printBuf, arg1, arg2,arg3);
-	delete printBuf;
 }
 
 int Scan_Syscall()
