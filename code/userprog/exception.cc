@@ -676,7 +676,8 @@ void Print_Syscall(unsigned int vaddr)
 {
 	char printBuf[MAX_CHAR_PRINTF+1];
 	memset(printBuf,0,MAX_CHAR_PRINTF+1);
-	if(copyin(vaddr,MAX_CHAR_PRINTF,printBuf) == -1)
+	int length = copyin(vaddr,MAX_CHAR_PRINTF,printBuf);
+	if( length == -1)
 	{
 		printf("%s: Bad Virtual Address \n",currentThread->getName());
 		return ;
@@ -689,7 +690,8 @@ void Print1_Syscall(unsigned int vaddr,int arg1)
 {
 	char printBuf[MAX_CHAR_PRINTF+1];
 	memset(printBuf,0,MAX_CHAR_PRINTF+1);
-	if(copyin(vaddr, MAX_CHAR_PRINTF, printBuf)==-1)
+	int length = copyin(vaddr,MAX_CHAR_PRINTF,printBuf);
+	if( length == -1)
 	{
 		printf("%s: Bad Virtual address\n",currentThread->getName());
 		return;
@@ -703,7 +705,8 @@ void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
 {
 	char printBuf[MAX_CHAR_PRINTF+1];
 	memset(printBuf,0,MAX_CHAR_PRINTF+1);
-	if(copyin(vaddr, MAX_CHAR_PRINTF , printBuf)==-1)
+	int length = copyin(vaddr,MAX_CHAR_PRINTF,printBuf);
+	if( length == -1)
 	{
 		printf("%s: Bad Virtual address\n",currentThread->getName());
 		return;
@@ -716,7 +719,8 @@ void Print3_Syscall(unsigned int vaddr,int arg1,int arg2,int arg3)
 {
 	char printBuf[MAX_CHAR_PRINTF];
 	memset(printBuf,0,MAX_CHAR_PRINTF+1);
-	if(copyin(vaddr, MAX_CHAR_PRINTF - 1 , printBuf)==-1)
+	int length = copyin(vaddr,MAX_CHAR_PRINTF,printBuf);
+	if( length == -1)
 	{
 		printf("%s: Bad Virtual address\n",currentThread->getName());
 		return;
