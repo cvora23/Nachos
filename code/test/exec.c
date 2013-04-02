@@ -11,10 +11,10 @@ int lockId=-1;
 
 int main()
 {
-	print("Execution Started\n");
-	lockId = createLock((char *)"testlock",8);
-	acquireLock(lockId);
-	releaseLock(lockId);
+	Print("Execution Started\n");
+	lockId = CreateLock((char *)"testlock",8);
+	Acquire(lockId);
+	Release(lockId);
 	Exit(0);
 
 
