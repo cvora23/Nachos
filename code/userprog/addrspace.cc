@@ -189,20 +189,12 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 #if 0
 		pageTable[i].physicalPage = i;
 #endif
-
-		if(i < numCodeDataPages)
+		pageTable[i].physicalPage = mainMemoryBitMap->Find();
+		if(pageTable[i].physicalPage == -1)
 		{
-			pageTable[i].physicalPage = mainMemoryBitMap->Find();
-			if(pageTable[i].physicalPage == -1)
-			{
-				printf("%s : No Memory available for allocation \n",currentThread->getName());
-		    	mainMemoryAccessLock->Release();
-				interrupt->Halt();
-			}
-		}
-		else
-		{
-			pageTable[i].physicalPage = i;
+			printf("%s : No Memory available for allocation \n",currentThread->getName());
+	    	mainMemoryAccessLock->Release();
+			interrupt->Halt();
 		}
 		//bzero(machine->mainMemory + pageTable[i].physicalPage* PageSize,PageSize);
 		DEBUG('a',"Initializing PHYSICAL PAGE = %d, VIRTUAL PAGE = %d \n",pageTable[i].physicalPage,i);
@@ -212,8 +204,16 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 		pageTable[i].readOnly = FALSE;  // if the code segment was entirely on
 						// a separate page, we could set its
 						// pages to be read-only
+		if(i<numCodeDataPages)
+		{
+	    	executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PageSize]),
+	    			PageSize,(noffH.code.inFileAddr + (i*PageSize)));
+	    	DEBUG('a',"Page copied to PageTable at Physical Addr: 0x%x . Code/Data of size %d "
+	    			"copied from 0x%x \n",pageTable[i].physicalPage*PageSize,PageSize,
+	    			(noffH.code.inFileAddr + i*PageSize));
+			totalPagesReserved++;
+		}
 		mainMemoryAccessLock->Release();
-
     }
 
     pageTableLock->Release();
@@ -235,7 +235,7 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
         executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
 			noffH.initData.size, noffH.initData.inFileAddr);
     }
-#endif
+
 
     for(unsigned int i=0;i<numCodeDataPages;i++)
     {
@@ -246,6 +246,7 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
     			(noffH.code.inFileAddr + i*PageSize));
 		totalPagesReserved++;
     }
+#endif
 
 }
 
