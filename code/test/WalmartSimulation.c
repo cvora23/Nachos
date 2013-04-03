@@ -1177,7 +1177,7 @@ void GoodLoaderThread()
 	g_goodsLoaderThreadCounter++;
 	Release(g_goodsLoaderThreadCounterLock);
 
-	SafePrint1("gl %d Started !!!!!!!\n",ThreadId);
+	Print1("GOODSLOADER %d Started !!!!!!!\n",ThreadId);
 
     while(1)
     {
@@ -1816,7 +1816,7 @@ void main(const char* testOption)
     }
 
 
-#if 0
+
     for(i = 0;i<NO_OF_MANAGERS;i++)
     {
        Fork(ManagerThread);
@@ -1831,6 +1831,7 @@ void main(const char* testOption)
     	Fork(SalesmanThread);
     }
 
+#if 0
     for(i = 0;i<NO_OF_CUSTOMERS;i++)
     {
     	Fork(CustomerThread);
