@@ -49,6 +49,7 @@
 #define SC_PrintStringInt			28
 #define SC_PrintStringIntInt		29
 #define SC_Print3					30
+#define SC_SafePrint1				31
 
 #ifndef IN_ASM
 
@@ -165,6 +166,8 @@ void DestroyCondition(int conditionId);
 void Print(char* buf);
 
 void Print1(char* buf,int arg1);
+
+void SafePrint1(char* buf,int arg1);
 
 void Print2(char* buf,int arg1,int arg2);
 

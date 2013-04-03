@@ -1171,16 +1171,13 @@ void GoodLoaderThread()
     int mySalesman = -1;
     int ThreadId;
     int i;
-	char string[3] = {'h','i','\0'};
 
 	Acquire(g_goodsLoaderThreadCounterLock);
 	ThreadId = g_goodsLoaderThreadCounter;
 	g_goodsLoaderThreadCounter++;
 	Release(g_goodsLoaderThreadCounterLock);
 
-	Acquire(printLock);
-	Print1(string,ThreadId);
-	Release(printLock);
+	SafePrint1("GOODSLOADER %d Started !!!!!!!\n",ThreadId);
 
     while(1)
     {

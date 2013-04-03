@@ -29,6 +29,8 @@
 
 using namespace std;
 
+char safePrintBuf[MAX_CHAR_PRINTF];
+
 int copyin(unsigned int vaddr, int len, char *buf) {
     // Copy len bytes from the current thread's virtual address vaddr.
     // Return the number of bytes so read, or -1 if an error occors.
@@ -701,6 +703,25 @@ void Print1_Syscall(unsigned int vaddr,int arg1)
 
 }
 
+void SafePrint1_Syscall(unsigned int vaddr,int arg1)
+{
+	memset(safePrintBuf,0,MAX_CHAR_PRINTF);
+	safePrintBuf[MAX_CHAR_PRINTF - 1] = '\0';
+	int size = 0;
+	do
+	{
+		machine->ReadMem(vaddr,sizeof(char),(int*)(safePrintBuf+size));
+		vaddr+=sizeof(char);
+		size++;
+	}while(size<(MAX_CHAR_PRINTF-1) && safePrintBuf[size-1] != '\0');
+
+	size--;
+	DEBUG('a',"Size of String passed = %d \n",size);
+	printf(safePrintBuf, arg1);
+	bzero(sprintBuf,sizeof(char)*MAX_CHAR_PRINTF);
+}
+
+
 void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
 {
 	char printBuf[MAX_CHAR_PRINTF+1];
@@ -1133,6 +1154,13 @@ void ExceptionHandler(ExceptionType which) {
 	    {
 	    	DEBUG('a',"Print1 syscall \n");
 	    	Print1_Syscall(arg1,arg2);
+	    }
+	    break;
+
+	    case SC_SafePrint1:
+	    {
+	    	DEBUG('a',"Print1 syscall \n");
+	    	SafePrint1_Syscall(arg1,arg2);
 	    }
 	    break;
 
