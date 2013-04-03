@@ -705,7 +705,7 @@ void Print1_Syscall(unsigned int vaddr,int arg1)
 
 }
 
-void SafePrint1_Syscall(unsigned int vaddr,int arg1)
+void SafePrint1_Syscall(int vaddr,int arg1)
 {
 	memset(safePrintBuf,0,MAX_CHAR_PRINTF);
     int *paddr = new int;
