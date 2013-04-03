@@ -212,6 +212,7 @@ void testCase9()
 	Print("Walmart Market Simulation \n");
 
 	Exec("../test/WalmartSimulation",25);
+	Exec("../test/WalmartSimulation",25);
 
 	Exit(0);
 }
