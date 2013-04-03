@@ -714,7 +714,7 @@ void SafePrint1_Syscall(unsigned int vaddr,int arg1)
 	do
 	{
 		machine->ReadMem(vaddr,sizeof(char),paddr);
-		safePrintBuf[size] = *paddr;
+		safePrintBuf[size] = (char)*paddr;
 		vaddr+=sizeof(char);
 		size++;
 	}while(size<(MAX_CHAR_PRINTF-1) && safePrintBuf[size-1] != '\0');
