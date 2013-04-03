@@ -708,11 +708,13 @@ void Print1_Syscall(unsigned int vaddr,int arg1)
 void SafePrint1_Syscall(unsigned int vaddr,int arg1)
 {
 	memset(safePrintBuf,0,MAX_CHAR_PRINTF);
+    int *paddr = new int;
 	safePrintBuf[MAX_CHAR_PRINTF - 1] = '\0';
 	int size = 0;
 	do
 	{
-		machine->ReadMem(vaddr,sizeof(char),(int*)(safePrintBuf+size));
+		machine->ReadMem(vaddr,sizeof(char),paddr);
+		safePrintBuf[size] = *paddr;
 		vaddr+=sizeof(char);
 		size++;
 	}while(size<(MAX_CHAR_PRINTF-1) && safePrintBuf[size-1] != '\0');
