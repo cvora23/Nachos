@@ -871,7 +871,6 @@ void CustomerThread()
 void SalesmanThread()
 {
 	int ThreadId;
-    int myDepartmentNo = g_salesmanInfo[ThreadId].departmentNo;
     int myGoodsLoader = -1;
 	int goodLoaderIndex;
 
@@ -880,6 +879,8 @@ void SalesmanThread()
 	ThreadId = g_salesmanThreadCounter;
 	g_salesmanThreadCounter++;
 	Release(g_salesmanThreadCounterLock);
+
+    int myDepartmentNo = g_salesmanInfo[ThreadId].departmentNo;
 
 	Acquire(printLock);
     Print1( "SALESMAN %d Started !!!!!!! \n",ThreadId);
@@ -1890,8 +1891,6 @@ void main(const char* testOption)
     	Fork(GoodLoaderThread);
     }
 
-
-
     for(i = 0;i<NO_OF_MANAGERS;i++)
     {
        Fork(ManagerThread);
@@ -1905,7 +1904,6 @@ void main(const char* testOption)
     {
     	Fork(SalesmanThread);
     }
-
 
     for(i = 0;i<NO_OF_CUSTOMERS;i++)
     {
