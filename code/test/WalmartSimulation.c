@@ -455,12 +455,16 @@ void CustomerThread()
 	g_customerThreadCounter++;
 	Release(g_customerThreadCounterLock);
 
+	Acquire(printLock);
     Print1("CUSTOMER %d enters the SuperMarket !!!!!!! \n",ThreadId);
+    Release(printLock);
 
     /*************************************CUSTOMER-TROLLEY INTERACTION STARTS HERE*********************************************/
 
     Acquire(g_customerTrolleyLock);
+	Acquire(printLock);
     Print1("CUSTOMER %d gets in line for a trolley\n",ThreadId);
+    Release(printLock);
     if(g_usedTrolleyCount<MAX_NO_OF_TROLLEYS)
     {
     	g_usedTrolleyCount++;
@@ -472,7 +476,9 @@ void CustomerThread()
     	g_waitForTrolleyCount--;
     	g_usedTrolleyCount++;
     }
+	Acquire(printLock);
     Print1("CUSTOMER %d has a trolley for shopping\n",ThreadId);
+    Release(printLock);
     Release(g_customerTrolleyLock);
 
     /*************************************CUSTOMER-TROLLEY INTERACTION ENDS HERE*********************************************/
@@ -481,12 +487,12 @@ void CustomerThread()
 
     for(i=0;i<g_customerInfo[ThreadId].noOfItems;i++)
     {
-
+    	Acquire(printLock);
     	Print3("CUSTOMER %d wants to shop ITEM_%d in DEPARTMENT_%d \n",
     			ThreadId,
     			g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo,
     			g_itemInfo[g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo].departmentNo);
-
+    	Release(printLock);
     	currentItemNoFromShoppingList = g_customerInfo[ThreadId].pCustomerShoppingList[i].itemNo;
       	currentItemNoCountFromShoppingList = g_customerInfo[ThreadId].pCustomerShoppingList[i].noOfItems;
 
@@ -508,8 +514,10 @@ void CustomerThread()
     			mySalesMan = salesmanIndex;
     			g_salesmanInfo[salesmanIndex].status = salesmanIsBusy;
     			g_salesmanInfo[salesmanIndex].customerId = ThreadId;
+    			Acquire(printLock);
     			Print3("CUSTOMER %d will enquire about ITEM_%d to SALESMAN_%d\n",ThreadId,
     					currentItemNoFromShoppingList,mySalesMan);
+    			Release(printLock);
     			break;
     		}
     		Release(g_customerSalesmanLock[salesmanIndex]);
@@ -517,19 +525,19 @@ void CustomerThread()
 
     	if(mySalesMan == -1)
     	{
-
+    		Acquire(printLock);
     		Print3("CUSTOMER %d is waiting in Line for DEPARTMENT_%d as NO SALESMAN is free for ITEM_%d inquiry \n",
     				ThreadId,
     				currentDepartmentNoForItem,
     				currentItemNoFromShoppingList);
-
+    		Release(printLock);
     		Acquire(g_customerDepartmentLock[currentDepartmentNoForItem]);
 
     		g_departmentWaitQueue[currentDepartmentNoForItem]++;
-
+    		Acquire(printLock);
     		Print2("CUSTOMER %d gets in line for the DEPARTMENT_%d \n",ThreadId,
     				currentDepartmentNoForItem);
-
+    		Release(printLock);
     		Wait(g_customerDepartmentCV[currentDepartmentNoForItem],g_customerDepartmentLock[currentDepartmentNoForItem]);
 
         	for(salesmanIndex=salesManStartForDepartment;
@@ -539,8 +547,10 @@ void CustomerThread()
         		if(g_salesmanInfo[salesmanIndex].status == salesmanSignalToCustomerFromDeptWaitQueue)
         		{
         			mySalesMan = salesmanIndex;
+        			Acquire(printLock);
         			Print3("CUSTOMER %d assumes that SALESMAN_%d Signaled him regarding enquiry of ITEM_%d\n",
         					ThreadId,mySalesMan,currentItemNoFromShoppingList);
+        			Release(printLock);
         			g_salesmanInfo[salesmanIndex].status = salesmanIsBusy;
         			g_salesmanInfo[salesmanIndex].customerId = ThreadId;
         			break;
@@ -550,10 +560,10 @@ void CustomerThread()
         	Release(g_customerDepartmentLock[currentDepartmentNoForItem]);
     	}
 
-
+    	Acquire(printLock);
 		Print3("CUSTOMER %d is interacting with SALESMAN_%d from DEPARTMENT_%d \n",
 				ThreadId,mySalesMan,currentDepartmentNoForItem);
-
+		Release(printLock);
     	Signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
 
     	Wait(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
@@ -568,19 +578,20 @@ void CustomerThread()
 		if(g_itemInfo[currentItemNoFromShoppingList].noOfItems>=currentItemNoCountFromShoppingList)
 		{
 			g_itemInfo[currentItemNoFromShoppingList].noOfItems -= currentItemNoCountFromShoppingList;
-
+			Acquire(printLock);
 			Print3("CUSTOMER %d has found ITEM_%d and placed ITEM_%d in the trolley \n",ThreadId,
 					currentItemNoFromShoppingList,currentItemNoCountFromShoppingList);
+			Release(printLock);
 			Release(g_shelfAccessLock[currentItemNoFromShoppingList]);
 		}
 		else
 		{
 			Release(g_shelfAccessLock[currentItemNoFromShoppingList]);
 			mySalesMan = -1;
-
+			Acquire(printLock);
     		Print2("CUSTOMER %d is not able to find ITEM_%d and is searching for SALESMAN's \n",
     				ThreadId,currentItemNoFromShoppingList);
-
+    		Release(printLock);
     		for(salesmanIndex=salesManStartForDepartment;
 	    			salesmanIndex<salesManEndForDepartment;salesmanIndex++)
 	    	{
@@ -589,8 +600,10 @@ void CustomerThread()
 	    		if(g_salesmanInfo[salesmanIndex].status == salesmanIsFree)
 	    		{
 	    			mySalesMan = salesmanIndex;
+	    			Acquire(printLock);
 	    			Print3("CUSTOMER %d will enquire about RESTOCK-ITEM_%d to SALESMAN_%d\n",ThreadId,
 	    					currentItemNoFromShoppingList,mySalesMan);
+	    			Release(printLock);
 	    			g_salesmanInfo[salesmanIndex].status = salesmanIsBusy;
 	    			g_salesmanInfo[salesmanIndex].customerId = ThreadId;
 	    			g_salesmanInfo[salesmanIndex].itemToRestock = currentItemNoFromShoppingList;
@@ -601,13 +614,13 @@ void CustomerThread()
 
 	    	if(mySalesMan == -1)
 	    	{
-
+	    		Acquire(printLock);
 	    		Print3("CUSTOMER %d is waiting in COMPLAIN LINE for DEPARTMENT_%d AS "
 	    				"NO SALESMAN is free for RESTOCK-ITEM_%d inquiry so \n",
 	    				ThreadId,
 	    				currentDepartmentNoForItem,
 	    				currentItemNoFromShoppingList);
-
+	    		Release(printLock);
 	    		Acquire(g_customerDepartmentComplainLock[currentDepartmentNoForItem]);
 
 	    		g_departmentComplainWaitQueue[currentDepartmentNoForItem]++;
@@ -622,8 +635,10 @@ void CustomerThread()
 	        		if(g_salesmanInfo[salesmanIndex].status == salesmanSignalToCustomerFromDeptComplainWaitQueue)
 	        		{
 		    			mySalesMan = salesmanIndex;
+		    			Acquire(printLock);
 	        			Print3("CUSTOMER %d assumes that SALESMAN_%d Signaled him regarding inquiry of RESTOCK ITEM_%d\n",
 	        					ThreadId,mySalesMan,currentItemNoFromShoppingList);
+	        			Release(printLock);
 		    			g_salesmanInfo[salesmanIndex].status = salesmanIsBusy;
 		    			g_salesmanInfo[salesmanIndex].customerId = ThreadId;
 		    			g_salesmanInfo[salesmanIndex].itemToRestock = currentItemNoFromShoppingList;
@@ -633,17 +648,17 @@ void CustomerThread()
 	        	}
 	        	Release(g_customerDepartmentComplainLock[currentDepartmentNoForItem]);
 	    	}
-
+	    	Acquire(printLock);
 	    	Print2("CUSTOMER %d is asking for assistance from SALESMAN_%d \n",
 	    			ThreadId,mySalesMan);
-
+	    	Release(printLock);
 	    	Signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
 
 	    	Wait(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
-
+	    	Acquire(printLock);
 	    	Print3("CUSTOMER %d has received assistance about re stocking of ITEM_%d from SALESMAN_%d \n",
 	    			ThreadId,currentItemNoFromShoppingList,mySalesMan);
-
+	    	Release(printLock);
 	    	Signal(g_customerSalesmanCV[mySalesMan],g_customerSalesmanLock[mySalesMan]);
 
 			g_itemInfo[currentItemNoFromShoppingList].noOfItems -= currentItemNoCountFromShoppingList;
@@ -654,16 +669,17 @@ void CustomerThread()
 	    	Release(g_customerSalesmanLock[mySalesMan]);
 
 		}
-
+		Acquire(printLock);
 		Print2("CUSTOMER %d has finished shopping in  DEPARTMENT_%d \n",
 				ThreadId,currentDepartmentNoForItem);
+		Release(printLock);
         /*************************************CUSTOMER-SALESMAN INTERACTION ENDS HERE*********************************************/
     }
-
+	Acquire(printLock);
     Print1("CUSTOMER %d has finished shopping for all items \n",ThreadId);
 
     Print1("CUSTOMER %d is looking for the Cashier \n",ThreadId);
-
+    Release(printLock);
     /*******************************************CUSTOMER-CASHIER INTERACTION STARTS HERE*******************************************/
     for(i=0;i<NO_OF_CASHIERS;i++)
     {
@@ -691,13 +707,17 @@ void CustomerThread()
 
 	if(g_customerInfo[ThreadId].type == PRIVILEGED)
 	{
+		Acquire(printLock);
 		Print3("CUSTOMER %d chose CASHIER_%d with Privileged Line of length %d \n",
 				ThreadId,myCashier,minCashierLineLength);
+		Release(printLock);
 	}
 	else
 	{
+		Acquire(printLock);
 		Print3("CUSTOMER %d chose CASHIER_%d with Line of length %d \n",
 				ThreadId,myCashier,minCashierLineLength);
+		Release(printLock);
 	}
 
     Acquire(g_customerCashierLock[myCashier]);
@@ -746,14 +766,18 @@ void CustomerThread()
     if(myBill <= g_customerInfo[ThreadId].money)
     {
     	g_customerInfo[ThreadId].hasEnoughMoneyForShopping = true;
+    	Acquire(printLock);
     	Print3("CUSTOMER %d pays %d amount to CASHIER_%d and is waiting for the receipt\n",
     			ThreadId,myBill,myCashier);
+    	Release(printLock);
     }
     else
     {
     	g_customerInfo[ThreadId].hasEnoughMoneyForShopping = false;
+    	Acquire(printLock);
     	Print2("CUSTOMER %d cannot pay %d\n",
     			ThreadId,myBill);
+    	Release(printLock);
     }
 
     Signal(g_customerCashierCV[myCashier],g_customerCashierLock[myCashier]);
@@ -762,13 +786,16 @@ void CustomerThread()
 
     if(g_customerInfo[ThreadId].hasEnoughMoneyForShopping == true)
     {
+    	Acquire(printLock);
     	Print2("CUSTOMER %d got receipt from CASHIER_%d and is now leaving\n",
     			ThreadId,myCashier);
-    }
+    	Release(printLock);
 
+    }
+	Acquire(printLock);
 	Print2("CUSTOMER %d signaled CASHIER_%d that I am leaving\n",
 			ThreadId,myCashier);
-
+	Release(printLock);
     Signal(g_customerCashierCV[myCashier],g_customerCashierLock[myCashier]);
 
     Acquire(g_managerCustomerInteractionLock);
@@ -781,7 +808,9 @@ void CustomerThread()
 
     if(g_customerInfo[ThreadId].hasEnoughMoneyForShopping == false)
     {
+    	Acquire(printLock);
     	Print1("CUSTOMER %d is waiting for MANAGER for negotiations\n",ThreadId);
+    	Release(printLock);
     	g_managerInfo.customerBill = myBill;
     	g_managerInfo.customerId = ThreadId;
 
@@ -791,23 +820,27 @@ void CustomerThread()
     	while(myBill<=g_customerInfo[ThreadId].hasEnoughMoneyForShopping)
     	{
     		Signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
+    		Acquire(printLock);
     		Print2("CUSTOMER %d tells MANAGER to remove ITEM_%d from trolley\n",
     				ThreadId,
     				g_customerInfo[ThreadId].pCustomerShoppingList[currentItemNoCountToRemoveFromTrolley].itemNo);
+    		Release(printLock);
         	Wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
         	myBill = g_managerInfo.customerBill;
         	currentItemNoCountToRemoveFromTrolley++;
     	}
 
     	g_customerInfo[ThreadId].isDoneShopping = true;
-
+    	Acquire(printLock);
     	Print2("CUSTOMER %d pays $ %d MANAGER after removing items and is waiting for receipt from MANAGER\n",
     			ThreadId,myBill);
-
+    	Release(printLock);
 		Signal(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
     	Wait(g_managerCustomerInteractionCV,g_managerCustomerInteractionLock);
 
+    	Acquire(printLock);
     	Print1("CUSTOMER %d got receipt from MANAGER and is now leaving\n",ThreadId);
+    	Release(printLock);
 
     	Release(g_managerCustomerInteractionLock);
     }
@@ -819,7 +852,9 @@ void CustomerThread()
 
     /*************************************CUSTOMER - MANAGER INTERACTION ENDS HERE *******************************************/
 
+	Acquire(printLock);
     Print1("CUSTOMER %d left the shopping mall !!!!! \n",ThreadId);
+    Release(printLock);
 
     Acquire(g_customerTrolleyLock);
     g_usedTrolleyCount--;
@@ -846,9 +881,11 @@ void SalesmanThread()
 	g_salesmanThreadCounter++;
 	Release(g_salesmanThreadCounterLock);
 
+	Acquire(printLock);
     Print1( "SALESMAN %d Started !!!!!!! \n",ThreadId);
     Print2("SALESMAN %d will be working for DEPARTMENT_%d \n",
     		ThreadId,g_salesmanInfo[ThreadId].departmentNo);
+    Release(printLock);
 
     while(1)
     {
@@ -856,10 +893,10 @@ void SalesmanThread()
 
     	if(g_departmentWaitQueue[myDepartmentNo]>0)
     	{
-
+    		Acquire(printLock);
     		Print2("SALESMAN %d ---- DEPARTMENT_%d WAIT QUEUE is not Empty... Someone Waiting for Assistance \n",
     				ThreadId,myDepartmentNo);
-
+    		Release(printLock);
     		g_departmentWaitQueue[myDepartmentNo]--;
 
     		Acquire(g_customerSalesmanLock[ThreadId]);
@@ -867,29 +904,31 @@ void SalesmanThread()
     		g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptWaitQueue;
 
     		Signal(g_customerDepartmentCV[myDepartmentNo],g_customerDepartmentLock[myDepartmentNo]);
-
+    		Acquire(printLock);
     		Print2("%SALESMAN %d signaling someone waiting in DEPARTMENT_%d WAIT QUEUE\n",ThreadId,
     				myDepartmentNo);
-
+    		Release(printLock);
     		Release(g_customerDepartmentLock[myDepartmentNo]);
 
+    		Acquire(printLock);
     		Print2("SALESMAN %d waiting for response from UNKNOWN CUSTOMER now in DEPARTMENT_%d WAIT QUEUE \n",
     				ThreadId,myDepartmentNo);
+    		Release(printLock);
 
     		Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
-
+    		Acquire(printLock);
     		Print3("SALESMAN %d GOT INITIAL RESPONSE from CUSTOMER_%d now in DEPARTMENT_%d WAIT QUEUE\n",
     				ThreadId,g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
-
+    		Release(printLock);
     		Signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
-
+    		Acquire(printLock);
     		Print3("SALESMAN %d SENDING RESPONSE to CUSTOMER_%d now in DEPARTMENT_%d WAIT QUEUE \n",
     				ThreadId,g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
-
-
+    		Release(printLock);
+    		Acquire(printLock);
     		Print3("SALESMAN %d welcomes CUSTOMER_%d to DEPARTMENT_%d \n",
     				ThreadId,g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
-
+    		Release(printLock);
     		Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
     		Print2("SALESMAN %d GOT FINAL RESPONSE from CUSTOMER_%d now \n",ThreadId,g_salesmanInfo[ThreadId].customerId);
@@ -905,10 +944,10 @@ void SalesmanThread()
 
     	if(g_departmentComplainWaitQueue[myDepartmentNo]>0)
     	{
-
+    		Acquire(printLock);
     		Print2("SALESMAN %d ---- DEPARTMENT_%d COMPLAIN WAIT QUEUE is not Empty... Someone Waiting for Assistance \n",
     				ThreadId,myDepartmentNo);
-
+    		Release(printLock);
     		g_departmentComplainWaitQueue[myDepartmentNo]--;
 
     		Acquire(g_customerSalesmanLock[ThreadId]);
@@ -916,22 +955,23 @@ void SalesmanThread()
     		g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptComplainWaitQueue;
 
     		Signal(g_customerDepartmentComplainCV[myDepartmentNo],g_customerDepartmentComplainLock[myDepartmentNo]);
-
+    		Acquire(printLock);
     		Print2("SALESMAN %d signaling someone waiting in DEPARTMENT_%d COMPLAIN WAIT QUEUE \n",ThreadId,
     				myDepartmentNo);
-
+    		Release(printLock);
     		Release(g_customerDepartmentComplainLock[myDepartmentNo]);
-
+    		Acquire(printLock);
     		Print2("SALESMAN %d waiting for response from UNKNOWN CUSTOMER now in DEPARTMENT_%d COMPLAIN WAIT QUEUE \n",
     				ThreadId,myDepartmentNo);
-
+    		Release(printLock);
     		Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
+    		Acquire(printLock);
     		Print3("SALESMAN %d is informed by CUSTOMER_%d that ITEM_%d is out of stock \n",
     				ThreadId,
     				g_salesmanInfo[ThreadId].customerId,
     				g_salesmanInfo[ThreadId].itemToRestock);
-
+    		Release(printLock);
 
     		/**************************START INTERACTING WITH GOODS LOADER NOW ***************************/
 
@@ -942,8 +982,11 @@ void SalesmanThread()
     			if(g_goodLoaderInfo[goodLoaderIndex].status == goodLoaderIsFree)
     			{
     				myGoodsLoader = goodLoaderIndex;
+    				Acquire(printLock);
 	    			Print3("SALESMAN %d will enquire about RESTOCK-ITEM_%d to GOODLOADER_%d\n",ThreadId,
 	    					g_salesmanInfo[ThreadId].itemToRestock,myGoodsLoader);
+	    			Release(printLock);
+
     				g_goodLoaderInfo[goodLoaderIndex].status = goodLoaderIsBusy;
     				g_goodLoaderInfo[goodLoaderIndex].salesmanId = ThreadId;
     				break;
@@ -953,10 +996,13 @@ void SalesmanThread()
 
     		if(myGoodsLoader == -1)
     		{
+    			Acquire(printLock);
 	    		Print2("SALESMAN %d is waiting in SINGLE LINE for GOOD LOADERS as "
 	    				" NO GOODLOADER is free for RESTOCK-ITEM_%d inquiry so "
 	    				"\n",ThreadId,
 	    				g_salesmanInfo[ThreadId].itemToRestock);
+	    		Release(printLock);
+
 
     			Acquire(g_goodLoaderWaitLock[0]);
     			g_goodLoaderWaitQueue[0]++;
@@ -969,8 +1015,11 @@ void SalesmanThread()
         			if(g_goodLoaderInfo[goodLoaderIndex].status == goodLoaderSignalToSalesman)
         			{
         				myGoodsLoader = goodLoaderIndex;
+        				Acquire(printLock);
 	        			Print3("SALESMAN %d assumes that GOOD LOADER_%d Signaled him regarding inquiry of RESTOCK ITEM_%d\n",
 	        					ThreadId,myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
+	        			Release(printLock);
+
         				g_goodLoaderInfo[goodLoaderIndex].status = goodLoaderIsBusy;
         				g_goodLoaderInfo[goodLoaderIndex].salesmanId = ThreadId;
         				break;
@@ -984,32 +1033,33 @@ void SalesmanThread()
     		g_goodLoaderInfo[myGoodsLoader].itemToRestock = g_salesmanInfo[ThreadId].itemToRestock;
 
     		Signal(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
-
+    		Acquire(printLock);
     		Print3("SALESMAN %d informs GOOD LOADER_%d that ITEM_%d is out of stock \n",
     				ThreadId,myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
-
+    		Release(printLock);
     		Wait(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
-
+    		Acquire(printLock);
     		Print3("SALESMAN %d is informed by the GOOD LOADER_%d that ITEM_%d is re stocked \n",
     				ThreadId,myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
-
+    		Release(printLock);
     		Release(g_salesmanGoodsLoaderLock[myGoodsLoader]);
 
     		/**************************END INTERACTING WITH GOODS LOADER NOW ***************************/
 
     		Signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
-
+    		Acquire(printLock);
     		Print3("SALESMAN %d SENDING RESPONSE to CUSTOMER_%d now in DEPARTMENT_%d COMPLAIN WAIT QUEUE \n",
     				ThreadId,g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
 
     		Print3("SALESMAN %d informs the CUSTOMER_%d that ITEM_%d is re stocked \n",
     				ThreadId,g_salesmanInfo[ThreadId].customerId,
     				g_salesmanInfo[ThreadId].itemToRestock);
+    		Release(printLock);
 
     		Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
-
+    		Acquire(printLock);
     		Print2("SALESMAN %d GOT FINAL RESPONSE from CUSTOMER_%d now \n",ThreadId,g_salesmanInfo[ThreadId].customerId);
-
+    		Release(printLock);
     		myGoodsLoader = -1;
     		g_salesmanInfo[ThreadId].itemToRestock = -1;
 
@@ -1026,11 +1076,11 @@ void SalesmanThread()
     	if(g_departmentWaitQueue[myDepartmentNo] == 0 &&
     			g_departmentComplainWaitQueue[myDepartmentNo] == 0)
     	{
-
+    		Acquire(printLock);
     		Print3("SALESMAN %d is RELAXING AS DEPARTMENT_%d WAIT QUEUE and DEPARTMENT_%d "
     				"COMPLAIN WAIT QUEUE both are empty"
     				"SET STATUS TO FREE\n ",ThreadId,myDepartmentNo,myDepartmentNo);
-
+    		Release(printLock);
     		Acquire(g_customerSalesmanLock[ThreadId]);
 
     		g_salesmanInfo[ThreadId].status = salesmanIsFree;
@@ -1040,37 +1090,42 @@ void SalesmanThread()
     		Release(g_customerDepartmentLock[myDepartmentNo]);
 
     		Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
-
+    		Acquire(printLock);
     		Print2("SALESMAN %d GOT INITIAL RESPONSE from CUSTOMER_%d in NO WAIT QUEUE\n",
     				ThreadId,g_salesmanInfo[ThreadId].customerId);
-
+    		Release(printLock);
 
 
     		if(g_salesmanInfo[ThreadId].itemToRestock == -1)
     		{
+    			Acquire(printLock);
     			Print1("SALESMAN %d is checking if INITIAL RESPONSE is not regarding RE-STOCK of Item in NO WAIT QUEUE\n",
     					ThreadId);
-
+    			Release(printLock);
     			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptWaitQueue;
 
     			Signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
-
+    			Acquire(printLock);
         		Print2("SALESMAN %d SENDING RESPONSE to CUSTOMER_%d in NO WAIT QUEUE \n",
         				ThreadId,g_salesmanInfo[ThreadId].customerId);
 
         		Print3("SALESMAN %d welcomes CUSTOMER_%d to DEPARTMENT_%d \n",
         				ThreadId,g_salesmanInfo[ThreadId].customerId,myDepartmentNo);
-
+        		Release(printLock);
     			Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
 
+    			Acquire(printLock);
         		Print2("SALESMAN %d GOT FINAL RESPONSE from CUSTOMER_%d in NO WAIT QUEUE \n",
         				ThreadId,g_salesmanInfo[ThreadId].customerId);
+        		Release(printLock);
 
         		Release(g_customerSalesmanLock[ThreadId]);
     		}
     		else
     		{
+    			Acquire(printLock);
     			Print1("SALESMAN %d is IF INITIAL RESPONSE is regarding RE-STOCK of Item in NO WAIT QUEUE\n",ThreadId);
+    			Release(printLock);
 
     			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptComplainWaitQueue;
 
@@ -1081,11 +1136,14 @@ void SalesmanThread()
         			if(g_goodLoaderInfo[goodLoaderIndex].status == goodLoaderIsFree)
         			{
         				myGoodsLoader = goodLoaderIndex;
+        				Acquire(printLock);
         	    		Print2(" SALESMAN %d is waiting in SINGLE LINE for GOOD LOADERS NO WAIT QUEUE as "
         	    				"NO GOODLOADER is free for RESTOCK-ITEM_%d inquiry so "
         	    				"\n",ThreadId,
         	    				g_salesmanInfo[ThreadId].itemToRestock
         	    				);
+        	    		Release(printLock);
+
         				g_goodLoaderInfo[goodLoaderIndex].status = goodLoaderIsBusy;
         				g_goodLoaderInfo[goodLoaderIndex].salesmanId = ThreadId;
         				break;
@@ -1095,11 +1153,13 @@ void SalesmanThread()
 
         		if(myGoodsLoader == -1)
         		{
+        			Acquire(printLock);
     	    		Print2("SALESMAN %d is waiting in SINGLE LINE for "
     	    				"GOOD LOADERS NO WAIT QUEUE AS NO GOODLOADER is free for RESTOCK-ITEM_%d inquiry so \n",
     	    				ThreadId,
     	    				g_salesmanInfo[ThreadId].itemToRestock
     	    				);
+    	    		Release(printLock);
 
         			Acquire(g_goodLoaderWaitLock[0]);
         			g_goodLoaderWaitQueue[0]++;
@@ -1113,8 +1173,11 @@ void SalesmanThread()
             			if(g_goodLoaderInfo[goodLoaderIndex].status == goodLoaderSignalToSalesman)
             			{
             				myGoodsLoader = goodLoaderIndex;
+            				Acquire(printLock);
     	        			Print3("SALESMAN %d assumes that GOOD LOADER_%d Signaled him regarding inquiry of RESTOCK ITEM_%d\n",
     	        					ThreadId,myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
+    	        			Release(printLock);
+
             				g_goodLoaderInfo[goodLoaderIndex].status = goodLoaderIsBusy;
             				g_goodLoaderInfo[goodLoaderIndex].salesmanId = ThreadId;
             				break;
@@ -1128,30 +1191,30 @@ void SalesmanThread()
         		g_goodLoaderInfo[myGoodsLoader].itemToRestock = g_salesmanInfo[ThreadId].itemToRestock;
 
         		Signal(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
-
+        		Acquire(printLock);
         		Print2("SALESMAN %d SENDING RESPONSE to CUSTOMER_%d now in NO WAIT QUEUE \n",
         				ThreadId,g_salesmanInfo[ThreadId].customerId);
 
         		Print3("SALESMAN %d informs GOOD LOADER_%d that ITEM_%d is out of stock \n",
         				ThreadId,myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
-
+        		Release(printLock);
         		Wait(g_salesmanGoodsLoaderCV[myGoodsLoader],g_salesmanGoodsLoaderLock[myGoodsLoader]);
-
+        		Acquire(printLock);
         		Print3("SALESMAN %d is informed by the GOOD LOADER_%d that ITEM_%d is re stocked \n",
         				ThreadId,myGoodsLoader,g_salesmanInfo[ThreadId].itemToRestock);
-
+        		Release(printLock);
         		Release(g_salesmanGoodsLoaderLock[myGoodsLoader]);
 
         		Signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
-
+        		Acquire(printLock);
         		Print3("SALESMAN %d informs the CUSTOMER_%d that ITEM_%d is re stocked \n",
         				ThreadId,g_salesmanInfo[ThreadId].customerId,
         				g_salesmanInfo[ThreadId].itemToRestock);
-
+        		Release(printLock);
         		Wait(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
-
+        		Acquire(printLock);
         		Print2("SALESMAN %d GOT FINAL RESPONSE from CUSTOMER_%d now \n",ThreadId,g_salesmanInfo[ThreadId].customerId);
-
+        		Release(printLock);
         		myGoodsLoader = -1;
         		g_salesmanInfo[ThreadId].itemToRestock = -1;
 
@@ -1176,9 +1239,9 @@ void GoodLoaderThread()
 	ThreadId = g_goodsLoaderThreadCounter;
 	g_goodsLoaderThreadCounter++;
 	Release(g_goodsLoaderThreadCounterLock);
-
+	Acquire(printLock);
 	Print1("GOODSLOADER %d Started !!!!!!!\n",ThreadId);
-
+	Release(printLock);
     while(1)
     {
     	int goodsLoaderWalkingTime;
@@ -1189,8 +1252,9 @@ void GoodLoaderThread()
 
     	if(g_goodLoaderWaitQueue[0]>0)
     	{
+    		Acquire(printLock);
     		Print1("GOODSLOADER %d GOOD LOADER WAIT QUEUE IS NOT EMPTY...RE-STOCK OF SOME ITEM \n",ThreadId);
-
+    		Release(printLock);
     		g_goodLoaderWaitQueue[0]--;
 
     		Acquire(g_salesmanGoodsLoaderLock[ThreadId]);
@@ -1198,17 +1262,18 @@ void GoodLoaderThread()
     		g_goodLoaderInfo[ThreadId].status = goodLoaderSignalToSalesman;
 
     		Signal(g_goodLoaderWaitCV[0],g_goodLoaderWaitLock[0]);
-
+    		Acquire(printLock);
     		Print1("GOODSLOADER %d signaling someone waiting in GOOD LOADERS WAIT QUEUE\n",ThreadId);
-
+    		Release(printLock);
     		Release(g_goodLoaderWaitLock[0]);
 
     		Wait(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
-
+    		Acquire(printLock);
     		Print3("GOODSLOADER %d is informed by SALESMAN_%d of DEPARTMENT_%d ",
     				ThreadId,g_goodLoaderInfo[ThreadId].salesmanId,
     				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo);
     				Print1("to re stock ITEM_%d \n",g_goodLoaderInfo[ThreadId].itemToRestock);
+    		Release(printLock);
 
     		Acquire(g_shelfAccessLock[g_goodLoaderInfo[ThreadId].itemToRestock]);
 
@@ -1219,16 +1284,19 @@ void GoodLoaderThread()
     		for(i=0;i<goodsLoaderWalkingTime;i++)
     		{
     			Yield();
+    			Acquire(printLock);
     			Print2("GOODSLOADER %d is walking from RE-STOCK room to shelf to RE-STOCK ITEM_%d\n",ThreadId,
     					g_goodLoaderInfo[ThreadId].itemToRestock);
+    			Release(printLock);
     		}
 
     		Signal(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
-
+    		Acquire(printLock);
     		Print3("GOODSLOADER %d has re stocked ITEM_%d in DEPARTMENT_%d \n",
     				ThreadId,
     				g_goodLoaderInfo[ThreadId].itemToRestock,
     				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo);
+    		Release(printLock);
 
     		Release(g_salesmanGoodsLoaderLock[ThreadId]);
     	}
@@ -1241,20 +1309,24 @@ void GoodLoaderThread()
 
     	if(g_goodLoaderWaitQueue[0] == 0)
     	{
+    		Acquire(printLock);
     		Print1("GOODSLOADER %d GOOD LOADER WAIT QUEUE IS EMPTY...RELAX \n",ThreadId);
 
     		Print1("GOODSLOADER %d is waiting for orders to Re stock\n",ThreadId);
+    		Release(printLock);
 
     		Acquire(g_salesmanGoodsLoaderLock[ThreadId]);
     		g_goodLoaderInfo[ThreadId].status = goodLoaderIsFree;
 
     		Release(g_goodLoaderWaitLock[0]);
     		Wait(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
-
+    		Acquire(printLock);
     		Print3("GOODSLOADER %d is informed by SALESMAN_%d of DEPARTMENT_%d ",
     				ThreadId,g_goodLoaderInfo[ThreadId].salesmanId,
     				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo);
     				Print1("to re stock ITEM_%d \n",g_goodLoaderInfo[ThreadId].itemToRestock);
+    	    Release(printLock);
+
 
     		Acquire(g_shelfAccessLock[g_goodLoaderInfo[ThreadId].itemToRestock]);
 
@@ -1266,17 +1338,20 @@ void GoodLoaderThread()
     		for(i=0;i<goodsLoaderWalkingTime;i++)
     		{
     			Yield();
+        		Acquire(printLock);
     			Print2("GOODSLOADER %d is walking from RE-STOCK room to shelf to RE-STOCK ITEM_%d\n",ThreadId,
     					g_goodLoaderInfo[ThreadId].itemToRestock);
+        		Release(printLock);
+
     		}
 
     		Signal(g_salesmanGoodsLoaderCV[ThreadId],g_salesmanGoodsLoaderLock[ThreadId]);
-
+    		Acquire(printLock);
     		Print3("GOODSLOADER %d has re stocked ITEM_%d in DEPARTMENT_%d \n",
     				ThreadId,
     				g_goodLoaderInfo[ThreadId].itemToRestock,
     				g_salesmanInfo[g_goodLoaderInfo[ThreadId].salesmanId].departmentNo);
-
+    		Release(printLock);
     		Release(g_salesmanGoodsLoaderLock[ThreadId]);
     	}
 
