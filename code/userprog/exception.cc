@@ -29,6 +29,8 @@
 
 using namespace std;
 
+extern "C" { int bzero(char *, int); };
+
 char safePrintBuf[MAX_CHAR_PRINTF];
 
 int copyin(unsigned int vaddr, int len, char *buf) {
@@ -718,7 +720,7 @@ void SafePrint1_Syscall(unsigned int vaddr,int arg1)
 	size--;
 	DEBUG('a',"Size of String passed = %d \n",size);
 	printf(safePrintBuf, arg1);
-	bzero(sprintBuf,sizeof(char)*MAX_CHAR_PRINTF);
+	bzero(safePrintBuf,sizeof(char)*MAX_CHAR_PRINTF);
 }
 
 
