@@ -1768,6 +1768,8 @@ void main(const char* testOption)
 	int configRetVal;
 	int i;
 
+	SafePrint1("GOODSLOADER %d Started !!!!!!!\n",5);
+
 	printLock = CreateLock("printLock",sizeof("printLock"));
 
 	/**
