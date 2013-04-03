@@ -1177,7 +1177,7 @@ void GoodLoaderThread()
 	g_goodsLoaderThreadCounter++;
 	Release(g_goodsLoaderThreadCounterLock);
 
-	SafePrint1("GOODSLOADER %d Started !!!!!!!\n",ThreadId);
+	SafePrint1("gl %d Started !!!!!!!\n",ThreadId);
 
     while(1)
     {
