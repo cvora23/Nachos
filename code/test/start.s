@@ -221,7 +221,7 @@ Print1:
     .globl SafePrint1
     .ent    SafePrint1
 SafePrint1:
-    addiu $2,$0,SC_Print1
+    addiu $2,$0,SC_SafePrint1
     syscall
     j   $31
     .end SafePrint1
