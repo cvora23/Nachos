@@ -873,14 +873,14 @@ void SalesmanThread()
 	int ThreadId;
     int myGoodsLoader = -1;
 	int goodLoaderIndex;
-
+	int myDepartmentNo;
 
 	Acquire(g_salesmanThreadCounterLock);
 	ThreadId = g_salesmanThreadCounter;
 	g_salesmanThreadCounter++;
 	Release(g_salesmanThreadCounterLock);
 
-    int myDepartmentNo = g_salesmanInfo[ThreadId].departmentNo;
+	myDepartmentNo = g_salesmanInfo[ThreadId].departmentNo;
 
 	Acquire(printLock);
     Print1( "SALESMAN %d Started !!!!!!! \n",ThreadId);
