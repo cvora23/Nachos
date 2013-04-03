@@ -1831,13 +1831,13 @@ void main(const char* testOption)
     	Fork(SalesmanThread);
     }
 
-#if 0
+
     for(i = 0;i<NO_OF_CUSTOMERS;i++)
     {
     	Fork(CustomerThread);
     }
 
-
+#if 0
 
 #endif
 
