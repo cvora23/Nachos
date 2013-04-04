@@ -918,8 +918,8 @@ SpaceId Exec_Syscall(unsigned int vaddr,int len)
 	firstNewThreadForExecProcess->threadId = 0;
 	firstNewThreadForExecProcess->stackRegVirtualPage = (firstNewThreadForExecProcess->space)->numPages;
 
-	//delete executable;
-	//delete [] execBuf;
+	delete executable;
+	delete [] execBuf;
 
 	DEBUG('a',"Process %d Thread %d Exec_Syscall: New Process created with Process Id \n",
 			currentThread->space->processId,currentThread->threadId,
