@@ -54,7 +54,7 @@
 #endif
 
 #ifndef NO_OF_CUSTOMERS
-#define NO_OF_CUSTOMERS									30
+#define NO_OF_CUSTOMERS									5
 #endif
 
 /*************************************DEFINES DECLARATION**********************************************/
