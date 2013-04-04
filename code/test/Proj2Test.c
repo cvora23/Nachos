@@ -212,6 +212,15 @@ void testCase9()
 	Print("Walmart Market Simulation \n");
 
 	Exec("../test/WalmartSimulation",25);
+
+	Exit(0);
+}
+
+void testCase10()
+{
+	Print("2 CONCURRENT Walmart Market Simulation \n");
+
+	Exec("../test/WalmartSimulation",25);
 	Exec("../test/WalmartSimulation",25);
 
 	Exit(0);
@@ -274,37 +283,14 @@ int main()
 			testCase5();
 		}
 		break;
-		case 6:
-		{
-#if 0
-			testCase6();
-#endif
-		}
-		break;
-		case 7:
-		{
-#if 0
-			testCase7();
-#endif
-		}
-		break;
-		case 8:
-		{
-#if 0
-			testCase8();
-#endif
-		}
-		break;
 		case 9:
 		{
 			testCase9();
 		}
 		break;
-		case 11:
+		case 10:
 		{
-#if 0
-			testCase11();
-#endif
+			testCase10();
 		}
 		break;
 		case 12:
