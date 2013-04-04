@@ -1550,7 +1550,7 @@ void ManagerThread()
     	    if(g_noOfCustomersLeft == NO_OF_CUSTOMERS)
     	    {
     	    	simulationEnd = 1;
-    	    	print("MANAGER HAS THE LAST SAY... END OF SIMULATION \n");
+    	    	Print("MANAGER HAS THE LAST SAY... END OF SIMULATION \n");
     	    }
     	}
     	else
