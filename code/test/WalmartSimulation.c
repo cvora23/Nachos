@@ -1847,10 +1847,8 @@ void printCvForSimulation()
 	Release(printLock);
 }
 
-void main(const char* testOption)
+int main()
 {
-
-
 
 #if 0
 	int configRetVal;
