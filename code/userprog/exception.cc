@@ -945,7 +945,7 @@ void Exit_Syscall(int status)
 		{
 			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
 			mainMemoryBitMap->Clear(physPageToClear);
-			DEBUG('b',"Found Physical Page %d for Process %d from Main Memory Bit Map \n",
+			DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
 					physPageToClear,(currentThread->space)->processId);
 		}
 
@@ -1001,7 +1001,7 @@ void Exit_Syscall(int status)
 		{
 			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
 			mainMemoryBitMap->Clear(physPageToClear);
-			DEBUG('b',"Found Physical Page %d for Process %d from Main Memory Bit Map \n",
+			DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
 					physPageToClear,(currentThread->space)->processId);
 		}
 
