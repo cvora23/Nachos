@@ -938,9 +938,12 @@ void Exit_Syscall(int status)
 		for(int i=0;i<numPages;i++)
 		{
 			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
-			mainMemoryBitMap->Clear(physPageToClear);
-			DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
+			if(mainMemoryBitMap->Test(physPageToClear))
+			{
+				mainMemoryBitMap->Clear(physPageToClear);
+				DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
 					physPageToClear,(currentThread->space)->processId);
+			}
 		}
 
 		mainMemoryAccessLock->Release();
@@ -995,9 +998,12 @@ void Exit_Syscall(int status)
 		for(int i=0;i<numPages;i++)
 		{
 			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
-			mainMemoryBitMap->Clear(physPageToClear);
-			DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
+			if(mainMemoryBitMap->Test(physPageToClear))
+			{
+				mainMemoryBitMap->Clear(physPageToClear);
+				DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
 					physPageToClear,(currentThread->space)->processId);
+			}
 		}
 
 		mainMemoryAccessLock->Release();
@@ -1051,9 +1057,12 @@ void Exit_Syscall(int status)
 		for(int i = (currentThread->stackRegVirtualPage)-8;i<(currentThread->stackRegVirtualPage);i++)
 		{
 			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
-			mainMemoryBitMap->Clear(physPageToClear);
-			DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
+			if(mainMemoryBitMap->Test(physPageToClear))
+			{
+				mainMemoryBitMap->Clear(physPageToClear);
+				DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
 					physPageToClear,(currentThread->space)->processId);
+			}
 		}
 
 		mainMemoryAccessLock->Release();
