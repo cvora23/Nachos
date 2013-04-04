@@ -928,6 +928,57 @@ void Exit_Syscall(int status)
 	{
 		printf("Exit_Syscall : Process %d Thread %d : Last thread of last process exiting.... BYE BYE NACHOS !!!!\n",
 				currentThread->space->processId,currentThread->threadId);
+
+		int numPages = (currentThread->space)->numPages;
+		AddrSpace *oldAddrSpace = currentThread->space;
+
+		(currentThread->space)->pageTableLock->Acquire();
+		mainMemoryAccessLock->Acquire();
+
+		for(int i=0;i<numPages;i++)
+		{
+			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
+			mainMemoryBitMap->Clear(physPageToClear);
+			DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
+					physPageToClear,(currentThread->space)->processId);
+		}
+
+		mainMemoryAccessLock->Release();
+
+		processTableBitMap->Clear((currentThread->space)->processId);
+
+		(currentThread->space)->pageTableLock->Release();
+
+		delete currentThread->space;
+
+		processTableAccessLock->Release();
+
+		userLockTableLock->Acquire();
+
+		for(int lockId = 0;lockId<MAX_LOCKS;lockId++)
+		{
+			if((userLockTable.lockBitMap->Test(lockId)) &&
+					(userLockTable.locks[lockId].addrSpace == oldAddrSpace))
+			{
+				DestroyLock_Syscall(lockId);
+			}
+		}
+
+		userLockTableLock->Release();
+
+		userConditionTableLock->Acquire();
+
+		for(int cvId = 0;cvId<MAX_CVS;cvId++)
+		{
+			if((userConditionTable.conditionBitMap->Test(cvId)) &&
+					(userConditionTable.conditions[cvId].addrSpace == oldAddrSpace))
+			{
+				DestroyCondition_Syscall(cvId);
+			}
+		}
+
+		userConditionTableLock->Release();
+
 		interrupt->Halt();
 	}
 
