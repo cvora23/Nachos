@@ -702,29 +702,8 @@ void Print1_Syscall(unsigned int vaddr,int arg1)
 	}
 	printBuf[MAX_CHAR_PRINTF] = '\0';
 	printf(printBuf, arg1);
-	printf("PROCESS ID: %d \n",currentThread->space->processId);
+	//printf("PROCESS ID: %d \n",currentThread->space->processId);
 }
-
-void SafePrint1_Syscall(int vaddr,int arg1)
-{
-	memset(safePrintBuf,0,MAX_CHAR_PRINTF);
-    int *paddr = new int;
-	safePrintBuf[MAX_CHAR_PRINTF - 1] = '\0';
-	int size = 0;
-	do
-	{
-		machine->ReadMem(vaddr,sizeof(char),paddr);
-		safePrintBuf[size] = (char)*paddr;
-		vaddr+=sizeof(char);
-		size++;
-	}while(size<(MAX_CHAR_PRINTF-1) && safePrintBuf[size-1] != '\0');
-
-	size--;
-	DEBUG('a',"Size of String passed = %d \n",size);
-	printf(safePrintBuf, arg1);
-	bzero(safePrintBuf,sizeof(char)*MAX_CHAR_PRINTF);
-}
-
 
 void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
 {
@@ -737,7 +716,7 @@ void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
 		return;
 	}
 	printBuf[MAX_CHAR_PRINTF] = '\0';
-	printf(printBuf, arg1, arg2);
+	//printf(printBuf, arg1, arg2);
 	printf("PROCESS ID: %d \n",currentThread->space->processId);
 }
 
@@ -753,7 +732,7 @@ void Print3_Syscall(unsigned int vaddr,int arg1,int arg2,int arg3)
 	}
 	printBuf[MAX_CHAR_PRINTF] = '\0';
 	printf(printBuf, arg1, arg2,arg3);
-	printf("PROCESS ID: %d \n",currentThread->space->processId);
+	//printf("PROCESS ID: %d \n",currentThread->space->processId);
 }
 
 int Scan_Syscall()
@@ -1156,13 +1135,6 @@ void ExceptionHandler(ExceptionType which) {
 	    {
 	    	DEBUG('a',"Print1 syscall \n");
 	    	Print1_Syscall(arg1,arg2);
-	    }
-	    break;
-
-	    case SC_SafePrint1:
-	    {
-	    	DEBUG('a',"Print1 syscall \n");
-	    	SafePrint1_Syscall(arg1,arg2);
 	    }
 	    break;
 
