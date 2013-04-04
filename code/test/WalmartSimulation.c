@@ -37,7 +37,6 @@
 /**
  * STORE MANAGEMENT INFO
  */
-
 #ifndef NO_OF_MANAGERS
 #define NO_OF_MANAGERS									1
 #endif
@@ -54,7 +53,7 @@
 #endif
 
 #ifndef NO_OF_CUSTOMERS
-#define NO_OF_CUSTOMERS									5
+#define NO_OF_CUSTOMERS									20
 #endif
 
 /*************************************DEFINES DECLARATION**********************************************/
