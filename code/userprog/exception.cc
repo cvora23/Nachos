@@ -702,7 +702,7 @@ void Print1_Syscall(unsigned int vaddr,int arg1)
 	}
 	printBuf[MAX_CHAR_PRINTF] = '\0';
 	printf(printBuf, arg1);
-
+	printf("PROCESS ID: %d \n",currentThread->space->processId);
 }
 
 void SafePrint1_Syscall(int vaddr,int arg1)
@@ -738,6 +738,7 @@ void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
 	}
 	printBuf[MAX_CHAR_PRINTF] = '\0';
 	printf(printBuf, arg1, arg2);
+	printf("PROCESS ID: %d \n",currentThread->space->processId);
 }
 
 void Print3_Syscall(unsigned int vaddr,int arg1,int arg2,int arg3)
@@ -752,6 +753,7 @@ void Print3_Syscall(unsigned int vaddr,int arg1,int arg2,int arg3)
 	}
 	printBuf[MAX_CHAR_PRINTF] = '\0';
 	printf(printBuf, arg1, arg2,arg3);
+	printf("PROCESS ID: %d \n",currentThread->space->processId);
 }
 
 int Scan_Syscall()

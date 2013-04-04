@@ -579,7 +579,7 @@ void CustomerThread()
 		{
 			g_itemInfo[currentItemNoFromShoppingList].noOfItems -= currentItemNoCountFromShoppingList;
 			Acquire(printLock);
-			Print3("CUSTOMER %d has found ITEM_%d and placed ITEM_%d in the trolley \n",ThreadId,
+			Print3("CUSTOMER %d has placed %d ITEM_%d's in the trolley \n",ThreadId,
 					currentItemNoFromShoppingList,currentItemNoCountFromShoppingList);
 			Release(printLock);
 			Release(g_shelfAccessLock[currentItemNoFromShoppingList]);
