@@ -1850,7 +1850,7 @@ void printCvForSimulation()
 int main()
 {
 
-#if 0
+#if 1
 	int configRetVal;
 	int i;
 
