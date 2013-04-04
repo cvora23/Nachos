@@ -953,6 +953,7 @@ void Exit_Syscall(int status)
 	else if(((processTableArray[(currentThread->space)->processId].totalThreads) == 1) &&
 			((processTableArray[(currentThread->space)->processId].activeThreadCounter) == 1))
 	{
+		printf("Exit_Syscall : Last executing thread of the process, but not the last process \n");
 		int numPages = (currentThread->space)->numPages;
 		AddrSpace *oldAddrSpace = currentThread->space;
 
@@ -1009,6 +1010,7 @@ void Exit_Syscall(int status)
 
 	else
 	{
+		printf("Exit_Syscall : NOT Last executing thread of the process, but not the last process \n");
 		(currentThread->space)->pageTableLock->Acquire();
 		processTableArray[(currentThread->space)->processId].activeThreadCounter--;
 		processTableArray[(currentThread->space)->processId].totalThreads--;
