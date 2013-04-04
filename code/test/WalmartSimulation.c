@@ -1850,7 +1850,10 @@ void printCvForSimulation()
 void main(const char* testOption)
 {
 
-#if 0	int configRetVal;
+
+
+#if 0
+	int configRetVal;
 	int i;
 
 	printLock = CreateLock("printLock",sizeof("printLock"));
