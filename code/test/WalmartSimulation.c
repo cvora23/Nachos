@@ -431,11 +431,22 @@ void printManagerInfo(int managerId)
 
 void CustomerThread()
 {
+    int ThreadId;
+	Acquire(g_customerThreadCounterLock);
+	ThreadId = g_customerThreadCounter;
+	g_customerThreadCounter++;
+	Release(g_customerThreadCounterLock);
 
+	Acquire(printLock);
+    Print1("CUSTOMER %d enters the SuperMarket !!!!!!! \n",ThreadId);
+    Release(printLock);
+
+
+#if 0
     /**
      * Local Variable for Customer Thread.
      */
-    int ThreadId;
+
     int currentItemNoFromShoppingList;
     int currentItemNoCountFromShoppingList;
     int currentDepartmentNoForItem;
@@ -449,16 +460,7 @@ void CustomerThread()
 	int i;
 	int salesmanIndex;
 
-	Acquire(g_customerThreadCounterLock);
-	ThreadId = g_customerThreadCounter;
-	g_customerThreadCounter++;
-	Release(g_customerThreadCounterLock);
-
-	Acquire(printLock);
-    Print1("CUSTOMER %d enters the SuperMarket !!!!!!! \n",ThreadId);
-    Release(printLock);
-
-    /*************************************CUSTOMER-TROLLEY INTERACTION STARTS HERE*********************************************/
+	    /*************************************CUSTOMER-TROLLEY INTERACTION STARTS HERE*********************************************/
 
     Acquire(g_customerTrolleyLock);
 	Acquire(printLock);
@@ -864,28 +866,40 @@ void CustomerThread()
     g_noOfCustomersLeft++;
     Release(g_customerTrolleyLock);
 
+#endif
+
+	Acquire(printLock);
+    Print1("CUSTOMER %d exits !!!!!!! \n",ThreadId);
+    Release(printLock);
+
     Exit(0);
 }
 
 void SalesmanThread()
 {
 	int ThreadId;
-    int myGoodsLoader = -1;
-	int goodLoaderIndex;
-	int myDepartmentNo;
-
 	Acquire(g_salesmanThreadCounterLock);
 	ThreadId = g_salesmanThreadCounter;
 	g_salesmanThreadCounter++;
 	Release(g_salesmanThreadCounterLock);
-
-	myDepartmentNo = g_salesmanInfo[ThreadId].departmentNo;
-
 	Acquire(printLock);
     Print1( "SALESMAN %d Started !!!!!!! \n",ThreadId);
     Print2("SALESMAN %d will be working for DEPARTMENT_%d \n",
     		ThreadId,g_salesmanInfo[ThreadId].departmentNo);
     Release(printLock);
+
+
+#if 0
+
+    int myGoodsLoader = -1;
+	int goodLoaderIndex;
+	int myDepartmentNo;
+
+
+
+	myDepartmentNo = g_salesmanInfo[ThreadId].departmentNo;
+
+
 
     while(!simulationEnd)
     {
@@ -1227,16 +1241,17 @@ void SalesmanThread()
     		Release(g_customerDepartmentComplainLock[myDepartmentNo]);
     	}
     }
-
+#endif
+	Acquire(printLock);
+    Print1("SALESMAN %d exits !!!!!!! \n",ThreadId);
+    Release(printLock);
 	Exit(0);
 }
 
 void GoodLoaderThread()
 {
-    int mySalesman = -1;
-    int ThreadId;
-    int i;
 
+    int ThreadId;
 	Acquire(g_goodsLoaderThreadCounterLock);
 	ThreadId = g_goodsLoaderThreadCounter;
 	g_goodsLoaderThreadCounter++;
@@ -1244,6 +1259,14 @@ void GoodLoaderThread()
 	Acquire(printLock);
 	Print1("GOODSLOADER %d Started !!!!!!!\n",ThreadId);
 	Release(printLock);
+
+#if 0
+
+    int mySalesman = -1;
+    int ThreadId;
+    int i;
+
+
     while(!simulationEnd)
     {
     	int goodsLoaderWalkingTime;
@@ -1363,6 +1386,12 @@ void GoodLoaderThread()
     	}
     }
 
+#endif
+
+	Acquire(printLock);
+    Print1("GOODS LOADER %d exits !!!!!!! \n",ThreadId);
+    Release(printLock);
+
 	Exit(0);
 
 }
@@ -1372,12 +1401,6 @@ void CashierThread()
 {
 
 	int ThreadId;
-	int myCustomer = -1;
-	int totalBill = 0;
-    int currentItemNoFromShoppingList;
-    int currentItemNoCountFromShoppingList;
-    int currentItemNoPriceFromShoppingList;
-	int i;
 
 	Acquire(g_cashierThreadCounterLock);
 	ThreadId = g_cashierThreadCounter;
@@ -1387,6 +1410,16 @@ void CashierThread()
 	Acquire(printLock);
     Print1( "CASHIER %d Started \n",ThreadId);
     Release(printLock);
+
+#if 0
+	int myCustomer = -1;
+	int totalBill = 0;
+    int currentItemNoFromShoppingList;
+    int currentItemNoCountFromShoppingList;
+    int currentItemNoPriceFromShoppingList;
+	int i;
+
+
 
     while(!simulationEnd)
     {
@@ -1502,6 +1535,12 @@ void CashierThread()
     	Release(g_customerCashierLock[ThreadId]);
 
     }
+#endif
+
+
+	Acquire(printLock);
+    Print1("CASHIER %d exits !!!!!!! \n",ThreadId);
+    Release(printLock);
 
 	Exit(0);
 
@@ -1510,6 +1549,11 @@ void CashierThread()
 void ManagerThread()
 {
     int ThreadId = 0;
+
+	Acquire(printLock);
+	Print1( "MANAGER %d Started  \n",ThreadId);
+	Release(printLock);
+#if 0
     int managerSales = 0;
     int itemRemoveCounter = 0;
 	int currentItemNoToRemove = 0;
@@ -1517,9 +1561,7 @@ void ManagerThread()
 	int currentItemNoToRemovePrice = 0;
 	int i;
 
-	Acquire(printLock);
-	Print1( "MANAGER %d Started  \n",ThreadId);
-	Release(printLock);
+
 
     while(!simulationEnd)
     {
@@ -1623,6 +1665,12 @@ void ManagerThread()
     		Yield();
     	}
     }
+
+#endif
+
+	Acquire(printLock);
+    Print1("MANAGER %d exits !!!!!!! \n",ThreadId);
+    Release(printLock);
 
     Exit(0);
 }
