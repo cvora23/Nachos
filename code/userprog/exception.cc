@@ -804,6 +804,8 @@ void Fork_Syscall(unsigned int vaddr)
 	    	mainMemoryAccessLock->Release();
 			interrupt->Halt();
     	}
+		DEBUG('b',"Found Physical Page %d for Process %d from Main Memory Bit Map \n",
+				tempPageTable[i].physicalPage,(currentThread->space)->processId);
     	tempPageTable[i].valid = TRUE;
     	tempPageTable[i].use = FALSE;
     	tempPageTable[i].dirty = FALSE;
@@ -943,6 +945,8 @@ void Exit_Syscall(int status)
 		{
 			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
 			mainMemoryBitMap->Clear(physPageToClear);
+			DEBUG('b',"Found Physical Page %d for Process %d from Main Memory Bit Map \n",
+					physPageToClear,(currentThread->space)->processId);
 		}
 
 		mainMemoryAccessLock->Release();
@@ -997,6 +1001,8 @@ void Exit_Syscall(int status)
 		{
 			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
 			mainMemoryBitMap->Clear(physPageToClear);
+			DEBUG('b',"Found Physical Page %d for Process %d from Main Memory Bit Map \n",
+					physPageToClear,(currentThread->space)->processId);
 		}
 
 		mainMemoryAccessLock->Release();

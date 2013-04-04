@@ -196,6 +196,8 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 	    	mainMemoryAccessLock->Release();
 			interrupt->Halt();
 		}
+		DEBUG('b',"Found Physical Page %d for Process %d from Main Memory Bit Map \n",
+				pageTable[i].physicalPage,processId);
 		//bzero(machine->mainMemory + pageTable[i].physicalPage* PageSize,PageSize);
 		DEBUG('a',"Initializing PHYSICAL PAGE = %d, VIRTUAL PAGE = %d \n",pageTable[i].physicalPage,i);
 		pageTable[i].valid = TRUE;
