@@ -1849,7 +1849,8 @@ void printCvForSimulation()
 
 void main(const char* testOption)
 {
-	int configRetVal;
+
+#if 0	int configRetVal;
 	int i;
 
 	printLock = CreateLock("printLock",sizeof("printLock"));
@@ -1918,7 +1919,6 @@ void main(const char* testOption)
     	Fork(CustomerThread);
     }
 
-#if 0
 
 #endif
 
