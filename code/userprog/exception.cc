@@ -716,8 +716,8 @@ void Print2_Syscall(unsigned int vaddr,int arg1,int arg2)
 		return;
 	}
 	printBuf[MAX_CHAR_PRINTF] = '\0';
-	//printf(printBuf, arg1, arg2);
-	printf("PROCESS ID: %d \n",currentThread->space->processId);
+	printf(printBuf, arg1, arg2);
+	//printf("PROCESS ID: %d \n",currentThread->space->processId);
 }
 
 void Print3_Syscall(unsigned int vaddr,int arg1,int arg2,int arg3)
