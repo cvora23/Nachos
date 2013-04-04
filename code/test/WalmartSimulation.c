@@ -888,7 +888,7 @@ void SalesmanThread()
     		ThreadId,g_salesmanInfo[ThreadId].departmentNo);
     Release(printLock);
 
-    while(1)
+    while(!simulationEnd)
     {
     	Acquire(g_customerDepartmentLock[myDepartmentNo]);
 
@@ -1228,6 +1228,8 @@ void SalesmanThread()
     		Release(g_customerDepartmentComplainLock[myDepartmentNo]);
     	}
     }
+
+	Exit(0);
 }
 
 void GoodLoaderThread()
@@ -1243,7 +1245,7 @@ void GoodLoaderThread()
 	Acquire(printLock);
 	Print1("GOODSLOADER %d Started !!!!!!!\n",ThreadId);
 	Release(printLock);
-    while(1)
+    while(!simulationEnd)
     {
     	int goodsLoaderWalkingTime;
     	goodsLoaderWalkingTime = GetRand()%(MAX_GOODS_LOADER_WALKINGTIME-MIN_GOODS_LOADER_WALKINGTIME) +
@@ -1361,6 +1363,9 @@ void GoodLoaderThread()
     		Release(g_goodLoaderWaitLock[0]);
     	}
     }
+
+	Exit(0);
+
 }
 
 
@@ -1384,7 +1389,7 @@ void CashierThread()
     Print1( "CASHIER %d Started \n",ThreadId);
     Release(printLock);
 
-    while(1)
+    while(!simulationEnd)
     {
     	myCustomer = -1;
     	totalBill = 0;
@@ -1498,6 +1503,9 @@ void CashierThread()
     	Release(g_customerCashierLock[ThreadId]);
 
     }
+
+	Exit(0);
+
 }
 
 void ManagerThread()
