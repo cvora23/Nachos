@@ -166,6 +166,7 @@ CashierInfo		g_cashierInfo[NO_OF_CASHIERS];
 ManagerInfo		g_managerInfo;
 
 int g_noOfCustomersLeft = 0;
+int g_customerListLeft[NO_OF_CUSTOMERS];
 int simulationEnd = 0;
 
 int g_customerThreadCounter = 0;
@@ -175,6 +176,8 @@ int g_cashierThreadCounter = 0;
 
 /*****************************************LOCKS**************************************************************/
 unsigned int printLock;
+
+unsigned int g_customersLeftLock;
 
 unsigned int g_customerThreadCounterLock;
 unsigned int g_salesmanThreadCounterLock;
@@ -427,6 +430,20 @@ void initManagerInfo()
 void printManagerInfo(int managerId)
 {
 
+}
+
+void printCustomerLeftList()
+{
+	int i;
+	Print("CUTOMER WHO HAS NOT LEFT YET ARE AS FOLLOWS: \n");
+	for(i=0;i<NO_OF_CUSTOMERS;i++)
+	{
+		if(g_customerListLeft[i] == 0)
+		{
+			Print1("%d \n",g_customerListLeft[i]);
+		}
+	}
+	Print1("NO OF CUSTOMERS LEFT SO FAR ARE %d \n",g_noOfCustomersLeft);
 }
 
 void CustomerThread()
@@ -864,8 +881,12 @@ void CustomerThread()
     {
     	Signal(g_customerTrolleyCV,g_customerTrolleyLock);
     }
-    g_noOfCustomersLeft++;
     Release(g_customerTrolleyLock);
+
+    Acquire(g_customersLeftLock);
+    g_noOfCustomersLeft++;
+    g_customerListLeft[ThreadId] = 1;
+    Release(g_customersLeftLock);
 
 #endif
 
@@ -1590,18 +1611,24 @@ void ManagerThread()
 
     	Acquire(printLock);
     	Print1("Total Sale of the entire store until now is $ %d \n",g_managerInfo.totalRevenue);
-    	Print1("NO OF CUSTOMERS LEFT SO FAR ARE %d \n",g_noOfCustomersLeft);
+
+        Acquire(g_customersLeftLock);
+        printCustomerLeftList();
+        Release(g_customersLeftLock);
+
     	Release(printLock);
 
     	Acquire(g_managerCashierLock);
     	if(g_managerWaitQueueLength == 0)
     	{
+            Acquire(g_customersLeftLock);
     		Release(g_managerCashierLock);
     	    if(g_noOfCustomersLeft == NO_OF_CUSTOMERS)
     	    {
     	    	simulationEnd = 1;
     	    	Print("MANAGER HAS THE LAST SAY... END OF SIMULATION \n");
     	    }
+            Release(g_customersLeftLock);
     	}
     	else
     	{
@@ -1687,6 +1714,7 @@ void initLockForSimulation()
 {
 	int i;
 
+	g_customersLeftLock = CreateLock("CustomersLeftLock",sizeof("CustomersLeftLock"));
 	g_customerThreadCounterLock = CreateLock("CustomerThreadCounterLock",sizeof("CustomerThreadCounterLock"));
 	g_salesmanThreadCounterLock = CreateLock("SalesmanThreadCounterLock",sizeof("SalesmanThreadCounterLock"));
 	g_goodsLoaderThreadCounterLock = CreateLock("GoodsLoaderThreadCounterLock",sizeof("GoodsLoaderThreadCounterLock"));
@@ -1810,6 +1838,11 @@ void initWaitQueueForSimulation()
 	for(i=0;i<NO_OF_GOODLOADER_WAIT_QUEUE;i++)
 	{
         g_goodLoaderWaitQueue[i] = 0;
+	}
+
+	for(i=0;i<NO_OF_CUSTOMERS;i++)
+	{
+		g_customerListLeft[i] = 0;
 	}
 }
 
