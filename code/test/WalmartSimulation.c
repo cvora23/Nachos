@@ -440,7 +440,7 @@ void printCustomerLeftList()
 	{
 		if(g_customerListLeft[i] == 0)
 		{
-			Print1("%d \n",g_customerListLeft[i]);
+			Print1("%d \n",i);
 		}
 	}
 	Print1("NO OF CUSTOMERS LEFT SO FAR ARE %d \n",g_noOfCustomersLeft);
