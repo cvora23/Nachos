@@ -458,7 +458,6 @@ void CustomerThread()
     Print1("CUSTOMER %d enters the SuperMarket !!!!!!! \n",ThreadId);
     Release(printLock);
 
-
 #if 1
 
 
@@ -1591,6 +1590,7 @@ void ManagerThread()
 
     	Acquire(printLock);
     	Print1("Total Sale of the entire store until now is $ %d \n",g_managerInfo.totalRevenue);
+    	Print1("NO OF CUSTOMERS LEFT SO FAR ARE %d \n",g_noOfCustomersLeft);
     	Release(printLock);
 
     	Acquire(g_managerCashierLock);
