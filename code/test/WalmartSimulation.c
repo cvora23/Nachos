@@ -1256,7 +1256,6 @@ void GoodLoaderThread()
 
     int ThreadId;
     int mySalesman = -1;
-    int ThreadId;
     int i;
 
 
