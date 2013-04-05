@@ -599,7 +599,7 @@ void CustomerThread()
 			g_itemInfo[currentItemNoFromShoppingList].noOfItems -= currentItemNoCountFromShoppingList;
 			Acquire(printLock);
 			Print3("CUSTOMER %d has placed %d ITEM_%d's in the trolley \n",ThreadId,
-					currentItemNoFromShoppingList,currentItemNoCountFromShoppingList);
+					currentItemNoCountFromShoppingList,currentItemNoFromShoppingList);
 			Release(printLock);
 			Release(g_shelfAccessLock[currentItemNoFromShoppingList]);
 		}
@@ -1139,8 +1139,10 @@ void SalesmanThread()
     			Print1("SALESMAN %d is checking if INITIAL RESPONSE is not regarding RE-STOCK of Item in NO WAIT QUEUE\n",
     					ThreadId);
     			Release(printLock);
-    			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptWaitQueue;
 
+#if 0
+    			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptWaitQueue;
+#endif
     			Signal(g_customerSalesmanCV[ThreadId],g_customerSalesmanLock[ThreadId]);
     			Acquire(printLock);
         		Print2("SALESMAN %d SENDING RESPONSE to CUSTOMER_%d in NO WAIT QUEUE \n",
@@ -1163,9 +1165,9 @@ void SalesmanThread()
     			Acquire(printLock);
     			Print1("SALESMAN %d is IF INITIAL RESPONSE is regarding RE-STOCK of Item in NO WAIT QUEUE\n",ThreadId);
     			Release(printLock);
-
+#if 0
     			g_salesmanInfo[ThreadId].status = salesmanSignalToCustomerFromDeptComplainWaitQueue;
-
+#endif
         		for(goodLoaderIndex=0;goodLoaderIndex<NO_OF_GOOD_LOADERS;goodLoaderIndex++)
         		{
         			Acquire(g_salesmanGoodsLoaderLock[goodLoaderIndex]);
