@@ -822,7 +822,7 @@ void Fork_Syscall(unsigned int vaddr)
 		 */
 
 		tempPageTable[i].location = (currentThread->space)->pageTable[i].location;
-		tempPageTable[i].byteOffSet = (currentThread->space)->pageTable[i].byteOffset;
+		tempPageTable[i].byteOffSet = (currentThread->space)->pageTable[i].byteOffSet;
 
 		/**
 		 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
