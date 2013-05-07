@@ -22,6 +22,27 @@
 #define MaxOpenFiles 256
 #define MaxChildSpaces 256
 
+/**
+ * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+ */
+typedef enum pageLocation
+{
+	EXECUTABLE,
+	SWAPFILE,
+	NEITHER
+};
+
+class newTranslationEntry : public TranslationEntry
+{
+public:
+	int byteOffset;
+	pageLocation location;
+};
+
+/**
+ * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+ */
+
 class AddrSpace {
   public:
     AddrSpace(OpenFile *executable);	// Create an address space,
@@ -43,10 +64,30 @@ class AddrSpace {
     unsigned int numCodeDataPages;
 
     Lock *pageTableLock;
+
+#ifdef PROJECT2
     TranslationEntry *pageTable;	// Assume linear page table translation
     								// for now!
+#endif
+
+
+    /**
+     * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+     */
+
+    newTranslationEntry* pageTable;
+    OpenFile* executableFilePointer;
+    unsigned int codeSize;
+
+    /**
+     * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+     */
+
     unsigned int numPages;			// Number of pages in the virtual
 									// address space
+
+
+
 };
 
 #endif // ADDRSPACE_H

@@ -6,7 +6,7 @@ IMPLEMENTATION STEPS:
 
 2: Making Sure NumPhysPages = 32. - DONE !!!!
 
-3: Implement IPT - Updated Translation Entry Class.
+3: Implement IPT - Updated Translation Entry Class. - DONE !!!!!!
     POPULATE IPT code to
       a: Address Space constructor.
       b: Fork Syscall 

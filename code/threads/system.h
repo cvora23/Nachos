@@ -49,7 +49,11 @@ extern Machine* machine;	// user program memory and registers
 #define MAX_PROCESS_NAME_LEN		256
 #define SWAPFILEBITMAP_SIZE 		10000
 
-
+typedef enum _PageEvictionPolicy
+{
+	FIFO = 0,
+	RANDOM
+};
 
 typedef struct _UserLock
 {

@@ -122,7 +122,13 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
     NoffHeader noffH;
     unsigned int size;
     int newProcessId;
-
+    /**
+     * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+     */
+    executableFilePointer = executable;
+    /**
+     * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+     */
     processTableAccessLock->Acquire();
 
     if((newProcessId = processTableBitMap->Find()) == -1)
@@ -162,11 +168,12 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
     size = numPages * PageSize;
     addrSpaceSize = size;
 
+#ifdef PROJECT2
     ASSERT(numPages + totalPagesReserved <= NumPhysPages);		// check we're not trying
 						// to run anything too big --
 						// at least until we have
 						// virtual memory
-
+#endif
     // zero out the entire address space, to zero the uninitialized data segment
     // and the stack segment
     //
@@ -179,16 +186,35 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 
     pageTableLock->Acquire();
 
+#ifdef PROJECT2
 // first, set up the translation 
     pageTable = new TranslationEntry[numPages];
+#endif
+    /**
+     * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+     */
+    pageTable = new newTranslationEntry[numPages];
+
+    /**
+     * 1: Nothing gets pre-loaded into main Memory..
+     * 2: Will wait for Page Fault Exception and then handle page fault exceptions
+     */
+
+    /**
+     * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+     */
     for (unsigned int i = 0; i < numPages; i++)
     {
+#ifdef PROJECT2
     	mainMemoryAccessLock->Acquire();
+#endif
 		pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
 
 #if 0
 		pageTable[i].physicalPage = i;
 #endif
+
+#ifdef PROJECT2
 		pageTable[i].physicalPage = mainMemoryBitMap->Find();
 		if(pageTable[i].physicalPage == -1)
 		{
@@ -200,12 +226,28 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 				pageTable[i].physicalPage,processId);
 		//bzero(machine->mainMemory + pageTable[i].physicalPage* PageSize,PageSize);
 		DEBUG('a',"Initializing PHYSICAL PAGE = %d, VIRTUAL PAGE = %d \n",pageTable[i].physicalPage,i);
+#endif
+
+		if(i < numCodeDataPages)
+		{
+			pageTable[i].physicalPage = -1;
+		}
+#ifdef PROJECT2
 		pageTable[i].valid = TRUE;
+#endif
+	    /**
+	     * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+	     */
+		pageTable[i].valid = FALSE;
+	    /**
+	     * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+	     */
 		pageTable[i].use = FALSE;
 		pageTable[i].dirty = FALSE;
 		pageTable[i].readOnly = FALSE;  // if the code segment was entirely on
 						// a separate page, we could set its
 						// pages to be read-only
+#ifdef PROJECT2
 		if(i<numCodeDataPages)
 		{
 	    	executable->ReadAt(&(machine->mainMemory[pageTable[i].physicalPage*PageSize]),
@@ -216,6 +258,28 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 			totalPagesReserved++;
 		}
 		mainMemoryAccessLock->Release();
+#endif
+
+	    /**
+	     * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+	     */
+
+		if(i < numCodeDataPages)
+		{
+			pageTable[i].location = EXECUTABLE;
+			pageTable[i].byteOffset = noffH.code.inFileAddr + (i*PageSize);
+		}
+		else
+		{
+			pageTable[i].location = NEITHER;
+		}
+
+
+	    /**
+	     * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+	     */
+
+
     }
 
     pageTableLock->Release();
@@ -319,6 +383,8 @@ void AddrSpace::SaveState()
 
 void AddrSpace::RestoreState() 
 {
+#ifdef PROJECT2
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
+#endif
 }

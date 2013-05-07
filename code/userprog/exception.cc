@@ -33,6 +33,8 @@ extern "C" { int bzero(char *, int); };
 
 char safePrintBuf[MAX_CHAR_PRINTF];
 
+int currentTLB = -1;
+
 int copyin(unsigned int vaddr, int len, char *buf) {
     // Copy len bytes from the current thread's virtual address vaddr.
     // Return the number of bytes so read, or -1 if an error occors.
@@ -762,7 +764,20 @@ void newKernelThread(unsigned int vaddr)
 void Fork_Syscall(unsigned int vaddr)
 {
 	int numPages;
+#ifdef PROJECT2
 	TranslationEntry* tempPageTableForDel;
+#endif
+
+	/**
+	 * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+	 */
+
+	newTranslationEntry* tempPageTableForDel;
+
+	/**
+	 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+	 */
+
 
 	if(vaddr > currentThread->space->addrSpaceSize)
 	{
@@ -776,7 +791,19 @@ void Fork_Syscall(unsigned int vaddr)
 
 	numPages = (currentThread->space)->numPages;
 
+#ifdef PROJECT2
 	TranslationEntry* tempPageTable = new TranslationEntry[numPages + 8];
+#endif
+
+	/**
+	 * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+	 */
+
+	newTranslationEntry* tempPageTable = new newTranslationEntry[numPages + 8];
+
+	/**
+	 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+	 */
 
     for (int i = 0; i < numPages; i++)
     {
@@ -789,8 +816,21 @@ void Fork_Syscall(unsigned int vaddr)
 						// if the code segment was entirely on
 						// a separate page, we could set its
 						// pages to be read-only
+
+		/**
+		 * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+		 */
+
+		tempPageTable[i].location = (currentThread->space)->pageTable[i].location;
+		tempPageTable[i].byteOffset = (currentThread->space)->pageTable[i].byteOffset;
+
+		/**
+		 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+		 */
+
     }
 
+#ifdef PROJECT2
 	mainMemoryAccessLock->Acquire();
 
     for(int i = numPages;i<numPages+8;i++)
@@ -816,6 +856,29 @@ void Fork_Syscall(unsigned int vaddr)
     }
 
 	mainMemoryAccessLock->Release();
+#endif
+
+	/**
+	 * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+	 */
+
+    for(int i = numPages;i<numPages+8;i++)
+    {
+    	tempPageTable[i].virtualPage = i;
+    	tempPageTable[i].physicalPage = -1;
+    	tempPageTable[i].valid = FALSE;
+    	tempPageTable[i].use = FALSE;
+    	tempPageTable[i].dirty = FALSE;
+    	tempPageTable[i].readOnly = FALSE;
+    	tempPageTable[i].location = NEITHER;
+    	tempPageTable[i].byteOffset = -100;
+
+    }
+
+
+	/**
+	 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+	 */
 
     (currentThread->space)->numPages = numPages + 8;
     (currentThread->space)->addrSpaceSize = (currentThread->space)->numPages * PageSize;
@@ -900,8 +963,10 @@ SpaceId Exec_Syscall(unsigned int vaddr,int len)
 	firstNewThreadForExecProcess->threadId = 0;
 	firstNewThreadForExecProcess->stackRegVirtualPage = (firstNewThreadForExecProcess->space)->numPages;
 
+#ifdef PROJECT2
 	delete executable;
 	delete [] execBuf;
+#endif
 
 	DEBUG('a',"Process %d Thread %d Exec_Syscall: New Process created with Process Id \n",
 			currentThread->space->processId,currentThread->threadId,
@@ -929,7 +994,7 @@ void Exit_Syscall(int status)
 	{
 		printf("Exit_Syscall : Process %d Thread %d : Last thread of last process exiting.... BYE BYE NACHOS !!!!\n",
 				currentThread->space->processId,currentThread->threadId);
-
+#ifdef PROJECT2
 		int numPages = (currentThread->space)->numPages;
 		AddrSpace *oldAddrSpace = currentThread->space;
 
@@ -982,7 +1047,7 @@ void Exit_Syscall(int status)
 		}
 
 		userConditionTableLock->Release();
-
+#endif
 		interrupt->Halt();
 	}
 
@@ -990,10 +1055,22 @@ void Exit_Syscall(int status)
 			((processTableArray[(currentThread->space)->processId].activeThreadCounter) == 1))
 	{
 		printf("Exit_Syscall : Last executing thread of the process, but not the last process \n");
+
+
 		int numPages = (currentThread->space)->numPages;
 		AddrSpace *oldAddrSpace = currentThread->space;
 
 		(currentThread->space)->pageTableLock->Acquire();
+
+		/**
+		 * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+		 */
+		IPTLock->Acquire();
+
+		/**
+		 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+		 */
+
 		mainMemoryAccessLock->Acquire();
 
 		for(int i=0;i<numPages;i++)
@@ -1005,9 +1082,24 @@ void Exit_Syscall(int status)
 				DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
 					physPageToClear,(currentThread->space)->processId);
 			}
+			/**
+			 * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+			 */
+			IPT[physPageToClear].valid = FALSE;
+			/**
+			 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+			 */
 		}
 
 		mainMemoryAccessLock->Release();
+
+		/**
+		 * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+		 */
+		IPTLock->Release();
+		/**
+		 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+		 */
 
 		processTableBitMap->Clear((currentThread->space)->processId);
 
@@ -1053,6 +1145,14 @@ void Exit_Syscall(int status)
 		processTableArray[(currentThread->space)->processId].activeThreadCounter--;
 		processTableArray[(currentThread->space)->processId].totalThreads--;
 
+		/**
+		 * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+		 */
+		IPTLock->Acquire();
+		/**
+		 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+		 */
+
 		mainMemoryAccessLock->Acquire();
 
 		for(int i = (currentThread->stackRegVirtualPage)-8;i<(currentThread->stackRegVirtualPage);i++)
@@ -1064,9 +1164,26 @@ void Exit_Syscall(int status)
 				DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
 					physPageToClear,(currentThread->space)->processId);
 			}
+
+			/**
+			 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+			 */
+			IPT[physPageToClear].valid = FALSE;
+			/**
+			 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+			 */
+
 		}
 
 		mainMemoryAccessLock->Release();
+
+		/**
+		 * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+		 */
+		IPTLock->Release();
+		/**
+		 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+		 */
 
 		(currentThread->space)->pageTableLock->Release();
 
@@ -1084,6 +1201,216 @@ int GetRand_Syscall()
 	return returnScanVal;
 }
 
+int evictAPage()
+{
+	int evictedPage;
+
+	IPTLock->Acquire();
+
+	if(evictedPage == 0)
+	{
+		evictedPage = (int)pageEvictionQueue->Remove();
+	}
+	else
+	{
+		evictedPage = rand()%NumPhysPages;
+	}
+
+	IntStatus old = interrupt->SetLevel(IntOff);
+	for(int i=0;i<TLBSize;i++)
+	{
+		if(machine->tlb[i].physicalPage == evictedPage && machine->tlb[i].valid == TRUE)
+		{
+			machine->tlb[i].valid = FALSE;
+			IPT[evictedPage].dirty=machine->tlb[i].dirty;
+		}
+	}
+	interrupt->SetLevel(old);
+
+	IPT[evictedPage].valid = FALSE;
+
+	if(IPT[evictedPage].dirty == TRUE)
+	{
+		if((processTableArray[IPT[evictedPage].processId].addrSpace)->pageTable[IPT[evictedPage].virtualPage].location == SWAPFILE)
+		{
+			swapFile->WriteAt(&(machine->mainMemory[evictedPage*PageSize]),PageSize,\
+					((processTableArray[IPT[evictedPage].processId].addrSpace)->pageTable[IPT[evictedPage].virtualPage].byteOffSet));
+		}
+		else
+		{
+			swapFileBitMapLock->Acquire();
+
+			int swapFileLocation;
+
+			if((swapFileLocation = swapFileBitMap->Find()) == -1)
+			{
+				printf("\n\n---------------------\n  NO MORE SPACE IN SWAP FILE.---------------------\n");
+				interrupt->Halt();
+			}
+			else
+			{
+				swapFileBitMapLock->Release();
+
+				(processTableArray[IPT[evictedPage].processId].addrSpace)->pageTable[IPT[evictedPage].virtualPage].location =
+						SWAPFILE;
+				(processTableArray[IPT[evictedPage].processId].addrSpace)->pageTable[IPT[evictedPage].virtualPage].byteOffSet =
+						swapFileLocation*PageSize;
+				swapFile->WriteAt(&(machine->mainMemory[evictedPage*PageSize]),PageSize,\
+						((processTableArray[IPT[evictedPage].processId].addrSpace)->pageTable[IPT[evictedPage].virtualPage].byteOffSet));
+			}
+		}
+	}
+
+	(processTableArray[IPT[evictedPage].processId].addrSpace)->pageTable[IPT[evictedPage].virtualPage].valid = FALSE;
+
+	IPTLock->Release();
+
+	return evictedPage;
+}
+
+int handleIPTMiss(int faultPageNo)
+{
+	int memIndex = -1;
+
+	processTableAccessLock->Acquire();
+
+	(currentThread->space)->pageTableLock->Acquire();
+
+	/**
+	 * faultPageNo or Virtual Address provided for a particular process is not
+	 * in Main Memory.
+	 */
+	if((currentThread->space)->pageTable[faultPageNo].valid == FALSE)
+	{
+		mainMemoryAccessLock->Acquire();
+
+		if((memIndex = mainMemoryBitMap->Find()) == -1)
+		{
+			mainMemoryAccessLock->Release();
+
+			memIndex = evictAPage();
+		}
+
+		mainMemoryAccessLock->Release();
+	}
+	else
+	{
+		/**
+		 * faultPageNo or Virtual Address provided for a particular process is in Main Memory.
+		 */
+		IPTLock->Acquire();
+
+		(currentThread->space)->pageTableLock->Release();
+		processTableAccessLock->Release();
+		return (currentThread->space)->pageTable[faultPageNo].physicalPage;
+	}
+
+	if(pageEvictionPolicy == FIFO)
+	{
+		pageEvictionQueue->Append((void*)memIndex);
+	}
+	else
+	{
+		/**
+		 * Do Nothing.
+		 */
+	}
+
+	if((currentThread->space)->pageTable[faultPageNo].location == EXECUTABLE)
+	{
+		// in executable file
+		(currentThread->space)->executableFilePointer->ReadAt(&(machine->mainMemory[memIndex*PageSize]),PageSize,
+				((currentThread->space)->pageTable[faultPageNo].byteOffset));
+		(currentThread->space)->pageTable[faultPageNo].valid = TRUE;
+		(currentThread->space)->pageTable[faultPageNo].physicalPage  = memIndex;
+	}
+	else if((currentThread->space)->pageTable[faultPageNo].location == SWAPFILE)
+	{
+		//in swap file
+		swapFile->ReadAt(&(machine->mainMemory[memIndex*PageSize]),PageSize,
+				((currentThread->space)->pageTable[faultPageNo].byteOffset));
+		(currentThread->space)->pageTable[faultPageNo].valid = TRUE;
+		(currentThread->space)->pageTable[faultPageNo].physicalPage  = memIndex;
+	}
+	else
+	{
+		//Update the page table entry.
+		(currentThread->space)->pageTable[faultPageNo].valid=TRUE;
+		(currentThread->space)->pageTable[faultPageNo].physicalPage=memIndex;
+	}
+
+	IPTLock->Acquire();
+
+	//Update the IPT Table with the page table entry
+	IPT[memIndex].virtualPage = (currentThread->space)->pageTable[faultPageNo].virtualPage;
+	IPT[memIndex].physicalPage = (currentThread->space)->pageTable[faultPageNo].physicalPage;
+	IPT[memIndex].valid = (currentThread->space)->pageTable[faultPageNo].valid;
+	IPT[memIndex].use = (currentThread->space)->pageTable[faultPageNo].use;
+	IPT[memIndex].dirty = (currentThread->space)->pageTable[faultPageNo].dirty;
+	IPT[memIndex].readOnly = (currentThread->space)->pageTable[faultPageNo].readOnly;
+	IPT[memIndex].processId = (currentThread->space)->processId;
+
+	(currentThread->space)->pageTableLock->Release();
+	processTableAccessLock->Release();
+
+	return memIndex;
+}
+
+void handlePageFault()
+{
+	int physicalPage = -1;
+
+	int faultPageNo = machine->ReadRegister(BadVAddrReg)/PageSize;
+
+	IPTLock->Acquire();
+
+	for(int i = 0;i<NumPhysPages;i++)
+	{
+		if((IPT[i].valid == TRUE) && (IPT[i].virtualPage == faultPageNo) && (IPT[i].processId == ((currentThread->space)->processId)) )
+		{
+			/**
+			 * IPT HIT
+			 */
+			physicalPage = i;
+			break;
+		}
+	}
+
+	if(physicalPage == -1)
+	{
+		/**
+		 * IPT MISS
+		 */
+		IPTLock->Release();
+
+		physicalPage = handleIPTMiss(faultPageNo);
+	}
+
+	/**
+	 * Update TLB if IPT MISS
+	 */
+
+	IntStatus old = interrupt->SetLevel(IntOff);
+
+	IPTLock->Release();
+
+	currentTLB = (currentTLB+1)%TLBSize;
+
+	if(machine->tlb[currentTLB].valid == TRUE)
+	{
+		IPT[machine->tlb[currentTLB].physicalPage].dirty=machine->tlb[currentTLB].dirty;
+	}
+	//populate the TLB. Get the values from the corresponding IPT index
+	machine->tlb[currentTLB].virtualPage = IPT[physicalPage].virtualPage;
+	machine->tlb[currentTLB].physicalPage = IPT[physicalPage].physicalPage;
+	machine->tlb[currentTLB].valid = IPT[physicalPage].valid;
+	machine->tlb[currentTLB].use = IPT[physicalPage].use;
+	machine->tlb[currentTLB].dirty = IPT[physicalPage].dirty;
+	machine->tlb[currentTLB].readOnly = IPT[physicalPage].readOnly;
+
+	//Restore the interrupts
+	interrupt->SetLevel(old);
+}
 
 void ExceptionHandler(ExceptionType which) {
     int type = machine->ReadRegister(2); // Which syscall?
@@ -1257,7 +1584,17 @@ void ExceptionHandler(ExceptionType which) {
 	machine->WriteRegister(PCReg,machine->ReadRegister(NextPCReg));
 	machine->WriteRegister(NextPCReg,machine->ReadRegister(PCReg)+4);
 	return;
-    } else {
+    }
+    else if(which == PageFaultException)
+    {
+    	/**
+    	 * Handle it properly using DPVM Algorithm
+    	 */
+    	handlePageFault();
+    	return;
+    }
+    else
+    {
       cout<<"Unexpected user mode exception - which:"<<which<<"  type:"<< type<<endl;
       interrupt->Halt();
     }
