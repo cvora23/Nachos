@@ -267,7 +267,7 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
 		if(i < numCodeDataPages)
 		{
 			pageTable[i].location = EXECUTABLE;
-			pageTable[i].byteOffset = noffH.code.inFileAddr + (i*PageSize);
+			pageTable[i].byteOffSet = noffH.code.inFileAddr + (i*PageSize);
 		}
 		else
 		{
