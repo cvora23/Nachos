@@ -135,7 +135,7 @@ extern BitMap* processTableBitMap;
 /**
  * ADDITIONS FOR PROJECT 3 ----------------START --------------------
  */
-extern IPTClass: public TranslationEntry
+class IPTClass: public TranslationEntry
 {
 public:
 	int processId; // To store the process id of the entry in the TLB
