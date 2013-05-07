@@ -822,7 +822,7 @@ void Fork_Syscall(unsigned int vaddr)
 		 */
 
 		tempPageTable[i].location = (currentThread->space)->pageTable[i].location;
-		tempPageTable[i].byteOffset = (currentThread->space)->pageTable[i].byteOffset;
+		tempPageTable[i].byteOffSet = (currentThread->space)->pageTable[i].byteOffset;
 
 		/**
 		 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
@@ -871,7 +871,7 @@ void Fork_Syscall(unsigned int vaddr)
     	tempPageTable[i].dirty = FALSE;
     	tempPageTable[i].readOnly = FALSE;
     	tempPageTable[i].location = NEITHER;
-    	tempPageTable[i].byteOffset = -100;
+    	tempPageTable[i].byteOffSet = -100;
 
     }
 
@@ -1320,7 +1320,7 @@ int handleIPTMiss(int faultPageNo)
 	{
 		// in executable file
 		(currentThread->space)->executableFilePointer->ReadAt(&(machine->mainMemory[memIndex*PageSize]),PageSize,
-				((currentThread->space)->pageTable[faultPageNo].byteOffset));
+				((currentThread->space)->pageTable[faultPageNo].byteOffSet));
 		(currentThread->space)->pageTable[faultPageNo].valid = TRUE;
 		(currentThread->space)->pageTable[faultPageNo].physicalPage  = memIndex;
 	}
@@ -1328,7 +1328,7 @@ int handleIPTMiss(int faultPageNo)
 	{
 		//in swap file
 		swapFile->ReadAt(&(machine->mainMemory[memIndex*PageSize]),PageSize,
-				((currentThread->space)->pageTable[faultPageNo].byteOffset));
+				((currentThread->space)->pageTable[faultPageNo].byteOffSet));
 		(currentThread->space)->pageTable[faultPageNo].valid = TRUE;
 		(currentThread->space)->pageTable[faultPageNo].physicalPage  = memIndex;
 	}
