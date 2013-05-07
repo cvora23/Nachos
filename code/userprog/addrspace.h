@@ -35,7 +35,7 @@ typedef enum pageLocation
 class newTranslationEntry : public TranslationEntry
 {
 public:
-	int byteOffset;
+	int byteOffSet;
 	pageLocation location;
 };
 
