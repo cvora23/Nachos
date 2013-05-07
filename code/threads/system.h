@@ -47,6 +47,9 @@ extern Machine* machine;	// user program memory and registers
 #define MAX_CV_NAME					256
 #define MAX_CHAR_PRINTF				200
 #define MAX_PROCESS_NAME_LEN		256
+#define SWAPFILEBITMAP_SIZE 		10000
+
+
 
 typedef struct _UserLock
 {
@@ -127,6 +130,30 @@ typedef struct _ProcessTable
 extern ProcessTable processTableArray[MAX_PROCESS];
 extern Lock* processTableAccessLock;
 extern BitMap* processTableBitMap;
+
+
+/**
+ * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+ */
+extern IPTClass: public TranslationEntry
+{
+public:
+	int processId; // To store the process id of the entry in the TLB
+};
+
+extern Lock* IPTLock;
+extern IPTClass IPT[NumPhysPages];
+
+extern int pageEvictionPolicy;
+extern List* pageEvictionQueue; // Queue for removing page for FIFO
+
+extern OpenFile* swapFile;
+extern BitMap* swapFileBitMap;
+extern Lock* swapFileBitMapLock;
+
+/**
+ * ADDITIONS FOR PROJECT 3 ---------------- END --------------------
+ */
 
 #endif
 

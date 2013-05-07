@@ -1,0 +1,15 @@
+Project 3:
+
+Part1:
+1: Implement TLB (Translation Lookaside Buffer)
+
+Part 2:
+
+Implement DPVM (Swap Files w/ FIFO and RAND, IPT and TLB)
+
+Testing Part 1 and Part 2:
+Matmult is the user program that is used in testing
+It is impossible to test Part 1 of this Project, since Part 1 is the groundwork for Part 2. 
+In order to test Part 1 solely, Part 2 can not exist.
+Based on what we know above, the success of the test for Part 2 is deemed sufficient evidence 
+for the feasibility of Part 1. 

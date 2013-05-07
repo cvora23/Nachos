@@ -1,0 +1,24 @@
+
+
+IMPLEMENTATION STEPS:
+
+1: Making sure swap file gets loaded during initialization of Nachos - DONE !!!!! .
+
+2: Making Sure NumPhysPages = 32. - DONE !!!!
+
+3: Implement IPT - Updated Translation Entry Class.
+    POPULATE IPT code to
+      a: Address Space constructor.
+      b: Fork Syscall 
+      c: Exit Syscall
+      
+4: Implement TLB and take care of Context Switch issue with TLB.      
+      
+5: Don't preload anything into memory.
+   Comment/Move/Remove pre-loading code and IPT population code goes into Page Fault Exception code.
+    
+6: Handling IPT Miss:
+    Allocate page of memory.
+    Read page into memory from executable if necessary.
+    Update page table-physical page valid bit.
+    Update TLB and IPT.      

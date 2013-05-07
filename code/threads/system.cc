@@ -44,6 +44,27 @@ ProcessTable processTableArray[MAX_PROCESS];
 Lock* processTableAccessLock;
 BitMap* processTableBitMap;
 
+/**
+ * ADDITIONS FOR PROJECT 3 ---------------- START --------------------
+ */
+
+
+IPTClass IPT[NumPhysPages];
+Lock* IPTLock;
+Lock* swapFileBitMapLock;
+BitMap* swapFileBitMap;
+OpenFile* swapFile;
+int pageEvictionPolicy = 0;
+List* pageEvictionQueue;
+
+
+
+/**
+ * ADDITIONS FOR PROJECT 3 ---------------- END --------------------
+ */
+
+
+
 #endif
 
 #ifdef NETWORK
@@ -175,6 +196,27 @@ Initialize(int argc, char **argv)
 
     processTableAccessLock = new Lock("processTableAccessLock");
     processTableBitMap = new BitMap(MAX_PROCESS);
+
+
+    /**
+     * ADDITIONS FOR PROJECT 3 ---------------- START --------------------
+     */
+
+    IPTLock = new Lock("IPTLock");
+    swapFileBitMapLock = new Lock("swapFileBitMapLock");
+    fileSystem->Create("swapFile",(SWAPFILEBITMAP_SIZE*PageSize));
+    swapFile=fileSystem->Open("swapFile");
+    pageEvictionQueue = new List();
+    swapFileBitMap = new BitMap(SWAPFILEBITMAP_SIZE);
+    for(int i=0;i<NumPhysPages;i++)
+    {
+    	IPT[i].valid = FALSE;
+    }
+
+
+    /**
+     * ADDITIONS FOR PROJECT 3 ---------------- END --------------------
+     */
 
 #endif
 
