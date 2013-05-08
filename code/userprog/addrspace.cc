@@ -370,6 +370,31 @@ AddrSpace::InitRegisters()
 
 void AddrSpace::SaveState() 
 {
+    /**
+     * ADDITIONS FOR PROJECT 3 ----------------START --------------------
+     */
+
+	IPTLock->Acquire();
+	//Disable the interrupts: Modifying TLB
+	IntStatus old=interrupt->SetLevel(IntOff);
+
+	//Invalidating all entries on TLB during context switch
+	for(int i=0; i<TLBSize; i++){
+		if(machine->tlb[i].valid==TRUE)
+		{
+			//copy the dirty bit from the TLB to IPT
+			IPT[machine->tlb[i].physicalPage].dirty=machine->tlb[i].dirty;
+		}
+		machine->tlb[i].valid = FALSE;
+	}
+
+	//Restoring the interrupts: Modification to TLB completed
+	interrupt->SetLevel(old);
+	IPTLock->Release();
+
+    /**
+     * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+     */
 
 }
 

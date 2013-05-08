@@ -954,7 +954,7 @@ SpaceId Exec_Syscall(unsigned int vaddr,int len)
 	if(executable == NULL)
 	{
 		printf("Exec_Syscall : Unable to open executable file passed \n");
-		delete [] execBuf;
+		//delete [] execBuf;
 		return -1;
 	}
 
