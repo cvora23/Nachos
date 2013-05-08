@@ -31,7 +31,7 @@ CPP = $(GCCDIR)cpp
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 
-all: halt matmult sort testfiles lockTest Proj2Test exec WalmartSimulation Problem2 Proj3test
+all: halt matmult sort testfiles lockTest Proj2Test exec WalmartSimulation Problem2 forkMatmult forkSort Proj3test
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
@@ -91,6 +91,18 @@ Problem2.o: Problem2.c
 Problem2: Problem2.o start.o
 	$(LD) $(LDFLAGS) start.o Problem2.o -o Problem2.coff
 	../bin/coff2noff Problem2.coff Problem2
+
+forkMatmult.o: forkMatmult.c
+	$(CC) $(CFLAGS) -c forkMatmult.c
+forkMatmult: forkMatmult.o start.o
+	$(LD) $(LDFLAGS) start.o forkMatmult.o -o forkMatmult.coff
+	../bin/coff2noff forkMatmult.coff forkMatmult	
+	
+forkSort.o: forkSort.c
+	$(CC) $(CFLAGS) -c forkSort.c
+forkSort: forkSort.o start.o
+	$(LD) $(LDFLAGS) start.o forkSort.o -o forkSort.coff
+	../bin/coff2noff forkSort.coff forkSort
 
 Proj3test.o: Proj3test.c
 	$(CC) $(CFLAGS) -c Proj3test.c
