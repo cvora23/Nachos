@@ -1076,15 +1076,18 @@ void Exit_Syscall(int status)
 		for(int i=0;i<numPages;i++)
 		{
 			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
-			if(mainMemoryBitMap->Test(physPageToClear))
-			{
-				mainMemoryBitMap->Clear(physPageToClear);
-				DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
-					physPageToClear,(currentThread->space)->processId);
-			}
 			/**
 			 * ADDITIONS FOR PROJECT 3 ----------------START --------------------
 			 */
+			if(physPageToClear != -1)
+			{
+				if(mainMemoryBitMap->Test(physPageToClear))
+				{
+					mainMemoryBitMap->Clear(physPageToClear);
+					DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
+						physPageToClear,(currentThread->space)->processId);
+				}
+			}
 			IPT[physPageToClear].valid = FALSE;
 			/**
 			 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
@@ -1155,6 +1158,10 @@ void Exit_Syscall(int status)
 
 		mainMemoryAccessLock->Acquire();
 
+
+		/**
+		 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
+		 */
 		for(int i = (currentThread->stackRegVirtualPage)-8;i<(currentThread->stackRegVirtualPage);i++)
 		{
 			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
@@ -1168,10 +1175,6 @@ void Exit_Syscall(int status)
 				}
 			}
 
-
-			/**
-			 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
-			 */
 			IPT[physPageToClear].valid = FALSE;
 			/**
 			 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
