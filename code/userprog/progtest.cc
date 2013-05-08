@@ -40,7 +40,9 @@ StartProcess(char *filename)
 
     currentThread->stackRegVirtualPage = (currentThread->space)->numPages;
 
+#ifdef PROJECT3
     delete executable;			// close file
+#endif
 
     space->InitRegisters();		// set the initial register values
     space->RestoreState();		// load page table register
