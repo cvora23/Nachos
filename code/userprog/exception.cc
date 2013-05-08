@@ -1158,12 +1158,16 @@ void Exit_Syscall(int status)
 		for(int i = (currentThread->stackRegVirtualPage)-8;i<(currentThread->stackRegVirtualPage);i++)
 		{
 			physPageToClear = (currentThread->space)->pageTable[i].physicalPage;
-			if( (physPageToClear!= -1) && (mainMemoryBitMap->Test(physPageToClear)))
+			if(physPageToClear != -1)
 			{
-				mainMemoryBitMap->Clear(physPageToClear);
-				DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
-					physPageToClear,(currentThread->space)->processId);
+				if(mainMemoryBitMap->Test(physPageToClear))
+				{
+					mainMemoryBitMap->Clear(physPageToClear);
+					DEBUG('b',"Cleared Physical Page %d for Process %d from Main Memory Bit Map \n",
+						physPageToClear,(currentThread->space)->processId);
+				}
 			}
+
 
 			/**
 			 * ADDITIONS FOR PROJECT 3 ----------------END --------------------
