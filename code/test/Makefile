@@ -91,6 +91,13 @@ Problem2.o: Problem2.c
 Problem2: Problem2.o start.o
 	$(LD) $(LDFLAGS) start.o Problem2.o -o Problem2.coff
 	../bin/coff2noff Problem2.coff Problem2
+
+Proj3test.o: Proj3test.c
+	$(CC) $(CFLAGS) -c Proj3test.c
+Proj3test: Proj3test.o start.o
+	$(LD) $(LDFLAGS) start.o Proj3test.o -o Proj3test.coff
+	../bin/coff2noff Proj3test.coff Proj3test
+
 	
 clean:
 	rm -f *.o *.coff
