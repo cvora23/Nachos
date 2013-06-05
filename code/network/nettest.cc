@@ -33,8 +33,6 @@
 void
 MailTest(int farAddr)
 {
-	cout<<"MailTest running "<<endl;
-
     PacketHeader outPktHdr, inPktHdr;
     MailHeader outMailHdr, inMailHdr;
     char *data = "Hello there!";
