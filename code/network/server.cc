@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include "server.h"
 
+#if 0
+
 // Send Message to notify the client for RPC
 
 void SendMessage(int machineId,int mailBoxId,char* data)
@@ -612,6 +614,8 @@ void BroadcastMethod(int machineId, int mailBoxId, int lockId, int cvId)
 	//TODO : see this declaration ie order of parameters of serverWaitfunction
 }
 
+#endif
+
 //Server function
 void Server()
 {
@@ -622,9 +626,11 @@ void Server()
 	char *name;
 	int lockId, cvId, mvId,arrayIndex;
 	int setValue;
+
+#if 0
+
 	while(1)
 	{
-	    printf("***\nEntered Server loop.\n");
 		postOffice->Receive(0,&inPacketHdr,&inMailHdr,buffer);
 		outPacketHdr.to = inMailHdr.from;
 		outMailHdr.to =inMailHdr.from;
@@ -735,6 +741,7 @@ void Server()
 			break;
 		}
 	}
+#endif
 
 }
 

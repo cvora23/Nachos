@@ -63,7 +63,7 @@ extern void Copy(char *unixFile, char *nachosFile);
 extern void Print(char *file), PerformanceTest(void);
 extern void StartProcess(char *file), ConsoleTest(char *in, char *out);
 extern void MailTest(int networkID);
-//extern void Server();
+extern void Server();
 
 #ifdef THREADS
 
@@ -250,7 +250,7 @@ main(int argc, char **argv)
 		}
 		else if(!strcmp(*argv,"-server"))
 		{
-			//Server();
+			Server();
 			ASSERT(false);
 		}
 		#endif // NETWORK
