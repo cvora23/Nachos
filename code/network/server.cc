@@ -5,6 +5,7 @@
  *      Author: cvora
  */
 
+#include <stdio.h>
 #include "server.h"
 
 // Send Message to notify the client for RPC

@@ -53,6 +53,7 @@
 #include "utility.h"
 #include "system.h"
 
+using namespace std;
 
 // External functions used by this file
 
@@ -98,7 +99,8 @@ main(int argc, char **argv)
 {
     int argCount;			// the number of arguments 
 					// for a particular command
-
+    cout<<"Nachos Testing starting ....."<<endl;
+    printf("Nachos Testing starting \n");
 
     DEBUG('t', "Entering main");
     (void) Initialize(argc, argv);
