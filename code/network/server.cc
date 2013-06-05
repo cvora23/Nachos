@@ -614,7 +614,6 @@ void BroadcastMethod(int machineId, int mailBoxId, int lockId, int cvId)
 //Server function
 void Server()
 {
-	printf(" \n Server started.. !!!!! \n");
 	PacketHeader outPacketHdr, inPacketHdr;
 	MailHeader outMailHdr, inMailHdr;
 	char buffer[MaxMailSize];
@@ -622,9 +621,9 @@ void Server()
 	char *name;
 	int lockId, cvId, mvId,arrayIndex;
 	int setValue;
-	printf(" \n Server started.. !!!!! \n");
 	while(1)
 	{
+	    printf("***\nEntered Server loop.\n");
 		postOffice->Receive(0,&inPacketHdr,&inMailHdr,buffer);
 		outPacketHdr.to = inMailHdr.from;
 		outMailHdr.to =inMailHdr.from;
