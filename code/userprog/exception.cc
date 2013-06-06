@@ -255,7 +255,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 	char buffer[MaxMailSize];
 	int returnValue;
 
-	if(lockNameLen<1 || lockNameLen>MAX_NAME_LENGTH)
+	if(lockNameLen<1 || lockNameLen>MAX_LOCK_NAME)
 	{
 		printf("Invalid LockName Length \n");
 		delete [] buf;
@@ -381,7 +381,7 @@ void AcquireLock_Syscall(int lockId)
 	int returnValue;
 
 	char *data = new char[MaxMailSize];
-	sprintf(data,"%d %s",SC_AcquireLock,lockId);
+	sprintf(data,"%d %d",SC_AcquireLock,lockId);
 
 	delete [] buf;
 
@@ -408,7 +408,7 @@ void AcquireLock_Syscall(int lockId)
     	printf("Acquire Lock Failed Reply from Server\n");
     }
 
-    return returnValue;
+    return;
 
 
 #else
@@ -462,7 +462,7 @@ void ReleaseLock_Syscall(int lockId)
 	int returnValue;
 
 	char *data = new char[MaxMailSize];
-	sprintf(data,"%d %s",SC_ReleaseLock,lockId);
+	sprintf(data,"%d %d",SC_ReleaseLock,lockId);
 
 	delete [] buf;
 
@@ -489,7 +489,7 @@ void ReleaseLock_Syscall(int lockId)
     	printf("Release Lock Failed Reply from Server\n");
     }
 
-    return returnValue;
+    return;
 
 
 #else
@@ -553,7 +553,7 @@ void DestroyLock_Syscall(int lockId)
 	int returnValue;
 
 	char *data = new char[MaxMailSize];
-	sprintf(data,"%d %s",SC_DestroyLock,lockId);
+	sprintf(data,"%d %d",SC_DestroyLock,lockId);
 
 	delete [] buf;
 
@@ -580,7 +580,7 @@ void DestroyLock_Syscall(int lockId)
     	printf("Lock not deleted Reply from Server\n");
     }
 
-    return returnValue;
+    return;
 
 
 #else
@@ -643,7 +643,7 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 	char buffer[MaxMailSize];
 	int returnValue;
 
-	if(conditionNameLen<1 || conditionNameLen>MAX_NAME_LENGTH)
+	if(conditionNameLen<1 || conditionNameLen>MAX_CV_NAME)
 	{
 		printf("Invalid conditionName Length \n");
 		delete [] buf;
@@ -668,7 +668,7 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 		delete[] buf;
 		return -1;
 	}
-	buf[lockNameLen]='\0';
+	buf[conditionNameLen]='\0';
 
 	char *data = new char[conditionNameLen+6];
 	sprintf(data,"%d %s",SC_CreateCondition,buf);
@@ -768,7 +768,7 @@ void Wait_Syscall(int conditionId,int lockId)
 	int returnValue;
 
 	char *data = new char[MaxMailSize];
-	sprintf(data,"%d %d %s",SC_Wait,conditionId,lockId);
+	sprintf(data,"%d %d %d",SC_Wait,conditionId,lockId);
 
 	delete [] buf;
 
@@ -795,7 +795,7 @@ void Wait_Syscall(int conditionId,int lockId)
     	printf("Wait not executed on CV %d Lock %d  Reply from Server\n",conditionId,lockId);
     }
 
-    return returnValue;
+    return;
 
 
 
@@ -855,7 +855,7 @@ void Signal_Syscall(int conditionId,int lockId)
 	int returnValue;
 
 	char *data = new char[MaxMailSize];
-	sprintf(data,"%d %d %s",SC_Signal,conditionId,lockId);
+	sprintf(data,"%d %d %d",SC_Signal,conditionId,lockId);
 
 	delete [] buf;
 
@@ -882,7 +882,7 @@ void Signal_Syscall(int conditionId,int lockId)
     	printf("Signal not executed on CV %d Lock %d  Reply from Server\n",conditionId,lockId);
     }
 
-    return returnValue;
+    return;
 
 
 #else
@@ -955,7 +955,7 @@ void Broadcast_Syscall(int conditionId,int lockId)
 	int returnValue;
 
 	char *data = new char[MaxMailSize];
-	sprintf(data,"%d %d %s",SC_Broadcast,conditionId,lockId);
+	sprintf(data,"%d %d %d",SC_Broadcast,conditionId,lockId);
 
 	delete [] buf;
 
@@ -982,7 +982,7 @@ void Broadcast_Syscall(int conditionId,int lockId)
     	printf("Broadcast not executed on CV %d Lock %d  Reply from Server\n",conditionId,lockId);
     }
 
-    return returnValue;
+    return;
 
 
 #else
@@ -1054,7 +1054,7 @@ void DestroyCondition_Syscall(int conditionId)
 	int returnValue;
 
 	char *data = new char[MaxMailSize];
-	sprintf(data,"%d %s",SC_DestroyCondition,conditionId);
+	sprintf(data,"%d %d",SC_DestroyCondition,conditionId);
 
 	delete [] buf;
 
@@ -1081,7 +1081,7 @@ void DestroyCondition_Syscall(int conditionId)
     	printf("Condition not deleted Reply from Server\n");
     }
 
-    return returnValue;
+    return;
 
 
 #else
