@@ -246,6 +246,75 @@ void Yield_Syscall()
 
 int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 {
+
+#ifdef NETWORK
+
+	char *buf;
+	PacketHeader outPktHdr,inPktHdr;
+	MailHeader outMailHdr,inMailHdr;
+	char buffer[MaxMailSize];
+	int returnValue;
+
+	if(lockNameLen<1 || lockNameLen>MAX_NAME_LENGTH)
+	{
+		printf("Invalid LockName Length \n");
+		delete [] buf;
+		return -1;
+	}
+
+	buf = new char[lockNameLen+1];
+	if(buf == NULL)
+	{
+		printf("Buffer Creation Error\n");
+		return -1;
+	}
+
+	//Validation: valid vaddr
+	if(vaddr<0 || (vaddr+lockNameLen)>=(currentThread->space)->addrSpaceSize){
+		printf("Invalid Address passed\n");
+		return -1;
+	}
+
+	//Copying LockName
+	if(copyin(vaddr, lockNameLen, buf)==-1){//bad virtual address if the function returns -1
+		delete[] buf;
+		return -1;
+	}
+	buf[lockNameLen]='\0';
+
+	char *data = new char[lockNameLen+6];
+	sprintf(data,"%d %s",SC_CreateLock,buf);
+
+	delete [] buf;
+
+    outPktHdr.to = 0;	//ServerMachineId = 0 by default
+    outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
+    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outMailHdr.length = strlen(data) + 1;
+
+
+    // postOffice->Send for CREATE LOCK
+    bool success = postOffice->Send(outPktHdr, outMailHdr, data);
+    delete[] data;
+    if ( !success )
+    {
+      printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
+      interrupt->Halt();
+    }
+
+    //Wait for the lock to be created
+    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    returnValue=(int)(buffer);
+    if(returnValue==-1)
+    {
+    	printf("Lock not created Reply from Server\n");
+    }
+
+    return returnValue;
+
+
+#else
+
 	int lockId;
 
 	if(lockNameLen<1 || lockNameLen>MAX_LOCK_NAME)
@@ -299,6 +368,48 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 
 void AcquireLock_Syscall(int lockId)
 {
+
+#ifdef NETWORK
+
+	char *buf;
+	PacketHeader outPktHdr,inPktHdr;
+	MailHeader outMailHdr,inMailHdr;
+	char buffer[MaxMailSize];
+	int returnValue;
+
+	char *data = new char[MaxMailSize];
+	sprintf(data,"%d %s",SC_AcquireLock,lockId);
+
+	delete [] buf;
+
+    outPktHdr.to = 0;	//ServerMachineId = 0 by default
+    outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
+    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outMailHdr.length = strlen(data) + 1;
+
+
+    // postOffice->Send for CREATE LOCK
+    bool success = postOffice->Send(outPktHdr, outMailHdr, data);
+    delete[] data;
+    if ( !success )
+    {
+      printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
+      interrupt->Halt();
+    }
+
+    //Wait for the lock to be created
+    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    returnValue=(int)(buffer);
+    if(returnValue==-1)
+    {
+    	printf("Acquire Lock Failed Reply from Server\n");
+    }
+
+    return returnValue;
+
+
+#else
+
 	userLockTableLock->Acquire();
 
 	if(lockId<0 || lockId>MAX_LOCKS)
@@ -335,6 +446,48 @@ void AcquireLock_Syscall(int lockId)
 
 void ReleaseLock_Syscall(int lockId)
 {
+
+#ifdef NETWORK
+
+	char *buf;
+	PacketHeader outPktHdr,inPktHdr;
+	MailHeader outMailHdr,inMailHdr;
+	char buffer[MaxMailSize];
+	int returnValue;
+
+	char *data = new char[MaxMailSize];
+	sprintf(data,"%d %s",SC_ReleaseLock,lockId);
+
+	delete [] buf;
+
+    outPktHdr.to = 0;	//ServerMachineId = 0 by default
+    outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
+    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outMailHdr.length = strlen(data) + 1;
+
+
+    // postOffice->Send for CREATE LOCK
+    bool success = postOffice->Send(outPktHdr, outMailHdr, data);
+    delete[] data;
+    if ( !success )
+    {
+      printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
+      interrupt->Halt();
+    }
+
+    //Wait for the lock to be created
+    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    returnValue=(int)(buffer);
+    if(returnValue==-1)
+    {
+    	printf("Release Lock Failed Reply from Server\n");
+    }
+
+    return returnValue;
+
+
+#else
+
 	userLockTableLock->Acquire();
 
 	if(lockId<0 || lockId>MAX_LOCKS)
@@ -382,6 +535,48 @@ void ReleaseLock_Syscall(int lockId)
 
 void DestroyLock_Syscall(int lockId)
 {
+
+#ifdef NETWORK
+
+	char *buf;
+	PacketHeader outPktHdr,inPktHdr;
+	MailHeader outMailHdr,inMailHdr;
+	char buffer[MaxMailSize];
+	int returnValue;
+
+	char *data = new char[MaxMailSize];
+	sprintf(data,"%d %s",SC_DestroyLock,lockId);
+
+	delete [] buf;
+
+    outPktHdr.to = 0;	//ServerMachineId = 0 by default
+    outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
+    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outMailHdr.length = strlen(data) + 1;
+
+
+    // postOffice->Send for CREATE LOCK
+    bool success = postOffice->Send(outPktHdr, outMailHdr, data);
+    delete[] data;
+    if ( !success )
+    {
+      printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
+      interrupt->Halt();
+    }
+
+    //Wait for the lock to be created
+    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    returnValue=(int)(buffer);
+    if(returnValue==-1)
+    {
+    	printf("Lock not deleted Reply from Server\n");
+    }
+
+    return returnValue;
+
+
+#else
+
 	userLockTableLock->Acquire();
 
 	if(lockId<0 || lockId>MAX_LOCKS)
@@ -428,6 +623,74 @@ void DestroyLock_Syscall(int lockId)
 
 int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 {
+
+#ifdef NETWORK
+
+	char *buf;
+	PacketHeader outPktHdr,inPktHdr;
+	MailHeader outMailHdr,inMailHdr;
+	char buffer[MaxMailSize];
+	int returnValue;
+
+	if(conditionNameLen<1 || conditionNameLen>MAX_NAME_LENGTH)
+	{
+		printf("Invalid conditionName Length \n");
+		delete [] buf;
+		return -1;
+	}
+
+	buf = new char[conditionNameLen+1];
+	if(buf == NULL)
+	{
+		printf("Buffer Creation Error\n");
+		return -1;
+	}
+
+	//Validation: valid vaddr
+	if(vaddr<0 || (vaddr+conditionNameLen)>=(currentThread->space)->addrSpaceSize){
+		printf("Invalid Address passed\n");
+		return -1;
+	}
+
+	//Copying LockName
+	if(copyin(vaddr, conditionNameLen, buf)==-1){//bad virtual address if the function returns -1
+		delete[] buf;
+		return -1;
+	}
+	buf[lockNameLen]='\0';
+
+	char *data = new char[conditionNameLen+6];
+	sprintf(data,"%d %s",SC_CreateCondition,buf);
+
+	delete [] buf;
+
+    outPktHdr.to = 0;	//ServerMachineId = 0 by default
+    outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
+    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outMailHdr.length = strlen(data) + 1;
+
+
+    // postOffice->Send for CREATE LOCK
+    bool success = postOffice->Send(outPktHdr, outMailHdr, data);
+    delete[] data;
+    if ( !success )
+    {
+      printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
+      interrupt->Halt();
+    }
+
+    //Wait for the lock to be created
+    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    returnValue=(int)(buffer);
+    if(returnValue==-1)
+    {
+    	printf("Condition not created Reply from Server\n");
+    }
+
+    return returnValue;
+
+#else
+
 	int conditionId;
 
 	if(conditionNameLen<1 || conditionNameLen>MAX_CV_NAME)
@@ -481,6 +744,49 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 
 void Wait_Syscall(int conditionId,int lockId)
 {
+
+#ifdef NETWORK
+
+	char *buf;
+	PacketHeader outPktHdr,inPktHdr;
+	MailHeader outMailHdr,inMailHdr;
+	char buffer[MaxMailSize];
+	int returnValue;
+
+	char *data = new char[MaxMailSize];
+	sprintf(data,"%d %d %s",SC_Wait,conditionId,lockId);
+
+	delete [] buf;
+
+    outPktHdr.to = 0;	//ServerMachineId = 0 by default
+    outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
+    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outMailHdr.length = strlen(data) + 1;
+
+
+    // postOffice->Send for CREATE LOCK
+    bool success = postOffice->Send(outPktHdr, outMailHdr, data);
+    delete[] data;
+    if ( !success )
+    {
+      printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
+      interrupt->Halt();
+    }
+
+    //Wait for the lock to be created
+    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    returnValue=(int)(buffer);
+    if(returnValue==-1)
+    {
+    	printf("Wait not executed on CV %d Lock %d  Reply from Server\n",conditionId,lockId);
+    }
+
+    return returnValue;
+
+
+
+#else
+
 	userLockTableLock->Acquire();
 	userConditionTableLock->Acquire();
 
@@ -523,6 +829,48 @@ void Wait_Syscall(int conditionId,int lockId)
 
 void Signal_Syscall(int conditionId,int lockId)
 {
+
+#ifdef NETWORK
+
+	char *buf;
+	PacketHeader outPktHdr,inPktHdr;
+	MailHeader outMailHdr,inMailHdr;
+	char buffer[MaxMailSize];
+	int returnValue;
+
+	char *data = new char[MaxMailSize];
+	sprintf(data,"%d %d %s",SC_Signal,conditionId,lockId);
+
+	delete [] buf;
+
+    outPktHdr.to = 0;	//ServerMachineId = 0 by default
+    outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
+    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outMailHdr.length = strlen(data) + 1;
+
+
+    // postOffice->Send for CREATE LOCK
+    bool success = postOffice->Send(outPktHdr, outMailHdr, data);
+    delete[] data;
+    if ( !success )
+    {
+      printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
+      interrupt->Halt();
+    }
+
+    //Wait for the lock to be created
+    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    returnValue=(int)(buffer);
+    if(returnValue==-1)
+    {
+    	printf("Signal not executed on CV %d Lock %d  Reply from Server\n",conditionId,lockId);
+    }
+
+    return returnValue;
+
+
+#else
+
 	userLockTableLock->Acquire();
 	userConditionTableLock->Acquire();
 
@@ -578,6 +926,48 @@ void Signal_Syscall(int conditionId,int lockId)
 
 void Broadcast_Syscall(int conditionId,int lockId)
 {
+
+#ifdef NETWORK
+
+	char *buf;
+	PacketHeader outPktHdr,inPktHdr;
+	MailHeader outMailHdr,inMailHdr;
+	char buffer[MaxMailSize];
+	int returnValue;
+
+	char *data = new char[MaxMailSize];
+	sprintf(data,"%d %d %s",SC_Broadcast,conditionId,lockId);
+
+	delete [] buf;
+
+    outPktHdr.to = 0;	//ServerMachineId = 0 by default
+    outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
+    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outMailHdr.length = strlen(data) + 1;
+
+
+    // postOffice->Send for CREATE LOCK
+    bool success = postOffice->Send(outPktHdr, outMailHdr, data);
+    delete[] data;
+    if ( !success )
+    {
+      printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
+      interrupt->Halt();
+    }
+
+    //Wait for the lock to be created
+    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    returnValue=(int)(buffer);
+    if(returnValue==-1)
+    {
+    	printf("Broadcast not executed on CV %d Lock %d  Reply from Server\n",conditionId,lockId);
+    }
+
+    return returnValue;
+
+
+#else
+
 	userLockTableLock->Acquire();
 	userConditionTableLock->Acquire();
 
@@ -633,6 +1023,48 @@ void Broadcast_Syscall(int conditionId,int lockId)
 
 void DestroyCondition_Syscall(int conditionId)
 {
+
+#ifdef NETWORK
+
+	char *buf;
+	PacketHeader outPktHdr,inPktHdr;
+	MailHeader outMailHdr,inMailHdr;
+	char buffer[MaxMailSize];
+	int returnValue;
+
+	char *data = new char[MaxMailSize];
+	sprintf(data,"%d %s",SC_DestroyCondition,conditionId);
+
+	delete [] buf;
+
+    outPktHdr.to = 0;	//ServerMachineId = 0 by default
+    outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
+    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outMailHdr.length = strlen(data) + 1;
+
+
+    // postOffice->Send for CREATE LOCK
+    bool success = postOffice->Send(outPktHdr, outMailHdr, data);
+    delete[] data;
+    if ( !success )
+    {
+      printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
+      interrupt->Halt();
+    }
+
+    //Wait for the lock to be created
+    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    returnValue=(int)(buffer);
+    if(returnValue==-1)
+    {
+    	printf("Condition not deleted Reply from Server\n");
+    }
+
+    return returnValue;
+
+
+#else
+
 	userConditionTableLock->Acquire();
 	if(conditionId<0 || conditionId>MAX_CVS)
 	{
