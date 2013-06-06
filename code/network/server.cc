@@ -616,10 +616,11 @@ void BroadcastMethod(int machineId, int mailBoxId, int lockId, int cvId)
 
 #endif
 
-#if 0
+
 //Server function
 void Server()
 {
+#if 0
 	PacketHeader outPacketHdr, inPacketHdr;
 	MailHeader outMailHdr, inMailHdr;
 	char buffer[MaxMailSize];
