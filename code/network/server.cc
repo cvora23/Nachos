@@ -616,6 +616,7 @@ void BroadcastMethod(int machineId, int mailBoxId, int lockId, int cvId)
 
 #endif
 
+#if 0
 //Server function
 void Server()
 {
@@ -627,7 +628,7 @@ void Server()
 	int lockId, cvId, mvId,arrayIndex;
 	int setValue;
 
-#if 0
+
 
 	while(1)
 	{

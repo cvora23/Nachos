@@ -8,12 +8,13 @@
 #ifndef SERVER_H_
 #define SERVER_H_
 
-#include "copyright.h"
 #include "network.h"
 #include "post.h"
 #include "list.h"
 #include "system.h"
 
+
+#if 0
 /**
  * Handling Locks on Server for RPC
  */
@@ -138,5 +139,6 @@ typedef struct clientReplyMessage
 	}
 }clientReply;
 
+#endif
 
 #endif /* SERVER_H_ */
