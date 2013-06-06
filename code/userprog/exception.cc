@@ -364,6 +364,9 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 	userLockTableLock->Release();
 	delete [] buf;
 	return lockId;
+
+#endif
+
 }
 
 void AcquireLock_Syscall(int lockId)
@@ -442,6 +445,9 @@ void AcquireLock_Syscall(int lockId)
 	userLockTable.locks[lockId].lock->Acquire();
 
 	return;
+
+#endif
+
 }
 
 void ReleaseLock_Syscall(int lockId)
@@ -531,6 +537,8 @@ void ReleaseLock_Syscall(int lockId)
 	userLockTableLock->Release();
 
 	return;
+
+#endif
 }
 
 void DestroyLock_Syscall(int lockId)
@@ -619,6 +627,9 @@ void DestroyLock_Syscall(int lockId)
 	userLockTableLock->Release();
 
 	return;
+
+#endif
+
 }
 
 int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
@@ -740,6 +751,9 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 	userConditionTableLock->Release();
 	delete [] buf;
 	return conditionId;
+
+#endif
+
 }
 
 void Wait_Syscall(int conditionId,int lockId)
@@ -825,6 +839,8 @@ void Wait_Syscall(int conditionId,int lockId)
 
 	(userConditionTable.conditions[conditionId].condition)->Wait(userLockTable.locks[lockId].lock);
 	return;
+
+#endif
 }
 
 void Signal_Syscall(int conditionId,int lockId)
@@ -922,6 +938,9 @@ void Signal_Syscall(int conditionId,int lockId)
 	userLockTableLock->Release();
 	userConditionTableLock->Release();
 	return;
+
+#endif
+
 }
 
 void Broadcast_Syscall(int conditionId,int lockId)
@@ -1019,6 +1038,8 @@ void Broadcast_Syscall(int conditionId,int lockId)
 	userLockTableLock->Release();
 	userConditionTableLock->Release();
 	return;
+
+#endif
 }
 
 void DestroyCondition_Syscall(int conditionId)
@@ -1107,6 +1128,8 @@ void DestroyCondition_Syscall(int conditionId)
 	userConditionTableLock->Release();
 
 	return;
+
+#endif
 
 }
 
