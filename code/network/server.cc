@@ -732,26 +732,6 @@ void Server()
 				SignalMethod(outPacketHdr.to,outMailHdr.to,lockId,cvId);
 				break;
 			}
-			case 10:
-			{
-				//space for mv functions
-			}
-			break;
-			case 11:
-			{
-				//space for mv functions
-			}
-			break;
-			case 12:
-			{
-				//space for mv functions
-			}
-			break;
-			case 13:
-			{
-				//space for mv functions
-			}
-			break;
 			default:
 			{
 				printf("Invalid arguements passed to the server");
