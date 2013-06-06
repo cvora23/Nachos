@@ -262,8 +262,8 @@ void CreateLock(int machineId, int mailBoxId, char * name)
 				&& (serverLockTable.serverLocksArray[i].serverLock->name,name)==0)
 		{
 			(serverLockTable.serverLocksArray[i].sLockCounter)++;
-			char *buf = new char[100];
-			memset(buf,0,100);
+			char *buf = new char[MaxMailSize];
+			memset(buf,0,MaxMailSize);
 			sprintf(buf,"%d",i); //since lock is already crated give the lock id in message
 			printf("Lock already created so sent the lockId to the client\n");
 			SendMessage(machineId,mailBoxId,buf);
@@ -276,8 +276,8 @@ void CreateLock(int machineId, int mailBoxId, char * name)
 	if((index = serverLockTable.sLockBitMap->Find()) == -1)
 	{
 		printf("No place to create new lock, Max limit of locks reached\n");
-		char *buf = new char[100];
-		memset(buf,0,100);
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
 		sprintf(buf,"%s","-1");
 		printf("message sent to client that there is no place to create new lock\n");
 		SendMessage(machineId,mailBoxId,buf);
@@ -289,8 +289,8 @@ void CreateLock(int machineId, int mailBoxId, char * name)
 		serverLockTable.serverLocksArray[index].serverLock = new locksForServer(name);
 		serverLockTable.serverLocksArray[index].valid = true;
 		(serverLockTable.serverLocksArray[index].sLockCounter)++;
-		char *buf = new char[100];
-		memset(buf,0,100);
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
 		sprintf(buf,"%d",index);
 		printf("message sent to client that lock is created with lockId %d\n",index);
 		SendMessage(machineId,mailBoxId,buf);
