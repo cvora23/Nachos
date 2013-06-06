@@ -645,6 +645,18 @@ void Server()
 
 		switch(messageType)
 		{
+
+
+#define SC_CreateLock 				11
+#define SC_AcquireLock 				12
+#define SC_ReleaseLock 				13
+#define SC_DestroyLock 				14
+#define SC_CreateCondition 			15
+#define SC_Signal 					16
+#define SC_Wait 					17
+#define SC_Broadcast 				18
+#define SC_DestroyCondition 		19
+
 			case SC_CreateLock:
 			{
 				name = new char[inMailHdr.length];
