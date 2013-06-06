@@ -289,6 +289,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
+    outPktHdr.from = currentThread->threadId + 1;
     outMailHdr.from = currentThread->threadId + 1; //*****TODO: get the threadId of the currentThread/processId ???????
     outMailHdr.length = strlen(data) + 1;
 
@@ -303,7 +304,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
     }
 
     //Wait for the lock to be created
-    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
     printf("Recevied Data \n");
     returnValue=(int)(buffer);
     if(returnValue==-1)
