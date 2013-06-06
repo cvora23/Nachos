@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "server.h"
 
-#if 0
+#if 1
 
 // Send Message to notify the client for RPC
 
@@ -620,7 +620,10 @@ void BroadcastMethod(int machineId, int mailBoxId, int lockId, int cvId)
 //Server function
 void Server()
 {
-#if 0
+#if 1
+
+	printf("Server Loop Started !!!!!!!!!!! \n");
+
 	PacketHeader outPacketHdr, inPacketHdr;
 	MailHeader outMailHdr, inMailHdr;
 	char buffer[MaxMailSize];
