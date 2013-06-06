@@ -304,6 +304,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 
     //Wait for the lock to be created
     postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    printf("Recevied Data \n");
     returnValue=(int)(buffer);
     if(returnValue==-1)
     {
