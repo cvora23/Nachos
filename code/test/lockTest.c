@@ -30,6 +30,7 @@ void testCase1()
 	for(i = 0;i<501;i++)
 	{
 		lockId = CreateLock((char*)"LockNo",10);
+		Print1("LOCK ID RECEIVED IS %d\n",lockId);
 	}
 	Print("------------------------------------------------------\n");
 
