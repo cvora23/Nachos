@@ -102,7 +102,7 @@ typedef struct parametersOfServerCVTable
 typedef struct serverCVTableStruct
 {
 	BitMap *sCVBitMap;
-	parametersOfServerCVTableObject serverCVSArray[MAX_LOCKS];
+	parametersOfServerCVTableObject serverCVSArray[MAX_CVS];
 
 	serverCVTableStruct()
 		{
