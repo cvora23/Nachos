@@ -289,7 +289,8 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
-    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outMailHdr.from = currentThread->threadId; //*****TODO: get the threadId of the currentThread/processId ???????
+    outPktHdr.from = currentThread->threadId;
     outMailHdr.length = strlen(data) + 1;
 
 

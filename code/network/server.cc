@@ -288,7 +288,7 @@ void CreateLock(int machineId, int mailBoxId, char * name)
 		serverLockTable.serverLocksArray[index].valid = true;
 		(serverLockTable.serverLocksArray[index].sLockCounter)++;
 		char *buf = new char[100];
-		sprintf(buf,"%d",index+1);
+		sprintf(buf,"%d",index);
 		printf("message sent to client that lock is created with lockId %d\n",index);
 		SendMessage(machineId,mailBoxId,buf);
 		delete [] buf;
