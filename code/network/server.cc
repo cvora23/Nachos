@@ -272,7 +272,7 @@ void CreateLock(int machineId, int mailBoxId, char * name)
 
 	}
 //check to find whether there is place to create new lock
-	if((index=(serverLockTable.sLockBitMap->Find())==-1))
+	if((index = serverLockTable.sLockBitMap->Find()) == -1)
 	{
 		printf("No place to create new lock, Max limit of locks reached\n");
 		char *buf = new char[100];
@@ -446,7 +446,7 @@ void CreateCondition(int machineId, int mailBoxId, char * name)
 
 	}
 //check to find whether there is place to create new lock
-	if((index=(serverCVTable.sCVBitMap->Find())==-1))
+	if((index=serverCVTable.sCVBitMap->Find())==-1)
 	{
 		printf("No place to create new CV, Max limit of CVS reached\n");
 		char *buf6 = new char[100];
