@@ -14,7 +14,7 @@
 #include "system.h"
 
 
-#if 0
+#if 1
 /**
  * Handling Locks on Server for RPC
  */
