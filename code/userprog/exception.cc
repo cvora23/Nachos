@@ -311,11 +311,8 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 
     for(unsigned int i=0;i<inMailHdr.length;i++)
     {
-    	if(buffer[i] != '\0')
-    	{
     		total += (buffer[i]-48)*multiplier;
     		multiplier *= 10;
-    	}
     }
 
     returnValue = total;
