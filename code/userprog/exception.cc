@@ -318,7 +318,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
     	}
     }
 
-    returnValue = multiplier;
+    returnValue = total;
     fflush(stdout);
 #if 0
 
