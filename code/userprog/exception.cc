@@ -400,7 +400,6 @@ void AcquireLock_Syscall(int lockId)
 
 #ifdef NETWORK
 
-	char *buf;
 	PacketHeader outPktHdr,inPktHdr;
 	MailHeader outMailHdr,inMailHdr;
 	char buffer[MaxMailSize];
@@ -408,8 +407,6 @@ void AcquireLock_Syscall(int lockId)
 
 	char *data = new char[MaxMailSize];
 	sprintf(data,"%d %d",SC_AcquireLock,lockId);
-
-	delete [] buf;
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
@@ -485,7 +482,6 @@ void ReleaseLock_Syscall(int lockId)
 
 #ifdef NETWORK
 
-	char *buf;
 	PacketHeader outPktHdr,inPktHdr;
 	MailHeader outMailHdr,inMailHdr;
 	char buffer[MaxMailSize];
@@ -493,8 +489,6 @@ void ReleaseLock_Syscall(int lockId)
 
 	char *data = new char[MaxMailSize];
 	sprintf(data,"%d %d",SC_ReleaseLock,lockId);
-
-	delete [] buf;
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
@@ -581,7 +575,6 @@ void DestroyLock_Syscall(int lockId)
 
 #ifdef NETWORK
 
-	char *buf;
 	PacketHeader outPktHdr,inPktHdr;
 	MailHeader outMailHdr,inMailHdr;
 	char buffer[MaxMailSize];
@@ -589,8 +582,6 @@ void DestroyLock_Syscall(int lockId)
 
 	char *data = new char[MaxMailSize];
 	sprintf(data,"%d %d",SC_DestroyLock,lockId);
-
-	delete [] buf;
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
@@ -687,7 +678,6 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 	if(conditionNameLen<1 || conditionNameLen>MAX_CV_NAME)
 	{
 		printf("Invalid conditionName Length \n");
-		delete [] buf;
 		return -1;
 	}
 
@@ -807,7 +797,6 @@ void Wait_Syscall(int conditionId,int lockId)
 
 #ifdef NETWORK
 
-	char *buf;
 	PacketHeader outPktHdr,inPktHdr;
 	MailHeader outMailHdr,inMailHdr;
 	char buffer[MaxMailSize];
@@ -815,8 +804,6 @@ void Wait_Syscall(int conditionId,int lockId)
 
 	char *data = new char[MaxMailSize];
 	sprintf(data,"%d %d %d",SC_Wait,conditionId,lockId);
-
-	delete [] buf;
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
@@ -899,7 +886,6 @@ void Signal_Syscall(int conditionId,int lockId)
 
 #ifdef NETWORK
 
-	char *buf;
 	PacketHeader outPktHdr,inPktHdr;
 	MailHeader outMailHdr,inMailHdr;
 	char buffer[MaxMailSize];
@@ -908,7 +894,6 @@ void Signal_Syscall(int conditionId,int lockId)
 	char *data = new char[MaxMailSize];
 	sprintf(data,"%d %d %d",SC_Signal,conditionId,lockId);
 
-	delete [] buf;
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
@@ -1004,7 +989,6 @@ void Broadcast_Syscall(int conditionId,int lockId)
 
 #ifdef NETWORK
 
-	char *buf;
 	PacketHeader outPktHdr,inPktHdr;
 	MailHeader outMailHdr,inMailHdr;
 	char buffer[MaxMailSize];
@@ -1012,8 +996,6 @@ void Broadcast_Syscall(int conditionId,int lockId)
 
 	char *data = new char[MaxMailSize];
 	sprintf(data,"%d %d %d",SC_Broadcast,conditionId,lockId);
-
-	delete [] buf;
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
