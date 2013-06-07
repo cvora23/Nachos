@@ -252,7 +252,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 	char *buf;
 	PacketHeader outPktHdr,inPktHdr;
 	MailHeader outMailHdr,inMailHdr;
-	char buffer[MaxMailSize];
+	char buffer[MaxMailSize] = {0};
 	int returnValue;
 
 	if(lockNameLen<1 || lockNameLen>MAX_LOCK_NAME)
@@ -305,7 +305,30 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 
     //Wait for the lock to be created
     postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
-    printf("Recevied Data \n");
+    printf("Recevied Data of length %d  \n",inMailHdr.length);
+
+#if 0
+
+	if(response[0] == 'i')
+	{
+		int i = 1;
+		int j = strlen(response);
+		int total = 0;
+
+		while(response[j] != 'i')
+		{
+		  if(response[j] != '\0')
+		  {
+					total += (response[j]-48)*i;
+					i = i*10;
+		  }
+		  j--;
+		}
+		id = total;
+  }
+  fflush(stdout);
+#endif
+
     returnValue=(int)(buffer);
     if(returnValue==-1)
     {
