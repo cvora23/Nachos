@@ -345,9 +345,10 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
   fflush(stdout);
 #endif
 
-    if(returnValue==-1)
+    if(returnValue < 0)
     {
     	printf("Lock not created Reply from Server\n");
+    	returnValue = -1;
     }
 
     return returnValue;
