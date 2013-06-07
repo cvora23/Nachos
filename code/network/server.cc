@@ -259,7 +259,7 @@ void CreateLock(int machineId, int mailBoxId, char * name)
 	for(int i=0; i < MAX_LOCKS; i++)
 	{
 		if(serverLockTable.serverLocksArray[i].valid == true
-				&& (serverLockTable.serverLocksArray[i].serverLock->name,name)==0)
+				&& strcmp(serverLockTable.serverLocksArray[i].serverLock->name,name)==0)
 		{
 			(serverLockTable.serverLocksArray[i].sLockCounter)++;
 			char *buf = new char[MaxMailSize];
