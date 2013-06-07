@@ -718,7 +718,8 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
-    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outPktHdr.from = currentThread->threadId + 1;
+    outMailHdr.from = currentThread->threadId + 1; //*****TODO: get the threadId of the currentThread/processId ???????
     outMailHdr.length = strlen(data) + 1;
 
 
@@ -732,11 +733,15 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
     }
 
     //Wait for the lock to be created
-    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
-    returnValue=(int)(buffer);
-    if(returnValue==-1)
+    postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
+    printf("Recevied Data of length %d  \n",inMailHdr.length);
+
+    returnValue = calculateValue(buffer,inMailHdr.length);
+
+    if(returnValue < 0)
     {
-    	printf("Condition not created Reply from Server\n");
+    	printf("Lock not created Reply from Server\n");
+    	returnValue = -1;
     }
 
     return returnValue;
@@ -815,7 +820,8 @@ void Wait_Syscall(int conditionId,int lockId)
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
-    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outPktHdr.from = currentThread->threadId + 1;
+    outMailHdr.from = currentThread->threadId + 1; //*****TODO: get the threadId of the currentThread/processId ???????
     outMailHdr.length = strlen(data) + 1;
 
 
@@ -829,11 +835,15 @@ void Wait_Syscall(int conditionId,int lockId)
     }
 
     //Wait for the lock to be created
-    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
-    returnValue=(int)(buffer);
-    if(returnValue==-1)
+    postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
+    printf("Recevied Data of length %d  \n",inMailHdr.length);
+
+    returnValue = calculateValue(buffer,inMailHdr.length);
+
+    if(returnValue < 0)
     {
-    	printf("Wait not executed on CV %d Lock %d  Reply from Server\n",conditionId,lockId);
+    	printf("Lock not created Reply from Server\n");
+    	returnValue = -1;
     }
 
     return;
@@ -902,7 +912,8 @@ void Signal_Syscall(int conditionId,int lockId)
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
-    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outPktHdr.from = currentThread->threadId + 1;
+    outMailHdr.from = currentThread->threadId + 1; //*****TODO: get the threadId of the currentThread/processId ???????
     outMailHdr.length = strlen(data) + 1;
 
 
@@ -916,11 +927,15 @@ void Signal_Syscall(int conditionId,int lockId)
     }
 
     //Wait for the lock to be created
-    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
-    returnValue=(int)(buffer);
-    if(returnValue==-1)
+    postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
+    printf("Recevied Data of length %d  \n",inMailHdr.length);
+
+    returnValue = calculateValue(buffer,inMailHdr.length);
+
+    if(returnValue < 0)
     {
-    	printf("Signal not executed on CV %d Lock %d  Reply from Server\n",conditionId,lockId);
+    	printf("Lock not created Reply from Server\n");
+    	returnValue = -1;
     }
 
     return;
@@ -1002,7 +1017,8 @@ void Broadcast_Syscall(int conditionId,int lockId)
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
-    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outPktHdr.from = currentThread->threadId + 1;
+    outMailHdr.from = currentThread->threadId + 1; //*****TODO: get the threadId of the currentThread/processId ???????
     outMailHdr.length = strlen(data) + 1;
 
 
@@ -1016,11 +1032,15 @@ void Broadcast_Syscall(int conditionId,int lockId)
     }
 
     //Wait for the lock to be created
-    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
-    returnValue=(int)(buffer);
-    if(returnValue==-1)
+    postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
+    printf("Recevied Data of length %d  \n",inMailHdr.length);
+
+    returnValue = calculateValue(buffer,inMailHdr.length);
+
+    if(returnValue < 0)
     {
-    	printf("Broadcast not executed on CV %d Lock %d  Reply from Server\n",conditionId,lockId);
+    	printf("Lock not created Reply from Server\n");
+    	returnValue = -1;
     }
 
     return;
@@ -1101,9 +1121,9 @@ void DestroyCondition_Syscall(int conditionId)
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
-    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outPktHdr.from = currentThread->threadId + 1;
+    outMailHdr.from = currentThread->threadId + 1; //*****TODO: get the threadId of the currentThread/processId ???????
     outMailHdr.length = strlen(data) + 1;
-
 
     // postOffice->Send for CREATE LOCK
     bool success = postOffice->Send(outPktHdr, outMailHdr, data);
@@ -1115,11 +1135,15 @@ void DestroyCondition_Syscall(int conditionId)
     }
 
     //Wait for the lock to be created
-    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
-    returnValue=(int)(buffer);
-    if(returnValue==-1)
+    postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
+    printf("Recevied Data of length %d  \n",inMailHdr.length);
+
+    returnValue = calculateValue(buffer,inMailHdr.length);
+
+    if(returnValue < 0)
     {
-    	printf("Condition not deleted Reply from Server\n");
+    	printf("Lock not created Reply from Server\n");
+    	returnValue = -1;
     }
 
     return;
