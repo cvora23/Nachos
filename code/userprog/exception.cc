@@ -319,7 +319,8 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
     delete[] data;
     if ( !success )
     {
-      printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
+      printf("The postOffice Send failed. You must not have the other Nachos running."
+    		  " Terminating Nachos.\n");
       interrupt->Halt();
     }
 
@@ -412,9 +413,9 @@ void AcquireLock_Syscall(int lockId)
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
-    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outPktHdr.from = currentThread->threadId + 1;
+    outMailHdr.from = currentThread->threadId + 1; //*****TODO: get the threadId of the currentThread/processId ???????
     outMailHdr.length = strlen(data) + 1;
-
 
     // postOffice->Send for CREATE LOCK
     bool success = postOffice->Send(outPktHdr, outMailHdr, data);
@@ -426,8 +427,7 @@ void AcquireLock_Syscall(int lockId)
     }
 
     //Wait for the lock to be created
-    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
-
+    postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
     printf("Recevied Data of length %d  \n",inMailHdr.length);
 
     returnValue = calculateValue(buffer,inMailHdr.length);
@@ -498,7 +498,8 @@ void ReleaseLock_Syscall(int lockId)
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
-    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outPktHdr.from = currentThread->threadId + 1;
+    outMailHdr.from = currentThread->threadId + 1; //*****TODO: get the threadId of the currentThread/processId ???????
     outMailHdr.length = strlen(data) + 1;
 
 
@@ -507,12 +508,13 @@ void ReleaseLock_Syscall(int lockId)
     delete[] data;
     if ( !success )
     {
-      printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
+      printf("The postOffice Send failed. You must not have the other Nachos running. "
+    		  "Terminating Nachos.\n");
       interrupt->Halt();
     }
 
     //Wait for the lock to be created
-    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
     printf("Recevied Data of length %d  \n",inMailHdr.length);
 
     returnValue = calculateValue(buffer,inMailHdr.length);
@@ -592,7 +594,8 @@ void DestroyLock_Syscall(int lockId)
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
-    outMailHdr.from=0; //*****TODO: get the threadId of the currentThread/processId ???????
+    outPktHdr.from = currentThread->threadId + 1;
+    outMailHdr.from = currentThread->threadId + 1; //*****TODO: get the threadId of the currentThread/processId ???????
     outMailHdr.length = strlen(data) + 1;
 
 
@@ -601,12 +604,13 @@ void DestroyLock_Syscall(int lockId)
     delete[] data;
     if ( !success )
     {
-      printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
+      printf("The postOffice Send failed. You must not have the other Nachos running. "
+    		  "Terminating Nachos.\n");
       interrupt->Halt();
     }
 
     //Wait for the lock to be created
-    postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
+    postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
     printf("Recevied Data of length %d  \n",inMailHdr.length);
 
     returnValue = calculateValue(buffer,inMailHdr.length);
