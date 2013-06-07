@@ -309,7 +309,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
     postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
     printf("Recevied Data of length %d  \n",inMailHdr.length);
 
-    unsigned int i = inMailHdr.length - 2;
+    int i = inMailHdr.length - 2;
 
     while(i>=0)
     {
