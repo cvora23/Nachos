@@ -313,7 +313,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 
     while(i>=0)
     {
-    	if(buffer[i]! = '\0')
+    	if(buffer[i] != '\0')
     	{
     		total += (buffer[i]-48)*multiplier;
     		multiplier *= 10;
