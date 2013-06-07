@@ -740,7 +740,7 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
 
     if(returnValue < 0)
     {
-    	printf("Lock not created Reply from Server\n");
+    	printf("Create Condition RPC FAILED Reply from Server\n");
     	returnValue = -1;
     }
 
@@ -842,7 +842,7 @@ void Wait_Syscall(int conditionId,int lockId)
 
     if(returnValue < 0)
     {
-    	printf("Lock not created Reply from Server\n");
+    	printf("WAIT RPC FAILED Reply from Server\n");
     	returnValue = -1;
     }
 
@@ -934,7 +934,7 @@ void Signal_Syscall(int conditionId,int lockId)
 
     if(returnValue < 0)
     {
-    	printf("Lock not created Reply from Server\n");
+    	printf("Signal RPC FAILED Reply from Server\n");
     	returnValue = -1;
     }
 
@@ -1039,7 +1039,7 @@ void Broadcast_Syscall(int conditionId,int lockId)
 
     if(returnValue < 0)
     {
-    	printf("Lock not created Reply from Server\n");
+    	printf("Broadcast RPC FAILED  Reply from Server\n");
     	returnValue = -1;
     }
 
@@ -1142,7 +1142,7 @@ void DestroyCondition_Syscall(int conditionId)
 
     if(returnValue < 0)
     {
-    	printf("Lock not created Reply from Server\n");
+    	printf("Destroy Condition Failed Reply from Server\n");
     	returnValue = -1;
     }
 
