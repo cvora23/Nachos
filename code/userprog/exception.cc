@@ -427,13 +427,18 @@ void AcquireLock_Syscall(int lockId)
 
     //Wait for the lock to be created
     postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
-    returnValue=(int)(buffer);
-    if(returnValue==-1)
+
+    printf("Recevied Data of length %d  \n",inMailHdr.length);
+
+    returnValue = calculateValue(buffer,inMailHdr.length);
+
+    if(returnValue < 0)
     {
     	printf("Acquire Lock Failed Reply from Server\n");
+    	returnValue = -1;
     }
 
-    return;
+    return ;
 
 
 #else
@@ -508,14 +513,17 @@ void ReleaseLock_Syscall(int lockId)
 
     //Wait for the lock to be created
     postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
-    returnValue=(int)(buffer);
-    if(returnValue==-1)
+    printf("Recevied Data of length %d  \n",inMailHdr.length);
+
+    returnValue = calculateValue(buffer,inMailHdr.length);
+
+    if(returnValue < 0)
     {
     	printf("Release Lock Failed Reply from Server\n");
+    	returnValue = -1;
     }
 
-    return;
-
+    return ;
 
 #else
 
@@ -599,10 +607,14 @@ void DestroyLock_Syscall(int lockId)
 
     //Wait for the lock to be created
     postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
-    returnValue=(int)(buffer);
-    if(returnValue==-1)
+    printf("Recevied Data of length %d  \n",inMailHdr.length);
+
+    returnValue = calculateValue(buffer,inMailHdr.length);
+
+    if(returnValue < 0)
     {
     	printf("Lock not deleted Reply from Server\n");
+    	returnValue = -1;
     }
 
     return;
