@@ -250,6 +250,8 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 #ifdef NETWORK
 
 	char *buf;
+	int total = 0;
+	int multiplier = 1;
 	PacketHeader outPktHdr,inPktHdr;
 	MailHeader outMailHdr,inMailHdr;
 	char buffer[MaxMailSize] = {0};
@@ -307,6 +309,17 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
     postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
     printf("Recevied Data of length %d  \n",inMailHdr.length);
 
+    for(int i=0;i<inMailHdr.length;i++)
+    {
+    	if(buffer[i] != '\0')
+    	{
+    		total += (buffer[i]-48)*multiplier;
+    		multiplier *= 10;
+    	}
+    }
+
+    returnValue = multiplier;
+    fflush(stdout);
 #if 0
 
 	if(response[0] == 'i')
@@ -319,7 +332,7 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
 		{
 		  if(response[j] != '\0')
 		  {
-					total += (response[j]-48)*i;
+					total += (response[j]-48)*multiplier;
 					i = i*10;
 		  }
 		  j--;
@@ -329,7 +342,6 @@ int CreateLock_Syscall(unsigned int vaddr,int lockNameLen)
   fflush(stdout);
 #endif
 
-    returnValue=(int)(buffer);
     if(returnValue==-1)
     {
     	printf("Lock not created Reply from Server\n");
