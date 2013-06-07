@@ -39,6 +39,8 @@ void testCase1()
 	for(i = 0;i<2001;i++)
 	{
 		conditionId = CreateCondition((char*)"ConditionNo",10);
+		Print1("CONDITION ID RECEIVED IS %d\n",lockId);
+
 	}
 	Print("------------------------------------------------------\n");
 
