@@ -666,7 +666,7 @@ void Server()
 				sscanf(buffer,"%d %s",&messageType,name);
 				printf("CreateLock of lock name  %s requested from Client with Machine id: %d and MailBox id: %d\n",\
 																									name, inPacketHdr.from,inMailHdr.from);
-				CreateLock(outPacketHdr.to,outMailHdr.to,name);
+				CreateLock(inPacketHdr.from,inMailHdr.from,name);
 				break;
 			}
 			case SC_DestroyLock:
@@ -674,7 +674,7 @@ void Server()
 				sscanf(buffer,"%d %d",&messageType, &lockId);
 				printf("DestroyLock with lock id /%d requested from Client with Machine id: %d and MailBox id: %d\n",\
 																									lockId, inPacketHdr.from,inMailHdr.from);
-				DestroyLock(outPacketHdr.to,outMailHdr.to,lockId);
+				DestroyLock(inPacketHdr.from,inMailHdr.from,lockId);
 				break;
 			}
 			case SC_CreateCondition:
@@ -683,7 +683,7 @@ void Server()
 				sscanf(buffer,"%d %s",&messageType,name);
 				printf("CreateCondition with condition name %s requested from Client with Machine id: %d, MailBox id: %d \n",\
 																									name, inPacketHdr.from,inMailHdr.from);
-				CreateCondition(outPacketHdr.to,outMailHdr.to,name);
+				CreateCondition(inPacketHdr.from,inMailHdr.from,name);
 				break;
 			}
 			case SC_DestroyCondition:
@@ -691,7 +691,7 @@ void Server()
 				sscanf(buffer,"%d %d",&messageType, &cvId);
 				printf("DestroyCondition request from Client with Machine id: %d, MailBox id: %d for CV id: %d\n",\
 																									inPacketHdr.from,inMailHdr.from,cvId);
-				DestroyCondition(outPacketHdr.to,outMailHdr.to,cvId);
+				DestroyCondition(inPacketHdr.from,inMailHdr.from,cvId);
 				break;
 			}
 			case SC_AcquireLock:
@@ -699,7 +699,7 @@ void Server()
 				sscanf(buffer,"%d %d",&messageType, &lockId);
 				printf("AcquireMethod request from Client with Machine id: %d, MailBox id: %d for lock id: %d\n",\
 																									inPacketHdr.from,inMailHdr.from,lockId);
-				AcquireMethod(outPacketHdr.to,outMailHdr.to,lockId);
+				AcquireMethod(inPacketHdr.from,inMailHdr.from,lockId);
 				break;
 
 			}
@@ -708,7 +708,7 @@ void Server()
 				sscanf(buffer,"%d %d",&messageType, &lockId);
 				printf("ReleaseMethod request from Client with Machine id: %d, MailBox id: %d for lock id: %d\n",\
 																									inPacketHdr.from,inMailHdr.from,lockId);
-				ReleaseMethod(outPacketHdr.to,outMailHdr.to,lockId);
+				ReleaseMethod(inPacketHdr.from,inMailHdr.from,lockId);
 				break;
 			}
 			case SC_Broadcast:
@@ -716,7 +716,7 @@ void Server()
 				sscanf(buffer,"%d %d %d",&messageType, &cvId, &lockId);
 				printf("Broadcast request from Client with Machine id: %d, MailBox id: %d for CV id: %d with lock id: %d\n",\
 																									inPacketHdr.from,inMailHdr.from,cvId,lockId);
-				BroadcastMethod(outPacketHdr.to,outMailHdr.to,lockId,cvId);
+				BroadcastMethod(inPacketHdr.from,inMailHdr.from,lockId,cvId);
 				break;
 			}
 			case SC_Wait:
@@ -724,7 +724,7 @@ void Server()
 				sscanf(buffer,"%d %d %d",&messageType, &cvId, &lockId);
 				printf("Wait request from Client with Machine id: %d, MailBox id: %d for CV id: %d with lock id: %d\n",\
 																									inPacketHdr.from,inMailHdr.from,cvId,lockId);
-				WaitMethod(outPacketHdr.to,outMailHdr.to,lockId,cvId);
+				WaitMethod(inPacketHdr.from,inMailHdr.from,lockId,cvId);
 				break;
 			}
 			case SC_Signal:
@@ -732,7 +732,7 @@ void Server()
 				sscanf(buffer,"%d %d %d",&messageType, &cvId, &lockId);
 				printf("Signal request from Client with Machine id: %d, MailBox id: %d for CV id: %d with lock id: %d\n",\
 																									inPacketHdr.from,inMailHdr.from,cvId,lockId);
-				SignalMethod(outPacketHdr.to,outMailHdr.to,lockId,cvId);
+				SignalMethod(inPacketHdr.from,inMailHdr.from,lockId,cvId);
 				break;
 			}
 			default:

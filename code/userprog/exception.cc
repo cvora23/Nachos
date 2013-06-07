@@ -410,7 +410,7 @@ void AcquireLock_Syscall(int lockId)
 
     outPktHdr.to = 0;	//ServerMachineId = 0 by default
     outMailHdr.to = 0;	//ServerMailBoxId = 0 by default
-    outPktHdr.from = postOffice->netAddr;
+    outPktHdr.from = currentThread->threadId + 1;
     outMailHdr.from = currentThread->threadId + 1; //*****TODO: get the threadId of the currentThread/processId ???????
     outMailHdr.length = strlen(data) + 1;
 
