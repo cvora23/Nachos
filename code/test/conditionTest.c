@@ -77,7 +77,7 @@ void testfunc()
 
 	Print("testfunc  Exiting \n");
 
-	Exit(0);
+	//Exit(0);
 }
 
 void testfunc1()
@@ -101,7 +101,7 @@ void testfunc1()
 
 	Print("testfunc1  Exiting \n");
 
-	Exit(0);
+//	Exit(0);
 }
 
 void testfunc2()
@@ -124,7 +124,7 @@ void testfunc2()
 
 
 	Print("testfunc2  Exiting \n");
-	Exit(0);
+	//Exit(0);
 
 }
 

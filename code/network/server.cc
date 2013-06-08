@@ -229,6 +229,7 @@ void cvsForServer :: Broadcast(int machineId, int mailBoxId, int conditionLockId
 		sprintf(response,"%s","1");
 		SendMessage(machineId,mailBoxId,response);
 		delete [] response;
+		waitingCVOnLock = -1;
 		return;
 	}
 
