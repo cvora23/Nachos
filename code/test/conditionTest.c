@@ -135,8 +135,11 @@ void testCase2()
 	Print("SIGNAL , BROADCAST, WAIT SUCCESS CASE\n");
 	Print("FORKING THREE THREADS TO SIMULATE Wait/Signal/Broadcast System calls \n");
 #endif
+
 	lockNumber1 = CreateLock("lock1",5);
+	Print1("LOCK ID RECEIVED IS %d\n",lockNumber1);
 	cvNumber1 = CreateCondition("cond1",5);
+	Print1("CONDITION ID RECEIVED IS %d\n",cvNumber1);
 
 	Fork(testfunc);
 	Fork(testfunc);
