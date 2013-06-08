@@ -83,12 +83,12 @@ void testfunc1()
 {
 	int myID;
 	myID=threadID;
+	threadID=threadID+1;
 
 	Print2("THREAD %d TRYING TO ACQUIRE LOCK %d \n",myID,lockNumber1);
 	Acquire(lockNumber1);
 	Print2("THREAD %d ACQUIRED LOCK %d \n",myID,lockNumber1);
 
-	threadID=threadID+1;
 	Print2("Thread : %d to send Signal on LOCK %d \n",myID,lockNumber1);
 	Signal(cvNumber1,lockNumber1);
 
@@ -105,12 +105,12 @@ void testfunc2()
 {
 	int myID;
 	myID=threadID;
+	threadID=threadID+1;
 
 	Print2("THREAD %d TRYING TO ACQUIRE LOCK %d \n",myID,lockNumber1);
 	Acquire(lockNumber1);
 	Print2("THREAD %d ACQUIRED LOCK %d \n",myID,lockNumber1);
 
-	threadID=threadID+1;
 	Print2("Thread : %d to send Broadcast to %d more waiting threads\n",myID,threadsWaiting);
 	Broadcast(cvNumber1,lockNumber1);
 
