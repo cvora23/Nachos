@@ -311,10 +311,11 @@ void DestroyLock(int machineId, int mailBoxId, int lockId)
 	if(lockId< 0 || lockId > MAX_LOCKS)
 	{
 		printf("Invalid lockId\n");
-		char *buf2 = new char[100];
-		sprintf(buf2,"%s","-1");
-		SendMessage(machineId,mailBoxId,buf2);
-		delete [] buf2;
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
 		return;
 	}
 
@@ -322,10 +323,11 @@ void DestroyLock(int machineId, int mailBoxId, int lockId)
 	if(serverLockTable.serverLocksArray[lockId].valid == false)
 	{
 		printf("Lock already deleted cannot destroy lock");
-		char *buf2 = new char[100];
-		sprintf(buf2,"%s","-1");
-		SendMessage(machineId,mailBoxId,buf2);
-		delete [] buf2;
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
 		return;
 	}
 
@@ -341,19 +343,21 @@ void DestroyLock(int machineId, int mailBoxId, int lockId)
 	delete serverLockTable.serverLocksArray[lockId].serverLock;
 	serverLockTable.serverLocksArray[lockId].valid = false;
 	//(serverLockTable.serverLocksArray[lockId].sLockCounter)=0;
-	char *buff2 = new char[100];
-	sprintf(buff2,"%s","1");
-	SendMessage(machineId,mailBoxId,buff2);
-	delete [] buff2;
+	char *buf = new char[MaxMailSize];
+	memset(buf,0,MaxMailSize);
+	sprintf(buf,"%s","1");
+	SendMessage(machineId,mailBoxId,buf);
+	delete [] buf;
 	return;
 	}
 	else
 	{
 	printf("Lock cannot be deleted as it is in use\n");
-	char *buff2 = new char[100];
-	sprintf(buff2,"%s","-1");
-	SendMessage(machineId,mailBoxId,buff2);
-	delete [] buff2;
+	char *buf = new char[MaxMailSize];
+	memset(buf,0,MaxMailSize);
+	sprintf(buf,"%s","-1");
+	SendMessage(machineId,mailBoxId,buf);
+	delete [] buf;
 	return;
 	}
 }
@@ -439,11 +443,12 @@ void CreateCondition(int machineId, int mailBoxId, char * name)
 				strcmp(serverCVTable.serverCVSArray[i].serverCV->name,name)==0)
 		{
 			(serverCVTable.serverCVSArray[i].sCVCounter)++;
-			char *buf6 = new char[100];
-			sprintf(buf6,"%d",i); //since lock is already crated give the lock id in message
+			char *buf = new char[MaxMailSize];
+			memset(buf,0,MaxMailSize);
+			sprintf(buf,"%d",i); //since lock is already crated give the lock id in message
 			printf("CV already created so sent the CVId to the client\n");
-			SendMessage(machineId,mailBoxId,buf6);
-			delete [] buf6;
+			SendMessage(machineId,mailBoxId,buf);
+			delete [] buf;
 			return;
 		}
 
@@ -452,11 +457,12 @@ void CreateCondition(int machineId, int mailBoxId, char * name)
 	if((index=serverCVTable.sCVBitMap->Find())==-1)
 	{
 		printf("No place to create new CV, Max limit of CVS reached\n");
-		char *buf6 = new char[100];
-		sprintf(buf6,"%s","-1");
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
 		printf("message sent to client that there is no place to create new CV\n");
-		SendMessage(machineId,mailBoxId,buf6);
-		delete [] buf6;
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
 		return;
 	}
 	else
@@ -464,11 +470,12 @@ void CreateCondition(int machineId, int mailBoxId, char * name)
 		serverCVTable.serverCVSArray[index].serverCV = new cvsForServer(name);
 		serverCVTable.serverCVSArray[index].valid = true;
 		(serverCVTable.serverCVSArray[index].sCVCounter)++;
-		char *buf6 = new char[100];
-		sprintf(buf6,"%s","1");
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","1");
 		printf("message sent to client that CV is created with CVId %d\n",index);
-		SendMessage(machineId,mailBoxId,buf6);
-		delete [] buf6;
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
 		return;
 
 	}
@@ -482,10 +489,11 @@ void DestroyCondition(int machineId, int mailBoxId, int cvId)
 	{
 
 		printf("Invalid cvId\n");
-		char *buf7 = new char[100];
-		sprintf(buf7,"%s","-1");
-		SendMessage(machineId,mailBoxId,buf7);// TODO : juzz send -1
-		delete [] buf7;
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
+		SendMessage(machineId,mailBoxId,buf);// TODO : juzz send -1
+		delete [] buf;
 		return;
 	}
 
@@ -493,10 +501,11 @@ void DestroyCondition(int machineId, int mailBoxId, int cvId)
 	if(serverCVTable.serverCVSArray[cvId].valid == false)
 	{
 		printf("CV already deleted cannot destroy CV");
-		char *buf7 = new char[100];
-		sprintf(buf7,"%s","-1");
-		SendMessage(machineId,mailBoxId,buf7);
-		delete [] buf7;
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
 		return;
 	}
 
@@ -510,19 +519,21 @@ void DestroyCondition(int machineId, int mailBoxId, int cvId)
 	serverCVTable.sCVBitMap->Clear(cvId);
 	delete serverCVTable.serverCVSArray[cvId].serverCV;
 	serverCVTable.serverCVSArray[cvId].valid = false;
-	char *buf7 = new char[100];
-	sprintf(buf7,"%s","1");
-	SendMessage(machineId,mailBoxId,buf7);
-	delete [] buf7;
+	char *buf = new char[MaxMailSize];
+	memset(buf,0,MaxMailSize);
+	sprintf(buf,"%s","1");
+	SendMessage(machineId,mailBoxId,buf);
+	delete [] buf;
 	return;
 	}
 	else
 	{
 	printf("CV cannot be deleted as it is in use\n");
-	char *buf7 = new char[100];
-	sprintf(buf7,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf7);
-	delete [] buf7;
+	char *buf = new char[MaxMailSize];
+	memset(buf,0,MaxMailSize);
+	sprintf(buf,"%s","-1");
+	SendMessage(machineId,mailBoxId,buf);
+	delete [] buf;
 	return;
 	}
 }
@@ -532,10 +543,11 @@ void WaitMethod(int machineId, int mailBoxId, int lockId, int cvId)
 	if(lockId<0 || lockId>MAX_LOCKS || cvId<0 || cvId> MAX_CVS)
 	{
 	printf("Lock and CV out of range");
-	char *buf3 = new char[100];
-	sprintf(buf3,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf3);
-	delete [] buf3;
+	char *buf = new char[MaxMailSize];
+	memset(buf,0,MaxMailSize);
+	sprintf(buf,"%s","-1");
+	SendMessage(machineId,mailBoxId,buf);
+	delete [] buf;
 	return;
 	}
 
@@ -544,10 +556,11 @@ void WaitMethod(int machineId, int mailBoxId, int lockId, int cvId)
 			== false)
 	{
 	printf("Lock or CV is not valid\n");
-	char *buf3 = new char[100];
-	sprintf(buf3,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf3);
-	delete [] buf3;
+	char *buf = new char[MaxMailSize];
+	memset(buf,0,MaxMailSize);
+	sprintf(buf,"%s","-1");
+	SendMessage(machineId,mailBoxId,buf);
+	delete [] buf;
 	return;
 	}
 
@@ -563,10 +576,11 @@ void SignalMethod(int machineId, int mailBoxId, int lockId, int cvId)
 	if(lockId<0 || lockId>MAX_LOCKS || cvId<0 || cvId> MAX_CVS)
 	{
 	printf("Lock and CV out of range");
-	char *buf4 = new char[100];
-	sprintf(buf4,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf4);
-	delete [] buf4;
+	char *buf = new char[MaxMailSize];
+	memset(buf,0,MaxMailSize);
+	sprintf(buf,"%s","-1");
+	SendMessage(machineId,mailBoxId,buf);
+	delete [] buf;
 	return;
 	}
 
@@ -575,10 +589,11 @@ void SignalMethod(int machineId, int mailBoxId, int lockId, int cvId)
 			== false)
 	{
 	printf("Lock or CV is not valid\n");
-	char *buf4 = new char[100];
-	sprintf(buf4,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf4);
-	delete [] buf4;
+	char *buf = new char[MaxMailSize];
+	memset(buf,0,MaxMailSize);
+	sprintf(buf,"%s","-1");
+	SendMessage(machineId,mailBoxId,buf);
+	delete [] buf;
 	return;
 	}
 
@@ -593,10 +608,11 @@ void BroadcastMethod(int machineId, int mailBoxId, int lockId, int cvId)
 	if(lockId<0 || lockId>MAX_LOCKS || cvId<0 || cvId> MAX_CVS)
 	{
 	printf("Lock and CV out of range");
-	char *buf5 = new char[100];
-	sprintf(buf5,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf5);
-	delete [] buf5;
+	char *buf = new char[MaxMailSize];
+	memset(buf,0,MaxMailSize);
+	sprintf(buf,"%s","-1");
+	SendMessage(machineId,mailBoxId,buf);
+	delete [] buf;
 	return;
 	}
 
@@ -605,10 +621,11 @@ void BroadcastMethod(int machineId, int mailBoxId, int lockId, int cvId)
 			== false)
 	{
 	printf("Lock or CV is not valid\n");
-	char *buf5 = new char[100];
-	sprintf(buf5,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf5);
-	delete [] buf5;
+	char *buf = new char[MaxMailSize];
+	memset(buf,0,MaxMailSize);
+	sprintf(buf,"%s","-1");
+	SendMessage(machineId,mailBoxId,buf);
+	delete [] buf;
 	return;
 	}
 
