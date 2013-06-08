@@ -58,14 +58,21 @@ int threadID=0;
 void testfunc()
 {
 	int myID;
-	Acquire(lockNumber1);
 	myID=threadID;
 	threadID=threadID+1;
+
+	Acquire(lockNumber1);
+	Print1("THREAD %d \n",myID);
+
 	Print2("Thread : %d is waiting on lockId : %d \n",myID,lockNumber1);
 	threadsWaiting=threadsWaiting+1;
 	Wait(cvNumber1,lockNumber1);
+	Print1("THREAD %d \n",myID);
+
 	Print1("Thread %d Coming Out of Wait\n",myID);
 	Release(lockNumber1);
+	Print1("THREAD %d \n",myID);
+
 	Exit(0);
 }
 
@@ -73,25 +80,30 @@ void testfunc1()
 {
 	int myID;
 	Acquire(lockNumber1);
+	Print("THREAD 4 \n");
 	myID=threadID;
 	threadID=threadID+1;
 	Print1("Thread : %d to send Signal\n",myID);
 	Signal(cvNumber1,lockNumber1);
+	Print("THREAD 1 \n");
 	threadsWaiting=threadsWaiting-1;
 	Release(lockNumber1);
+	Print("THREAD 1 \n");
 	Exit(0);
-
 }
 
 void testfunc2()
 {
 	int myID;
 	Acquire(lockNumber1);
+	Print("THREAD 5 \n");
 	myID=threadID;
 	threadID=threadID+1;
 	Print2("Thread : %d to send Broadcast to %d more waiting threads\n",myID,threadsWaiting);
 	Broadcast(cvNumber1,lockNumber1);
+	Print("THREAD 2 \n");
 	Release(lockNumber1);
+	Print("THREAD 2 \n");
 	Exit(0);
 
 }
