@@ -62,16 +62,18 @@ void testfunc()
 	threadID=threadID+1;
 
 	Acquire(lockNumber1);
-	Print1("THREAD %d \n",myID);
+	Print2("THREAD %d ACQUIRED LOCK %d \n",myID,lockNumber1);
 
 	Print2("Thread : %d is waiting on lockId : %d \n",myID,lockNumber1);
 	threadsWaiting=threadsWaiting+1;
 	Wait(cvNumber1,lockNumber1);
-	Print1("THREAD %d \n",myID);
 
 	Print1("Thread %d Coming Out of Wait\n",myID);
+
 	Release(lockNumber1);
-	Print1("THREAD %d \n",myID);
+	Print2("THREAD %d RELEASING LOCK %d\n",myID,lockNumber1);
+
+	Print("testfunc  Exiting \n");
 
 	Exit(0);
 }
@@ -79,31 +81,41 @@ void testfunc()
 void testfunc1()
 {
 	int myID;
-	Acquire(lockNumber1);
-	Print("THREAD 4 \n");
 	myID=threadID;
+
+	Acquire(lockNumber1);
+	Print2("THREAD %d ACQUIRED LOCK %d \n",myID,lockNumber1);
+
 	threadID=threadID+1;
-	Print1("Thread : %d to send Signal\n",myID);
+	Print1("Thread : %d to send Signal on LOCK %d \n",myID,lockNumber1);
 	Signal(cvNumber1,lockNumber1);
-	Print("THREAD 1 \n");
+
 	threadsWaiting=threadsWaiting-1;
 	Release(lockNumber1);
-	Print("THREAD 1 \n");
+	Print2("THREAD %d RELEASING LOCK %d\n",myID,lockNumber1);
+
+	Print("testfunc1  Exiting \n");
+
 	Exit(0);
 }
 
 void testfunc2()
 {
 	int myID;
-	Acquire(lockNumber1);
-	Print("THREAD 5 \n");
 	myID=threadID;
+
+	Acquire(lockNumber1);
+	Print2("THREAD %d ACQUIRED LOCK %d \n",myID,lockNumber1);
+
 	threadID=threadID+1;
 	Print2("Thread : %d to send Broadcast to %d more waiting threads\n",myID,threadsWaiting);
 	Broadcast(cvNumber1,lockNumber1);
-	Print("THREAD 2 \n");
+
 	Release(lockNumber1);
-	Print("THREAD 2 \n");
+	Print2("THREAD %d RELEASING LOCK %d\n",myID,lockNumber1);
+
+
+	Print("testfunc2  Exiting \n");
 	Exit(0);
 
 }
@@ -152,6 +164,9 @@ void testCase2()
 	Yield();
 	Yield();
 	Fork(testfunc2);
+
+	Print("TestCase 2 Exiting \n");
+
 	Exit(0);
 
 
