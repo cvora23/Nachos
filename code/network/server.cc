@@ -153,6 +153,7 @@ void cvsForServer::Signal(int machineId,int mailBoxId,int conditionLockId)
 		sprintf(response,"%s","-1");
 		SendMessage(machineId,mailBoxId,response);
 		delete [] response;
+		waitingCVOnLock = -1;
 		return;
 	}
 
@@ -170,9 +171,15 @@ void cvsForServer::Signal(int machineId,int mailBoxId,int conditionLockId)
 void cvsForServer :: Wait(int machineId, int mailBoxId, int conditionLockId)
 {
 
+	if(waitingCVOnLock ==-1)
+	//no one is waiting on the lock
+	{
+		waitingCVOnLock= conditionLockId;
+	}
+
+
 	if(waitingCVOnLock != conditionLockId)
 	{
-		//Illegal lock , so cannot signa..
 		char *response = new char[100];
 		sprintf(response,"%s","-1");
 		SendMessage(machineId,mailBoxId,response);
@@ -180,11 +187,6 @@ void cvsForServer :: Wait(int machineId, int mailBoxId, int conditionLockId)
 		return;
 	}
 
-	if(waitingCVOnLock ==-1)
-	//no one is waiting on the lock
-	{
-	waitingCVOnLock= conditionLockId;
-	}
 
 	//create message
 	clientReply* clientRply = new clientReply();
@@ -232,7 +234,7 @@ void cvsForServer :: Broadcast(int machineId, int mailBoxId, int conditionLockId
 
 	//now if we are here we have to broad cast to all waiting clients on CV
 	//so for this remove clientMsg from waitQueue one by one and
-	//acquire lock..so this has to be done is a while loop
+	//acquire lock..so this has to be done in a while loop
 
 	clientReply* clientRply;
 	while(!(waitingQueueOfCVS -> IsEmpty()))
@@ -240,6 +242,10 @@ void cvsForServer :: Broadcast(int machineId, int mailBoxId, int conditionLockId
 		clientRply= (clientReply*)waitingQueueOfCVS->Remove();
 		serverLockTable.serverLocksArray[conditionLockId].serverLock->
 		Acquire(clientRply->outPktHdr.to, clientRply->outMailHdr.to);
+	}
+	if(waitingQueueOfCVS -> IsEmpty())
+	{
+		waitingCVOnLock = -1;
 	}
 
 	char *response = new char[100];
