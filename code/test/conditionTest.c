@@ -40,7 +40,6 @@ void testCase1()
 	{
 		conditionId = CreateCondition((char*)"ConditionNo",10);
 		Print1("CONDITION ID RECEIVED IS %d\n",conditionId);
-
 	}
 	Print("------------------------------------------------------\n");
 
@@ -79,9 +78,7 @@ void testfunc()
 
 	Print("testfunc  Exiting \n");
 
-	/*
-	 * Exit(0);
-	 */
+	Exit(0);
 }
 
 void testfunc1()
@@ -107,9 +104,7 @@ void testfunc1()
 
 	Print("testfunc1  Exiting \n");
 
-	/*
-	 * Exit(0);
-	 */
+	Exit(0);
 }
 
 void testfunc2()
@@ -133,9 +128,8 @@ void testfunc2()
 	Print1("THREAD %d is done !!!!!!!!!!!!!!!!!! \n",myID);
 
 	Print("testfunc2  Exiting \n");
-	/*
-	 * Exit(0);
-	 */
+
+	Exit(0);
 }
 
 void testCase2()
