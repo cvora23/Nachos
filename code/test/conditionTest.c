@@ -61,6 +61,7 @@ void testfunc()
 	myID=threadID;
 	threadID=threadID+1;
 
+	Print2("THREAD %d TRYING TO ACQUIRE LOCK %d \n",myID,lockNumber1);
 	Acquire(lockNumber1);
 	Print2("THREAD %d ACQUIRED LOCK %d \n",myID,lockNumber1);
 
@@ -83,6 +84,7 @@ void testfunc1()
 	int myID;
 	myID=threadID;
 
+	Print2("THREAD %d TRYING TO ACQUIRE LOCK %d \n",myID,lockNumber1);
 	Acquire(lockNumber1);
 	Print2("THREAD %d ACQUIRED LOCK %d \n",myID,lockNumber1);
 
@@ -104,6 +106,7 @@ void testfunc2()
 	int myID;
 	myID=threadID;
 
+	Print2("THREAD %d TRYING TO ACQUIRE LOCK %d \n",myID,lockNumber1);
 	Acquire(lockNumber1);
 	Print2("THREAD %d ACQUIRED LOCK %d \n",myID,lockNumber1);
 
