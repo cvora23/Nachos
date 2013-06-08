@@ -87,7 +87,7 @@ void testfunc1()
 	Print2("THREAD %d ACQUIRED LOCK %d \n",myID,lockNumber1);
 
 	threadID=threadID+1;
-	Print1("Thread : %d to send Signal on LOCK %d \n",myID,lockNumber1);
+	Print2("Thread : %d to send Signal on LOCK %d \n",myID,lockNumber1);
 	Signal(cvNumber1,lockNumber1);
 
 	threadsWaiting=threadsWaiting-1;
