@@ -71,8 +71,9 @@ void testfunc()
 
 	Print1("Thread %d Coming Out of Wait\n",myID);
 
-	Release(lockNumber1);
 	Print2("THREAD %d RELEASING LOCK %d\n",myID,lockNumber1);
+	Release(lockNumber1);
+	Print2("THREAD %d RELEASED LOCK %d\n",myID,lockNumber1);
 
 	Print("testfunc  Exiting \n");
 
@@ -93,8 +94,10 @@ void testfunc1()
 	Signal(cvNumber1,lockNumber1);
 
 	threadsWaiting=threadsWaiting-1;
-	Release(lockNumber1);
+
 	Print2("THREAD %d RELEASING LOCK %d\n",myID,lockNumber1);
+	Release(lockNumber1);
+	Print2("THREAD %d RELEASED LOCK %d\n",myID,lockNumber1);
 
 	Print("testfunc1  Exiting \n");
 
@@ -114,8 +117,10 @@ void testfunc2()
 	Print2("Thread : %d to send Broadcast to %d more waiting threads\n",myID,threadsWaiting);
 	Broadcast(cvNumber1,lockNumber1);
 
-	Release(lockNumber1);
+
 	Print2("THREAD %d RELEASING LOCK %d\n",myID,lockNumber1);
+	Release(lockNumber1);
+	Print2("THREAD %d RELEASED LOCK %d\n",myID,lockNumber1);
 
 
 	Print("testfunc2  Exiting \n");
