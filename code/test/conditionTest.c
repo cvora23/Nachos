@@ -75,7 +75,7 @@ void testfunc()
 	Release(lockNumber1);
 	Print2("THREAD %d RELEASED LOCK %d\n",myID,lockNumber1);
 
-	Print("THREAD %d is done !!!!!!!!!!!!!!!!!! \n");
+	Print1("THREAD %d is done !!!!!!!!!!!!!!!!!! \n",myID);
 
 	Print("testfunc  Exiting \n");
 
@@ -103,7 +103,7 @@ void testfunc1()
 	Release(lockNumber1);
 	Print2("THREAD %d RELEASED LOCK %d\n",myID,lockNumber1);
 
-	Print("THREAD %d is done !!!!!!!!!!!!!!!!!! \n");
+	Print1("THREAD %d is done !!!!!!!!!!!!!!!!!! \n",myID);
 
 	Print("testfunc1  Exiting \n");
 
@@ -130,7 +130,7 @@ void testfunc2()
 	Release(lockNumber1);
 	Print2("THREAD %d RELEASED LOCK %d\n",myID,lockNumber1);
 
-	Print("THREAD %d is done !!!!!!!!!!!!!!!!!! \n");
+	Print1("THREAD %d is done !!!!!!!!!!!!!!!!!! \n",myID);
 
 	Print("testfunc2  Exiting \n");
 	/*
