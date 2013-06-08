@@ -114,7 +114,7 @@ void testCase2()
 	int negativeLockId=-1;
 	int hugeLockId=9999;
 	int hugeCVId=9999;
-
+#if 0
 	Print("WAIT/SIGNAL/BROADCAST SYSTEM CALL TEST \n");
 
 	Print(" WAITING on invalid LOCK/CONDITION .. Passing -VE CONDITION ID and LOCK ID\n");
@@ -134,7 +134,7 @@ void testCase2()
 
 	Print("SIGNAL , BROADCAST, WAIT SUCCESS CASE\n");
 	Print("FORKING THREE THREADS TO SIMULATE Wait/Signal/Broadcast System calls \n");
-
+#endif
 	lockNumber1 = CreateLock("lock1",5);
 	cvNumber1 = CreateCondition("cond1",5);
 
