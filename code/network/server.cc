@@ -472,7 +472,7 @@ void CreateCondition(int machineId, int mailBoxId, char * name)
 		(serverCVTable.serverCVSArray[index].sCVCounter)++;
 		char *buf = new char[MaxMailSize];
 		memset(buf,0,MaxMailSize);
-		sprintf(buf,"%s",index);
+		sprintf(buf,"%d",index);
 		printf("message sent to client that CV is created with CVId %d\n",index);
 		SendMessage(machineId,mailBoxId,buf);
 		delete [] buf;
