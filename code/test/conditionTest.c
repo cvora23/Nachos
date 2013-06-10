@@ -82,7 +82,6 @@ void testfunc()
 #endif
 	Print("testfunc  Exiting \n");
 
-	Exit(0);
 }
 
 void testfunc1()
@@ -111,7 +110,6 @@ void testfunc1()
 #endif
 
 	Print("testfunc1  Exiting \n");
-	Exit(0);
 
 }
 
@@ -192,7 +190,6 @@ void testCase2()
 
 	Print("TestCase 2 Exiting \n");
 
-	Exit(0);
 
 
 }
