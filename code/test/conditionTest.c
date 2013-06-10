@@ -83,6 +83,8 @@ void testfunc()
 
 void testfunc1()
 {
+	Exit(0);
+
 	int myID;
 	myID=threadID;
 	threadID=threadID+1;
@@ -104,7 +106,7 @@ void testfunc1()
 
 	Print("testfunc1  Exiting \n");
 
-	Exit(0);
+
 }
 
 void testfunc2()
