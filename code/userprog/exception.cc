@@ -721,6 +721,10 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
       printf("The postOffice Send failed. You must not have the other Nachos running. Terminating Nachos.\n");
       interrupt->Halt();
     }
+    else
+    {
+    	printf("ACQUIRE LOCK CALL IS SUCCESSFUL \n");
+    }
 
     //Wait for the lock to be created
     postOffice->Receive(currentThread->threadId + 1, &inPktHdr, &inMailHdr, buffer);
