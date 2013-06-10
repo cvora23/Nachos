@@ -137,10 +137,12 @@ void testfunc2()
 
 	Print1("THREAD %d is done !!!!!!!!!!!!!!!!!! \n",myID);
 
+	Print("testfunc2  Exiting \n");
+	Exit(0);
+
+
 #endif
 
-	Print("testfunc2  Exiting \n");
-	//Exit(0);
 }
 
 void testCase2()
