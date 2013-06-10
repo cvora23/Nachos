@@ -104,8 +104,9 @@ void testfunc1()
 
 	Print1("THREAD %d is done !!!!!!!!!!!!!!!!!! \n",myID);
 
-	Print("testfunc1  Exiting \n");
 #endif
+
+	Print("testfunc1  Exiting \n");
 	Exit(0);
 
 }
@@ -132,8 +133,9 @@ void testfunc2()
 
 	Print1("THREAD %d is done !!!!!!!!!!!!!!!!!! \n",myID);
 
-	Print("testfunc2  Exiting \n");
 #endif
+
+	Print("testfunc2  Exiting \n");
 	Exit(0);
 }
 
