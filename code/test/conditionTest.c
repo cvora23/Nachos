@@ -226,7 +226,9 @@ int main()
 		}
 		break;
 	}
-	Exit(0);
+	/**
+	 * EXIT(0);
+	 */
 }
 
 
