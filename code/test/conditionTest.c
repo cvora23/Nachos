@@ -57,7 +57,7 @@ int threadID=0;
 void testfunc()
 {
 
-#if 0
+#if 1
 
 	int myID;
 	myID=threadID;
@@ -87,7 +87,7 @@ void testfunc()
 void testfunc1()
 {
 
-#if 0
+#if 1
 	int myID;
 	myID=threadID;
 	threadID=threadID+1;
@@ -116,7 +116,7 @@ void testfunc1()
 void testfunc2()
 {
 
-#if 0
+#if 1
 	int myID;
 	myID=threadID;
 	threadID=threadID+1;
@@ -136,8 +136,6 @@ void testfunc2()
 	Print1("THREAD %d is done !!!!!!!!!!!!!!!!!! \n",myID);
 
 	Print("testfunc2  Exiting \n");
-	Exit(0);
-
 
 #endif
 

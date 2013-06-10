@@ -723,7 +723,7 @@ int CreateCondition_Syscall(unsigned int vaddr,int conditionNameLen)
     }
     else
     {
-    	printf("ACQUIRE LOCK CALL IS SUCCESSFUL \n");
+    	printf("CREATE CONDITION CALL IS SUCCESSFUL \n");
     }
 
     //Wait for the lock to be created
