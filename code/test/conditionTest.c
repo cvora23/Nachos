@@ -140,7 +140,7 @@ void testfunc2()
 #endif
 
 	Print("testfunc2  Exiting \n");
-	Exit(0);
+	//Exit(0);
 }
 
 void testCase2()
