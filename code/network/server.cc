@@ -662,6 +662,8 @@ void Server()
 
 	while(1)
 	{
+		printf("Server Loop Started !!!!!!!!!!! \n");
+
 		postOffice->Receive(0,&inPacketHdr,&inMailHdr,buffer);
 		printf("Received some data... Will Parse the data \n");
 		outPacketHdr.to = inMailHdr.from;
