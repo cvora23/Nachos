@@ -30,8 +30,8 @@ public:
 	bool isHeldByCurrentClient(int machineId,int mailBoxId);
 	char* getName() {return name;}
 
-	void Acquire(int machineId,int mailBoxId);
-	bool Release(int machineId,int mailBoxId);
+	void Acquire(int lockId,int machineId,int mailBoxId);
+	bool Release(int lockId,int machineId,int mailBoxId);
 	List* waitingQueueOfLocks;
 	char* name;
 
@@ -80,9 +80,9 @@ public:
 	cvsForServer(char* debugName);
 	~cvsForServer();
 	char* getName() {return name ;}
-	void Wait(int machineId,int mailBoxId,int conditionLock);
-	void Broadcast(int machineId,int mailBoxId,int conditionLock);
-	void Signal(int machineId,int mailBoxId,int conditionLock);
+	void Wait(int machineId,int mailBoxId,int conditionId,int conditionLock);
+	void Broadcast(int machineId,int mailBoxId,int conditionId,int conditionLock);
+	void Signal(int machineId,int mailBoxId,int conditionId,int conditionLock);
 
 	List* waitingQueueOfCVS;
 	char* name;

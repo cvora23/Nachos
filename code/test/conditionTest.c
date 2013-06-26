@@ -52,7 +52,7 @@ void testCase1()
 /* TEST FUNCTIONS FOR TEST CASE 2*/
 
 int lockNumber1,cvNumber1,threadsWaiting=0;
-int threadID=0;
+int threadID=2;
 
 void testfunc()
 {

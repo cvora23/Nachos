@@ -62,14 +62,13 @@ bool locksForServer::isHeldByCurrentClient(int machineId,int mailBoxId)
 	}
 }
 
-void locksForServer::Acquire(int machineId,int mailBoxId)
+void locksForServer::Acquire(int lockId,int machineId,int mailBoxId)
 {
 	if(isHeldByCurrentClient(machineId,mailBoxId))
 	{
-		printf("THe Lock is already acquired by the Client\n");
 		char* buf = new char[MaxMailSize];
 		sprintf(buf,"%s","1");
-		printf("LOCK ACQUIRE FAIL REPLY TO : machineId = %d mailBoxId = %d \n",
+		printf("LOCK %d ALREADY ACQUIRED MESSAGE SENT TO machineId = %d mailBoxId = %d \n",lockId,
 				machineId,mailBoxId);
 		SendMessage(machineId,mailBoxId,buf);
 		delete [] buf;
@@ -82,8 +81,8 @@ void locksForServer::Acquire(int machineId,int mailBoxId)
 		ownerMailBoxId = mailBoxId;
 		char* buf = new char[MaxMailSize];
 		sprintf(buf,"%s","1");
-		printf("LOCK ACQUIRE PASS REPLY TO : machineId = %d mailBoxId = %d \n",
-				machineId,mailBoxId);
+		printf("LOCK %d ACQUIRED MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+				lockId,machineId,mailBoxId);
 		SendMessage(machineId,mailBoxId,buf);
 		delete [] buf;
 	}
@@ -95,17 +94,19 @@ void locksForServer::Acquire(int machineId,int mailBoxId)
 		clientRply->outMailHdr.to = mailBoxId;
 		clientRply->outMailHdr.from = 0;
 		clientRply->outMailHdr.length = strlen(clientRply->data + 1);
+		printf("LOCK %d CURRENTLY ACQUIRED BY machineId = %d, mailBoxId = %d SO WAITING IN LOCK QUEUE MESSAGE SENT TO "
+				"machineId = %d mailBoxId = %d \n",lockId,
+				ownerMachineId,ownerMailBoxId,machineId,mailBoxId);
 		waitingQueueOfLocks->Append((void*)clientRply);
 	}
 
 	return;
 }
 
-bool locksForServer::Release(int machineId,int mailBoxId)
+bool locksForServer::Release(int lockId,int machineId,int mailBoxId)
 {
 	if(!isHeldByCurrentClient(machineId,mailBoxId))
 	{
-		printf("Error releasing since the current cient does not hold the lock\n");
 		return false;
 	}
 
@@ -114,13 +115,14 @@ bool locksForServer::Release(int machineId,int mailBoxId)
 	{
 		ownerMachineId = clientRply->outPktHdr.to;
 		ownerMailBoxId = clientRply->outMailHdr.to;
-		printf("LOCK RELEASED TO  : machineId = %d mailBoxId = %d \n",
+		printf("LOCK %d RELEASED MESSAGE SENT TO  : machineId = %d mailBoxId = %d \n",lockId,
 				clientRply->outPktHdr.to,clientRply->outMailHdr.to);
 		SendMessage(clientRply->outPktHdr.to,clientRply->outMailHdr.to,clientRply->data);
 		delete clientRply;
 	}
 	else
 	{
+		printf("LOCK %d RELEASED TO NO ONE AND IS FREE TO BE ACQUIRED MESSAGE SENT TO !!!!!! \n",lockId);
 		serverLockStatusObj = SERVERLOCKFREE;
 		ownerMachineId = -1;
 		ownerMailBoxId = -1;
@@ -140,13 +142,14 @@ cvsForServer::~cvsForServer()
 	delete waitingQueueOfCVS;
 }
 
-void cvsForServer::Signal(int machineId,int mailBoxId,int conditionLockId)
+void cvsForServer::Signal(int machineId,int mailBoxId,int conditionId,int conditionLockId)
 {
 	if(waitingCVOnLock != conditionLockId)
 	{
 		char* response = new char[100];
 		sprintf(response,"%s","-1");
-		printf(" CONDITION SIGNAL FAIL INVALID CONDITION LOCK ID PASSED  \n");
+		printf(" CONDITION %d SIGNAL FAIL INVALID CONDITION LOCK ID %d PASSED MESSAGE SENT TO  machineId = %d mailBoxId = %d \n",
+				conditionId,conditionLockId,machineId,mailBoxId);
 		SendMessage(machineId,mailBoxId,response);
 		delete [] response;
 		return;
@@ -156,7 +159,8 @@ void cvsForServer::Signal(int machineId,int mailBoxId,int conditionLockId)
 	{
 		char* response = new char[100];
 		sprintf(response,"%s","-1");
-		printf(" CONDITION SIGNAL FAIL NO ONE WAITING FOR THIS CONDITION \n");
+		printf(" CONDITION %d SIGNAL FAIL NO ONE WAITING FOR THIS CONDITION MESSAGE SENT TO  machineId = %d mailBoxId = %d \n",
+				conditionId,machineId,mailBoxId);
 		SendMessage(machineId,mailBoxId,response);
 		delete [] response;
 		waitingCVOnLock = -1;
@@ -166,22 +170,23 @@ void cvsForServer::Signal(int machineId,int mailBoxId,int conditionLockId)
 	clientReply* clientRply= (clientReply*)waitingQueueOfCVS->Remove();
 	if(clientRply != NULL)
 	{
-		printf("SOMEONE WAITING FOR THIS SIGNAL  : machineId = %d mailBoxId = %d \n",
-				clientRply->outPktHdr.to,clientRply->outMailHdr.to);
-		serverLockTable.serverLocksArray[conditionLockId].serverLock->Acquire(clientRply->outPktHdr.to,
+		printf("CONDITION %d SIGNAL WITH LOCK %d TO machineId = %d mailBoxId = %d \n",
+				conditionId,conditionLockId,clientRply->outPktHdr.to,clientRply->outMailHdr.to);
+		serverLockTable.serverLocksArray[conditionLockId].serverLock->Acquire(conditionLockId,clientRply->outPktHdr.to,
 			clientRply->outMailHdr.to);
 	}
 
 	char *response = new char[100];
 	sprintf(response,"%s","1");
-	printf("CONDITION SIGNAL PASS REPLY TO  : machineId = %d mailBoxId = %d \n",
-			machineId,mailBoxId);
+	printf("CONDITION %d SIGNAL WITH LOCK %d DONE MESSAGE SENT TO  "
+			"machineId = %d mailBoxId = %d \n",
+			conditionId,conditionLockId,machineId,mailBoxId);
 	SendMessage(machineId,mailBoxId,response);
 	delete [] response;
 	return;
 }
 
-void cvsForServer :: Wait(int machineId, int mailBoxId, int conditionLockId)
+void cvsForServer :: Wait(int machineId, int mailBoxId,int conditionId, int conditionLockId)
 {
 
 	if(waitingCVOnLock ==-1)
@@ -194,7 +199,8 @@ void cvsForServer :: Wait(int machineId, int mailBoxId, int conditionLockId)
 	{
 		char *response = new char[100];
 		sprintf(response,"%s","-1");
-		printf(" CONDITION WAIT FAIL INVALID CONDITION LOCK ID PASSED  \n");
+		printf(" CONDITION %d WAIT FAIL INVALID CONDITION LOCK ID %d PASSED MESSAGE SENT TO  machineId = %d mailBoxId = %d \n",
+				conditionId,conditionLockId,machineId,mailBoxId);
 		SendMessage(machineId,mailBoxId,response);
 		delete [] response;
 		return;
@@ -211,13 +217,15 @@ void cvsForServer :: Wait(int machineId, int mailBoxId, int conditionLockId)
 	clientRply->outMailHdr.from= 0;
 	clientRply->outMailHdr.length=strlen((clientRply->data)+1);
 
-	printf("APPENDING TO CONDITION WAIT QUEUE  machineId = %d mailBoxId = %d \n",machineId, mailBoxId);
+	printf("CONDITION %d WITH LOCK %d APPENDING TO CONDITION WAIT QUEUE CONDITION machineId = %d mailBoxId = %d \n",
+			conditionId,conditionLockId,machineId, mailBoxId);
 	//now append clientMsg to wait queue
 	waitingQueueOfCVS-> Append((void*)clientRply);
 
-	printf("CONDITION WAIT RELEASING LOCK  machineId = %d mailBoxId = %d \n",machineId, mailBoxId);
+	printf("CONDITION %d WITH LOCK %d CONDITION WAIT RELEASING LOCK  machineId = %d mailBoxId = %d \n",
+			conditionId,conditionLockId,machineId, mailBoxId);
 	//release
-	serverLockTable.serverLocksArray[conditionLockId].serverLock->Release(machineId, mailBoxId);
+	serverLockTable.serverLocksArray[conditionLockId].serverLock->Release(conditionLockId,machineId, mailBoxId);
 
 	//TODO: whether to do acquire here or not..as aft release we need to acquire lock
 	//as we come out of wait..
@@ -225,14 +233,15 @@ void cvsForServer :: Wait(int machineId, int mailBoxId, int conditionLockId)
 }
 
 
-void cvsForServer :: Broadcast(int machineId, int mailBoxId, int conditionLockId)
+void cvsForServer :: Broadcast(int machineId, int mailBoxId,int conditionId, int conditionLockId)
 {
 	if(waitingCVOnLock != conditionLockId)
 	{
 		//Illegal lock , so cannot signa..
 		char *response = new char[100];
 		sprintf(response,"%s","-1");
-		printf(" CONDITION BROADCAST FAIL INVALID CONDITION LOCK ID PASSED  \n");
+		printf(" CONDITION %d BROADCAST FAIL INVALID CONDITION LOCK ID %d PASSED MESSAGE SENT TO  machineId = %d mailBoxId = %d \n",
+				conditionId,conditionLockId,machineId,mailBoxId);
 		SendMessage(machineId,mailBoxId,response);
 		delete [] response;
 		return;
@@ -241,7 +250,8 @@ void cvsForServer :: Broadcast(int machineId, int mailBoxId, int conditionLockId
 	if(waitingQueueOfCVS -> IsEmpty())
 	{
 		//send signal even if queie is empty
-		printf(" CONDITION BROADCAST FAIL NO ONE WAITING FOR THIS CONDITION  \n");
+		printf(" CONDITION %d BROADCAST FAIL NO ONE WAITING FOR THIS CONDITION MESSAGE SENT TO  machineId = %d mailBoxId = %d \n",
+				conditionId,machineId,mailBoxId);
 		char *response = new char[100];
 		sprintf(response,"%s","1");
 		SendMessage(machineId,mailBoxId,response);
@@ -261,7 +271,7 @@ void cvsForServer :: Broadcast(int machineId, int mailBoxId, int conditionLockId
 		clientRply= (clientReply*)waitingQueueOfCVS->Remove();
 		printf(" REMOVING CLIENT  machineId = %d mailBoxId = %d\n",clientRply->outPktHdr.to,clientRply->outMailHdr.to);
 		serverLockTable.serverLocksArray[conditionLockId].serverLock->
-		Acquire(clientRply->outPktHdr.to, clientRply->outMailHdr.to);
+		Acquire(conditionLockId,clientRply->outPktHdr.to, clientRply->outMailHdr.to);
 	}
 	if(waitingQueueOfCVS -> IsEmpty())
 	{
@@ -270,7 +280,8 @@ void cvsForServer :: Broadcast(int machineId, int mailBoxId, int conditionLockId
 
 	char *response = new char[100];
 	sprintf(response,"%s","1");
-	printf(" CONDITION BROADCAST PASS machineId = %d mailBoxId = %d \n",machineId, mailBoxId);
+	printf(" CONDITION %d WITH LOCK %d BROADCAST DONE MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+			conditionId,conditionLockId,machineId, mailBoxId);
 	SendMessage(machineId,mailBoxId,response);
 	delete [] response;
 	return;
@@ -292,7 +303,7 @@ void CreateLock(int machineId, int mailBoxId, char * name)
 			char *buf = new char[MaxMailSize];
 			memset(buf,0,MaxMailSize);
 			sprintf(buf,"%d",i); //since lock is already crated give the lock id in message
-			printf("Lock already created so sent the lockId to the client\n");
+			printf("LOCK %d ALREADY CREATED MESSAGE SENT TO machineId = %d mailBoxId = %d \n",i,machineId,mailBoxId);
 			SendMessage(machineId,mailBoxId,buf);
 			delete [] buf;
 			return;
@@ -302,11 +313,10 @@ void CreateLock(int machineId, int mailBoxId, char * name)
 //check to find whether there is place to create new lock
 	if((index = serverLockTable.sLockBitMap->Find()) == -1)
 	{
-		printf("No place to create new lock, Max limit of locks reached\n");
 		char *buf = new char[MaxMailSize];
 		memset(buf,0,MaxMailSize);
 		sprintf(buf,"%s","-1");
-		printf("message sent to client that there is no place to create new lock\n");
+		printf("NEW LOCK CANT BE CREATED. LOCK MAX LIMIT REACHED MESSAGE SENT TO  machineId = %d mailBoxId = %d \n",machineId,mailBoxId);
 		SendMessage(machineId,mailBoxId,buf);
 		delete [] buf;
 		return;
@@ -319,7 +329,7 @@ void CreateLock(int machineId, int mailBoxId, char * name)
 		char *buf = new char[MaxMailSize];
 		memset(buf,0,MaxMailSize);
 		sprintf(buf,"%d",index);
-		printf("message sent to client that lock is created with lockId %d\n",index);
+		printf("NEW LOCK %d CREATED MESSAGE SENT TO machineId = %d mailBoxId = %d \n",index,machineId,mailBoxId);
 		SendMessage(machineId,mailBoxId,buf);
 		delete [] buf;
 		return;
@@ -341,6 +351,7 @@ void DestroyLock(int machineId, int mailBoxId, int lockId)
 		char *buf = new char[MaxMailSize];
 		memset(buf,0,MaxMailSize);
 		sprintf(buf,"%s","-1");
+		printf("LOCK %d CANT BE DESTROYED AS INVALID LOCK MESSAGE SENT TO machineId = %d mailBoxId = %d \n",lockId,machineId,mailBoxId);
 		SendMessage(machineId,mailBoxId,buf);
 		delete [] buf;
 		return;
@@ -349,7 +360,7 @@ void DestroyLock(int machineId, int mailBoxId, int lockId)
 
 	if(serverLockTable.serverLocksArray[lockId].valid == false)
 	{
-		printf("Lock already deleted cannot destroy lock \n");
+		printf("LOCK %d CANT BE DESTROYED AS ALREADY DESTROYED MESSAGE SENT TO machineId = %d mailBoxId = %d \n",lockId,machineId,mailBoxId);
 		char *buf = new char[MaxMailSize];
 		memset(buf,0,MaxMailSize);
 		sprintf(buf,"%s","-1");
@@ -366,26 +377,28 @@ void DestroyLock(int machineId, int mailBoxId, int lockId)
 	//lock can be destroyed only if the server lock counter is 0
 	if((serverLockTable.serverLocksArray[lockId].sLockCounter)==0)
 	{
-	serverLockTable.sLockBitMap->Clear(lockId);
-	delete serverLockTable.serverLocksArray[lockId].serverLock;
-	serverLockTable.serverLocksArray[lockId].valid = false;
-	//(serverLockTable.serverLocksArray[lockId].sLockCounter)=0;
-	char *buf = new char[MaxMailSize];
-	memset(buf,0,MaxMailSize);
-	sprintf(buf,"%s","1");
-	SendMessage(machineId,mailBoxId,buf);
-	delete [] buf;
-	return;
+		serverLockTable.sLockBitMap->Clear(lockId);
+		delete serverLockTable.serverLocksArray[lockId].serverLock;
+		serverLockTable.serverLocksArray[lockId].valid = false;
+		//(serverLockTable.serverLocksArray[lockId].sLockCounter)=0;
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","1");
+		printf("LOCK %d DESTROYED MESSAGE SENT TO machineId = %d mailBoxId = %d \n",lockId,machineId,mailBoxId);
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
+		return;
 	}
 	else
 	{
-	printf("Lock cannot be deleted as it is in use\n");
-	char *buf = new char[MaxMailSize];
-	memset(buf,0,MaxMailSize);
-	sprintf(buf,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf);
-	delete [] buf;
-	return;
+		printf("LOCK %d CANT BE DESTROYED AS USED BY OTHERS MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+				lockId,machineId,mailBoxId);
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
+		return;
 	}
 }
 
@@ -394,7 +407,8 @@ void AcquireMethod(int machineId,int mailBoxId,int lockId)
 	//check lock id range
 	if(lockId<0||lockId>=MAX_LOCKS)
 	{
-		printf("lockid out of range \n");
+		printf("LOCK %d CANT BE ACQUIRED AS INVALID LOCK MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+				lockId,machineId,mailBoxId );
 		char *data = new char[5];
 		sprintf(data,"%s","-1");
 		SendMessage(machineId, mailBoxId,data);
@@ -402,15 +416,17 @@ void AcquireMethod(int machineId,int mailBoxId,int lockId)
 		return;
 	}
 
-	if(serverLockTable.serverLocksArray[lockId].valid==false){
-		printf("lock id does not exist \n");
+	if(serverLockTable.serverLocksArray[lockId].valid==false)
+	{
+		printf("LOCK %d CANT BE ACQUIRED AS INVALID LOCK MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+				lockId,machineId,mailBoxId );
 		char *data = new char[5];
 		sprintf(data,"%s","-1");
 		SendMessage(machineId, mailBoxId,data);
 		delete[] data;
 		return;
 	}
-	serverLockTable.serverLocksArray[lockId].serverLock->Acquire(machineId,mailBoxId);
+	serverLockTable.serverLocksArray[lockId].serverLock->Acquire(lockId,machineId,mailBoxId);
 
 }
 
@@ -420,7 +436,8 @@ void ReleaseMethod(int machineId,int mailBoxId,int lockId)
 		//check lock id range
 	if(lockId<0||lockId>=MAX_LOCKS)
 	{
-		printf("lockid out of range \n");
+		printf("LOCK %d CANT BE RELEASED AS INVALID LOCK MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+				lockId,machineId,mailBoxId );
 		char *data = new char[5];
 		sprintf(data,"%s","-1");
 		SendMessage(machineId, mailBoxId,data);
@@ -430,7 +447,8 @@ void ReleaseMethod(int machineId,int mailBoxId,int lockId)
 
 	//Check if a lock with the given id was already created
 	if(serverLockTable.serverLocksArray[lockId].valid==false){
-		printf("lock id does not exist \n");
+		printf("LOCK %d CANT BE RELEASED AS INVALID LOCK MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+				lockId,machineId,mailBoxId );
 		char *data = new char[5];
 		sprintf(data,"%s","-1");
 		SendMessage(machineId, mailBoxId,data);
@@ -438,25 +456,26 @@ void ReleaseMethod(int machineId,int mailBoxId,int lockId)
 		return;
 	}
 
-	reply = serverLockTable.serverLocksArray[lockId].serverLock->Release(machineId,mailBoxId);
+	reply = serverLockTable.serverLocksArray[lockId].serverLock->Release(lockId,machineId,mailBoxId);
 	//returns true if lock can be released
 	//Reply message will be sent by the Release method
 	if(reply==false)
 	{
 		char *buf = new char[MaxMailSize];
 		sprintf(buf,"%s", "-1");
-		printf("Lock ID %d can not be  released \n",lockId);
+		printf("LOCK %d CANT BE RELEASED AS YOU ARE NOT CURRENT OWNER OF LOCK MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+				lockId,machineId,mailBoxId);
 		SendMessage(machineId, mailBoxId, buf);
 		delete[] buf;
 		return;
 	}
-	else{
+	else
+	{
 		char *buf = new char[MaxMailSize];
 		sprintf(buf,"%s", "1");
-		printf("Lock ID %d is released \n",lockId);
 		SendMessage(machineId, mailBoxId, buf);
 		delete[] buf;
-		}
+	}
 }
 
 void CreateCondition(int machineId, int mailBoxId, char * name)
@@ -473,7 +492,7 @@ void CreateCondition(int machineId, int mailBoxId, char * name)
 			char *buf = new char[MaxMailSize];
 			memset(buf,0,MaxMailSize);
 			sprintf(buf,"%d",i); //since lock is already crated give the lock id in message
-			printf("CV already created so sent the CVId to the client\n");
+			printf("CONDITION %d ALREADY CREATED MESSAGE SENT TO machineId = %d mailBoxId = %d \n",i,machineId,mailBoxId);
 			SendMessage(machineId,mailBoxId,buf);
 			delete [] buf;
 			return;
@@ -483,11 +502,11 @@ void CreateCondition(int machineId, int mailBoxId, char * name)
 //check to find whether there is place to create new lock
 	if((index=serverCVTable.sCVBitMap->Find())==-1)
 	{
-		printf("No place to create new CV, Max limit of CVS reached\n");
+		printf("NEW CONDITION CANT BE CREATED. CONDITION MAX LIMIT REACHED MESSAGE SENT TO  "
+				"machineId = %d mailBoxId = %d \n",machineId,mailBoxId);
 		char *buf = new char[MaxMailSize];
 		memset(buf,0,MaxMailSize);
 		sprintf(buf,"%s","-1");
-		printf("message sent to client that there is no place to create new CV\n");
 		SendMessage(machineId,mailBoxId,buf);
 		delete [] buf;
 		return;
@@ -500,7 +519,7 @@ void CreateCondition(int machineId, int mailBoxId, char * name)
 		char *buf = new char[MaxMailSize];
 		memset(buf,0,MaxMailSize);
 		sprintf(buf,"%d",index);
-		printf("message sent to client that CV is created with CVId %d\n",index);
+		printf("NEW CONDITION %d CREATED MESSAGE SENT TO machineId = %d mailBoxId = %d \n",index,machineId,mailBoxId);
 		SendMessage(machineId,mailBoxId,buf);
 		delete [] buf;
 		return;
@@ -514,7 +533,8 @@ void DestroyCondition(int machineId, int mailBoxId, int cvId)
 	if(cvId< 0 || cvId > MAX_CVS)
 	{
 
-		printf("Invalid cvId\n");
+		printf("CONDITION %d CANT BE DESTROYED AS INVALID CONDITION MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+				cvId,machineId,mailBoxId);
 		char *buf = new char[MaxMailSize];
 		memset(buf,0,MaxMailSize);
 		sprintf(buf,"%s","-1");
@@ -526,7 +546,8 @@ void DestroyCondition(int machineId, int mailBoxId, int cvId)
 
 	if(serverCVTable.serverCVSArray[cvId].valid == false)
 	{
-		printf("CV already deleted cannot destroy CV \n");
+		printf("CONDITION %d CANT BE DESTROYED AS ALREADY DESTROYED MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+				cvId,machineId,mailBoxId);
 		char *buf = new char[MaxMailSize];
 		memset(buf,0,MaxMailSize);
 		sprintf(buf,"%s","-1");
@@ -542,25 +563,27 @@ void DestroyCondition(int machineId, int mailBoxId, int cvId)
 	//CV can be destroyed only if the server CV counter is 0
 	if((serverCVTable.serverCVSArray[cvId].sCVCounter)==0)
 	{
-	serverCVTable.sCVBitMap->Clear(cvId);
-	delete serverCVTable.serverCVSArray[cvId].serverCV;
-	serverCVTable.serverCVSArray[cvId].valid = false;
-	char *buf = new char[MaxMailSize];
-	memset(buf,0,MaxMailSize);
-	sprintf(buf,"%s","1");
-	SendMessage(machineId,mailBoxId,buf);
-	delete [] buf;
-	return;
+		serverCVTable.sCVBitMap->Clear(cvId);
+		delete serverCVTable.serverCVSArray[cvId].serverCV;
+		serverCVTable.serverCVSArray[cvId].valid = false;
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","1");
+		printf("CONDITION %d DESTROYED MESSAGE SENT TO machineId = %d mailBoxId = %d \n",cvId,machineId,mailBoxId);
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
+		return;
 	}
 	else
 	{
-	printf("CV cannot be deleted as it is in use\n");
-	char *buf = new char[MaxMailSize];
-	memset(buf,0,MaxMailSize);
-	sprintf(buf,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf);
-	delete [] buf;
-	return;
+		printf("CONDITION %d CANT BE DESTROYED AS USED BY OTHERS MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+			cvId,machineId,mailBoxId);
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
+		return;
 	}
 }
 
@@ -568,30 +591,32 @@ void WaitMethod(int machineId, int mailBoxId, int lockId, int cvId)
 {
 	if(lockId<0 || lockId>MAX_LOCKS || cvId<0 || cvId> MAX_CVS)
 	{
-	printf("Lock and CV out of range \n");
-	char *buf = new char[MaxMailSize];
-	memset(buf,0,MaxMailSize);
-	sprintf(buf,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf);
-	delete [] buf;
-	return;
+		printf("CONDITION WAIT FAILED AS LOCK %d OR CONDITION %d ARE INVALID MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+				lockId,cvId,machineId,mailBoxId);
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
+		return;
 	}
 
 
 	if(serverLockTable.serverLocksArray[lockId].valid == false || serverCVTable.serverCVSArray[cvId].valid
 			== false)
 	{
-	printf("Lock or CV is not valid\n");
-	char *buf = new char[MaxMailSize];
-	memset(buf,0,MaxMailSize);
-	sprintf(buf,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf);
-	delete [] buf;
-	return;
+		printf("CONDITION WAIT FAILED AS LOCK %d OR CONDITION %d ARE INVALID MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+				lockId,cvId,machineId,mailBoxId);
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
+		return;
 	}
 
 	//If we are here then the lock and CV both are valid
-	serverCVTable.serverCVSArray[cvId].serverCV->Wait(machineId,mailBoxId,lockId);
+	serverCVTable.serverCVSArray[cvId].serverCV->Wait(machineId,mailBoxId,cvId,lockId);
 	//TODO : see this declaration ie order of parameters of serverWaitfunction
 }
 
@@ -601,30 +626,32 @@ void SignalMethod(int machineId, int mailBoxId, int lockId, int cvId)
 {
 	if(lockId<0 || lockId>MAX_LOCKS || cvId<0 || cvId> MAX_CVS)
 	{
-	printf("Lock and CV out of range \n");
-	char *buf = new char[MaxMailSize];
-	memset(buf,0,MaxMailSize);
-	sprintf(buf,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf);
-	delete [] buf;
-	return;
+		printf("CONDITION SIGNAL FAILED AS LOCK %d OR CONDITION %d ARE INVALID MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+					lockId,cvId,machineId,mailBoxId);
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
+		return;
 	}
 
 
 	if(serverLockTable.serverLocksArray[lockId].valid == false || serverCVTable.serverCVSArray[cvId].valid
 			== false)
 	{
-	printf("Lock or CV is not valid\n");
-	char *buf = new char[MaxMailSize];
-	memset(buf,0,MaxMailSize);
-	sprintf(buf,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf);
-	delete [] buf;
-	return;
+		printf("CONDITION SIGNAL FAILED AS LOCK %d OR CONDITION %d ARE INVALID MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+					lockId,cvId,machineId,mailBoxId);
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
+		return;
 	}
 
 	//If we are here then the lock and CV both are valid
-	serverCVTable.serverCVSArray[cvId].serverCV->Signal(machineId,mailBoxId,lockId);
+	serverCVTable.serverCVSArray[cvId].serverCV->Signal(machineId,mailBoxId,cvId,lockId);
 	//TODO : see this declaration ie order of parameters of serverWaitfunction
 }
 
@@ -633,30 +660,32 @@ void BroadcastMethod(int machineId, int mailBoxId, int lockId, int cvId)
 {
 	if(lockId<0 || lockId>MAX_LOCKS || cvId<0 || cvId> MAX_CVS)
 	{
-	printf("Lock and CV out of range \n");
-	char *buf = new char[MaxMailSize];
-	memset(buf,0,MaxMailSize);
-	sprintf(buf,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf);
-	delete [] buf;
-	return;
+		printf("CONDITION BROADCAST FAILED AS LOCK %d OR CONDITION %d ARE INVALID MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+					lockId,cvId,machineId,mailBoxId);
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
+		return;
 	}
 
 
 	if(serverLockTable.serverLocksArray[lockId].valid == false || serverCVTable.serverCVSArray[cvId].valid
 			== false)
 	{
-	printf("Lock or CV is not valid\n");
-	char *buf = new char[MaxMailSize];
-	memset(buf,0,MaxMailSize);
-	sprintf(buf,"%s","-1");
-	SendMessage(machineId,mailBoxId,buf);
-	delete [] buf;
-	return;
+		printf("CONDITION BROADCAST FAILED AS LOCK %d OR CONDITION %d ARE INVALID MESSAGE SENT TO machineId = %d mailBoxId = %d \n",
+					lockId,cvId,machineId,mailBoxId);
+		char *buf = new char[MaxMailSize];
+		memset(buf,0,MaxMailSize);
+		sprintf(buf,"%s","-1");
+		SendMessage(machineId,mailBoxId,buf);
+		delete [] buf;
+		return;
 	}
 
 	//If we are here then the lock and CV both are valid
-	serverCVTable.serverCVSArray[cvId].serverCV->Broadcast(machineId,mailBoxId,lockId);
+	serverCVTable.serverCVSArray[cvId].serverCV->Broadcast(machineId,mailBoxId,cvId,lockId);
 	//TODO : see this declaration ie order of parameters of serverWaitfunction
 }
 
