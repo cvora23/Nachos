@@ -379,7 +379,8 @@ void AddrSpace::SaveState()
 	IntStatus old=interrupt->SetLevel(IntOff);
 
 	//Invalidating all entries on TLB during context switch
-	for(int i=0; i<TLBSize; i++){
+	for(int i=0; i<TLBSize; i++)
+	{
 		if(machine->tlb[i].valid==TRUE)
 		{
 			//copy the dirty bit from the TLB to IPT

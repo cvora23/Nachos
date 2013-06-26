@@ -66,7 +66,7 @@ void locksForServer::Acquire(int machineId,int mailBoxId)
 {
 	if(isHeldByCurrentClient(machineId,mailBoxId))
 	{
-		printf("THe Lock is already acquired by the Client");
+		printf("THe Lock is already acquired by the Client\n");
 		char* buf = new char[MaxMailSize];
 		sprintf(buf,"%s","1");
 		SendMessage(machineId,mailBoxId,buf);
@@ -102,7 +102,7 @@ bool locksForServer::Release(int machineId,int mailBoxId)
 {
 	if(!isHeldByCurrentClient(machineId,mailBoxId))
 	{
-		printf("Error releasing since the current cient does not hold the lock");
+		printf("Error releasing since the current cient does not hold the lock\n");
 		return false;
 	}
 
@@ -329,7 +329,7 @@ void DestroyLock(int machineId, int mailBoxId, int lockId)
 
 	if(serverLockTable.serverLocksArray[lockId].valid == false)
 	{
-		printf("Lock already deleted cannot destroy lock");
+		printf("Lock already deleted cannot destroy lock \n");
 		char *buf = new char[MaxMailSize];
 		memset(buf,0,MaxMailSize);
 		sprintf(buf,"%s","-1");
@@ -374,7 +374,7 @@ void AcquireMethod(int machineId,int mailBoxId,int lockId)
 	//check lock id range
 	if(lockId<0||lockId>=MAX_LOCKS)
 	{
-		printf("lockid out of range");
+		printf("lockid out of range \n");
 		char *data = new char[5];
 		sprintf(data,"%s","-1");
 		SendMessage(machineId, mailBoxId,data);
@@ -383,7 +383,7 @@ void AcquireMethod(int machineId,int mailBoxId,int lockId)
 	}
 
 	if(serverLockTable.serverLocksArray[lockId].valid==false){
-		printf("lock id does not exist");
+		printf("lock id does not exist \n");
 		char *data = new char[5];
 		sprintf(data,"%s","-1");
 		SendMessage(machineId, mailBoxId,data);
@@ -400,7 +400,7 @@ void ReleaseMethod(int machineId,int mailBoxId,int lockId)
 		//check lock id range
 	if(lockId<0||lockId>=MAX_LOCKS)
 	{
-		printf("lockid out of range");
+		printf("lockid out of range \n");
 		char *data = new char[5];
 		sprintf(data,"%s","-1");
 		SendMessage(machineId, mailBoxId,data);
@@ -410,7 +410,7 @@ void ReleaseMethod(int machineId,int mailBoxId,int lockId)
 
 	//Check if a lock with the given id was already created
 	if(serverLockTable.serverLocksArray[lockId].valid==false){
-		printf("lock id does not exist");
+		printf("lock id does not exist \n");
 		char *data = new char[5];
 		sprintf(data,"%s","-1");
 		SendMessage(machineId, mailBoxId,data);
@@ -506,7 +506,7 @@ void DestroyCondition(int machineId, int mailBoxId, int cvId)
 
 	if(serverCVTable.serverCVSArray[cvId].valid == false)
 	{
-		printf("CV already deleted cannot destroy CV");
+		printf("CV already deleted cannot destroy CV \n");
 		char *buf = new char[MaxMailSize];
 		memset(buf,0,MaxMailSize);
 		sprintf(buf,"%s","-1");
@@ -548,7 +548,7 @@ void WaitMethod(int machineId, int mailBoxId, int lockId, int cvId)
 {
 	if(lockId<0 || lockId>MAX_LOCKS || cvId<0 || cvId> MAX_CVS)
 	{
-	printf("Lock and CV out of range");
+	printf("Lock and CV out of range \n");
 	char *buf = new char[MaxMailSize];
 	memset(buf,0,MaxMailSize);
 	sprintf(buf,"%s","-1");
@@ -581,7 +581,7 @@ void SignalMethod(int machineId, int mailBoxId, int lockId, int cvId)
 {
 	if(lockId<0 || lockId>MAX_LOCKS || cvId<0 || cvId> MAX_CVS)
 	{
-	printf("Lock and CV out of range");
+	printf("Lock and CV out of range \n");
 	char *buf = new char[MaxMailSize];
 	memset(buf,0,MaxMailSize);
 	sprintf(buf,"%s","-1");
@@ -613,7 +613,7 @@ void BroadcastMethod(int machineId, int mailBoxId, int lockId, int cvId)
 {
 	if(lockId<0 || lockId>MAX_LOCKS || cvId<0 || cvId> MAX_CVS)
 	{
-	printf("Lock and CV out of range");
+	printf("Lock and CV out of range \n");
 	char *buf = new char[MaxMailSize];
 	memset(buf,0,MaxMailSize);
 	sprintf(buf,"%s","-1");
