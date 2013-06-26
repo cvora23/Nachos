@@ -69,6 +69,8 @@ void locksForServer::Acquire(int machineId,int mailBoxId)
 		printf("THe Lock is already acquired by the Client\n");
 		char* buf = new char[MaxMailSize];
 		sprintf(buf,"%s","1");
+		printf("LOCK ACQUIRE FAIL REPLY TO : machineId = %d mailBoxId = %d \n",
+				machineId,mailBoxId);
 		SendMessage(machineId,mailBoxId,buf);
 		delete [] buf;
 		return;
@@ -80,13 +82,14 @@ void locksForServer::Acquire(int machineId,int mailBoxId)
 		ownerMailBoxId = mailBoxId;
 		char* buf = new char[MaxMailSize];
 		sprintf(buf,"%s","1");
+		printf("LOCK ACQUIRE PASS REPLY TO : machineId = %d mailBoxId = %d \n",
+				machineId,mailBoxId);
 		SendMessage(machineId,mailBoxId,buf);
 		delete [] buf;
 	}
 	else
 	{
 		clientReply *clientRply = new clientReply();
-
 		sprintf(clientRply->data,"%s","1");
 		clientRply->outPktHdr.to = machineId;
 		clientRply->outMailHdr.to = mailBoxId;
@@ -111,7 +114,8 @@ bool locksForServer::Release(int machineId,int mailBoxId)
 	{
 		ownerMachineId = clientRply->outPktHdr.to;
 		ownerMailBoxId = clientRply->outMailHdr.to;
-
+		printf("LOCK RELEASED TO  : machineId = %d mailBoxId = %d \n",
+				clientRply->outPktHdr.to,clientRply->outMailHdr.to);
 		SendMessage(clientRply->outPktHdr.to,clientRply->outMailHdr.to,clientRply->data);
 		delete clientRply;
 	}
@@ -142,6 +146,7 @@ void cvsForServer::Signal(int machineId,int mailBoxId,int conditionLockId)
 	{
 		char* response = new char[100];
 		sprintf(response,"%s","-1");
+		printf(" CONDITION SIGNAL FAIL INVALID CONDITION LOCK ID PASSED  \n");
 		SendMessage(machineId,mailBoxId,response);
 		delete [] response;
 		return;
@@ -151,6 +156,7 @@ void cvsForServer::Signal(int machineId,int mailBoxId,int conditionLockId)
 	{
 		char* response = new char[100];
 		sprintf(response,"%s","-1");
+		printf(" CONDITION SIGNAL FAIL NO ONE WAITING FOR THIS CONDITION \n");
 		SendMessage(machineId,mailBoxId,response);
 		delete [] response;
 		waitingCVOnLock = -1;
@@ -158,11 +164,18 @@ void cvsForServer::Signal(int machineId,int mailBoxId,int conditionLockId)
 	}
 
 	clientReply* clientRply= (clientReply*)waitingQueueOfCVS->Remove();
-	serverLockTable.serverLocksArray[conditionLockId].serverLock->Acquire(clientRply->outPktHdr.to,
+	if(clientRply != NULL)
+	{
+		printf("SOMEONE WAITING FOR THIS SIGNAL  : machineId = %d mailBoxId = %d \n",
+				clientRply->outPktHdr.to,clientRply->outMailHdr.to);
+		serverLockTable.serverLocksArray[conditionLockId].serverLock->Acquire(clientRply->outPktHdr.to,
 			clientRply->outMailHdr.to);
+	}
 
 	char *response = new char[100];
 	sprintf(response,"%s","1");
+	printf("CONDITION SIGNAL PASS REPLY TO  : machineId = %d mailBoxId = %d \n",
+			machineId,mailBoxId);
 	SendMessage(machineId,mailBoxId,response);
 	delete [] response;
 	return;
@@ -172,16 +185,16 @@ void cvsForServer :: Wait(int machineId, int mailBoxId, int conditionLockId)
 {
 
 	if(waitingCVOnLock ==-1)
-	//no one is waiting on the lock
 	{
+		//no one is waiting on the lock
 		waitingCVOnLock= conditionLockId;
 	}
-
 
 	if(waitingCVOnLock != conditionLockId)
 	{
 		char *response = new char[100];
 		sprintf(response,"%s","-1");
+		printf(" CONDITION WAIT FAIL INVALID CONDITION LOCK ID PASSED  \n");
 		SendMessage(machineId,mailBoxId,response);
 		delete [] response;
 		return;
@@ -198,9 +211,11 @@ void cvsForServer :: Wait(int machineId, int mailBoxId, int conditionLockId)
 	clientRply->outMailHdr.from= 0;
 	clientRply->outMailHdr.length=strlen((clientRply->data)+1);
 
+	printf("APPENDING TO CONDITION WAIT QUEUE  machineId = %d mailBoxId = %d \n",machineId, mailBoxId);
 	//now append clientMsg to wait queue
 	waitingQueueOfCVS-> Append((void*)clientRply);
 
+	printf("CONDITION WAIT RELEASING LOCK  machineId = %d mailBoxId = %d \n",machineId, mailBoxId);
 	//release
 	serverLockTable.serverLocksArray[conditionLockId].serverLock->Release(machineId, mailBoxId);
 
@@ -217,6 +232,7 @@ void cvsForServer :: Broadcast(int machineId, int mailBoxId, int conditionLockId
 		//Illegal lock , so cannot signa..
 		char *response = new char[100];
 		sprintf(response,"%s","-1");
+		printf(" CONDITION BROADCAST FAIL INVALID CONDITION LOCK ID PASSED  \n");
 		SendMessage(machineId,mailBoxId,response);
 		delete [] response;
 		return;
@@ -225,6 +241,7 @@ void cvsForServer :: Broadcast(int machineId, int mailBoxId, int conditionLockId
 	if(waitingQueueOfCVS -> IsEmpty())
 	{
 		//send signal even if queie is empty
+		printf(" CONDITION BROADCAST FAIL NO ONE WAITING FOR THIS CONDITION  \n");
 		char *response = new char[100];
 		sprintf(response,"%s","1");
 		SendMessage(machineId,mailBoxId,response);
@@ -237,10 +254,12 @@ void cvsForServer :: Broadcast(int machineId, int mailBoxId, int conditionLockId
 	//so for this remove clientMsg from waitQueue one by one and
 	//acquire lock..so this has to be done in a while loop
 
+	printf(" BROADCASTING ALL THE CLIENTS WAITING FOR THIS CONDITION  \n");
 	clientReply* clientRply;
 	while(!(waitingQueueOfCVS -> IsEmpty()))
 	{
 		clientRply= (clientReply*)waitingQueueOfCVS->Remove();
+		printf(" REMOVING CLIENT  machineId = %d mailBoxId = %d\n",clientRply->outPktHdr.to,clientRply->outMailHdr.to);
 		serverLockTable.serverLocksArray[conditionLockId].serverLock->
 		Acquire(clientRply->outPktHdr.to, clientRply->outMailHdr.to);
 	}
@@ -251,6 +270,7 @@ void cvsForServer :: Broadcast(int machineId, int mailBoxId, int conditionLockId
 
 	char *response = new char[100];
 	sprintf(response,"%s","1");
+	printf(" CONDITION BROADCAST PASS machineId = %d mailBoxId = %d \n",machineId, mailBoxId);
 	SendMessage(machineId,mailBoxId,response);
 	delete [] response;
 	return;
