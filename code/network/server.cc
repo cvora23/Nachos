@@ -648,8 +648,6 @@ void Server()
 {
 #if 1
 
-	printf("Server Loop Started !!!!!!!!!!! \n");
-
 	PacketHeader outPacketHdr, inPacketHdr;
 	MailHeader outMailHdr, inMailHdr;
 	char buffer[MaxMailSize];
