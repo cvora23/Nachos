@@ -167,6 +167,7 @@ void cvsForServer::Signal(int machineId,int mailBoxId,int conditionId,int condit
 		return;
 	}
 
+	printf("Hello World \n");
 	clientReply* clientRply= (clientReply*)waitingQueueOfCVS->Remove();
 	if(clientRply != NULL)
 	{
