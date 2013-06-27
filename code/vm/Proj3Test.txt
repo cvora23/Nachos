@@ -1,0 +1,14 @@
+How To Test:
+
+For Part 1 and Part 2:
+
+From vm directory:
+nachos -P {RAND || FIFO} -x ../test/sort
+nachos -P {RAND || FIFO} -x ../test/matmult
+nachos -P {RAND || FIFO} -x ../test/Proj3test
+
+
+For Part 3:
+in separate windows run the -s (server command) first
+nachos -s
+nachos -m 1 -x ../test/lockTest OR nachos -m 1 -x ../test/conditionTest
