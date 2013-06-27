@@ -51,7 +51,7 @@ void testCase1()
 
 /* TEST FUNCTIONS FOR TEST CASE 2*/
 
-int lockNumber1,cvNumber1,threadsWaiting=0;
+int lockNumber1,cvNumber1;
 int threadID=2;
 
 void testfunc()
@@ -71,7 +71,6 @@ void testfunc()
 	Print2("THREAD %d ACQUIRED LOCK %d \n",myID,lockNumber1);
 
 	Print2("Thread : %d is waiting on lockId : %d \n",myID,lockNumber1);
-	threadsWaiting=threadsWaiting+1;
 	Wait(cvNumber1,lockNumber1);
 
 	Print1("Thread %d Coming Out of Wait\n",myID);
@@ -84,6 +83,8 @@ void testfunc()
 
 #endif
 	Print("END -----------------------------------  testfunc \n");
+
+	Exit(0);
 
 }
 
@@ -103,8 +104,6 @@ void testfunc1()
 	Print2("Thread : %d to send Signal on LOCK %d \n",myID,lockNumber1);
 	Signal(cvNumber1,lockNumber1);
 
-	threadsWaiting=threadsWaiting-1;
-
 	Print2("THREAD %d RELEASING LOCK %d\n",myID,lockNumber1);
 	Release(lockNumber1);
 	Print2("THREAD %d RELEASED LOCK %d\n",myID,lockNumber1);
@@ -114,6 +113,8 @@ void testfunc1()
 #endif
 
 	Print("END -----------------------------------  testfunc1 \n");
+
+	Exit(0);
 
 }
 
@@ -132,7 +133,6 @@ void testfunc2()
 	Acquire(lockNumber1);
 	Print2("THREAD %d ACQUIRED LOCK %d \n",myID,lockNumber1);
 
-	Print2("Thread : %d to send Broadcast to %d more waiting threads\n",myID,threadsWaiting);
 	Broadcast(cvNumber1,lockNumber1);
 
 
@@ -145,6 +145,7 @@ void testfunc2()
 	Print("END -----------------------------------  testfunc2 \n");
 
 #endif
+	Exit(0);
 
 }
 
@@ -198,6 +199,8 @@ void testCase2()
 
 	Print("TestCase 2 Exiting \n");
 
+	Exit(0);
+
 }
 
 int main()
@@ -232,6 +235,9 @@ int main()
 	/**
 	 * EXIT(0);
 	 */
+
+	Exit(0);
+
 }
 
 

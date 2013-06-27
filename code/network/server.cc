@@ -167,7 +167,6 @@ void cvsForServer::Signal(int machineId,int mailBoxId,int conditionId,int condit
 		return;
 	}
 
-	printf("Hello World \n");
 	clientReply* clientRply= (clientReply*)waitingQueueOfCVS->Remove();
 	if(clientRply != NULL)
 	{
@@ -710,10 +709,10 @@ void Server()
 
 	while(1)
 	{
-		printf("Server Loop Started !!!!!!!!!!! \n");
+		/*printf("Server Loop Started !!!!!!!!!!! \n");*/
 
 		postOffice->Receive(0,&inPacketHdr,&inMailHdr,buffer);
-		printf("Received some data... Will Parse the data \n");
+		/*printf("Received some data... Will Parse the data \n");*/
 		outPacketHdr.to = inMailHdr.from;
 		outMailHdr.to =inMailHdr.from;
 		fflush(stdout);
