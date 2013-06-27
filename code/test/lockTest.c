@@ -132,6 +132,25 @@ void testCase4()
 	Print("------------------------------------------------------\n");
 }
 
+void ForkedCreateLockTest()
+{
+	int lockId = -1;
+	int i;
+	Print("CREATE LOCK SYSTEM CALL TEST\n\n");
+
+	Print("PASSING LOCK NAME LENGTH > MAX_LOCK_NAME \n\n");
+	lockId = CreateLock((char*)"LockName",400);
+	Print("------------------------------------------------------\n");
+}
+
+void testCase5()
+{
+	Fork(ForkedCreateLockTest);
+	Print("-----------------------testCase5-------------------------------\n");
+	Exit(0);
+}
+
+
 int main()
 {
 	int testCaseNo;
@@ -140,6 +159,7 @@ int main()
 	Print("2 : DestroyLock system call \n");
 	Print("3 : AcquireLock system call \n");
 	Print("4 : ReleaseLock system call \n");
+	Print("5 : CreateLock on a Forked Thread system call \n");
 
 	Print("Enter your choice \n");
 	testCaseNo = Scan();
@@ -168,12 +188,19 @@ int main()
 			testCase4();
 		}
 		break;
+		case 5:
+		{
+			testCase5();
+		}
+		break;
 		default:
 		{
 			Print("Invalid Test Case No\n");
 		}
 		break;
 	}
+	Exit(0);
+
 }
 
 

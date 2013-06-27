@@ -84,7 +84,21 @@ void testfunc()
 #endif
 	Print("END -----------------------------------  testfunc \n");
 
+	/*
 	Exit(0);
+	*/
+
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+	Exit(0);
+
 
 }
 
@@ -114,39 +128,21 @@ void testfunc1()
 
 	Print("END -----------------------------------  testfunc1 \n");
 
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+	Yield();
+
+	/*
 	Exit(0);
+	 */
 
-}
-
-void testfunc2()
-{
-
-#if 1
-	int myID;
-	myID=threadID;
-	threadID=threadID+1;
-
-	Print("START --------------------- testfunc2 \n");
-
-
-	Print2("THREAD %d TRYING TO ACQUIRE LOCK %d \n",myID,lockNumber1);
-	Acquire(lockNumber1);
-	Print2("THREAD %d ACQUIRED LOCK %d \n",myID,lockNumber1);
-
-	Broadcast(cvNumber1,lockNumber1);
-
-
-	Print2("THREAD %d RELEASING LOCK %d\n",myID,lockNumber1);
-	Release(lockNumber1);
-	Print2("THREAD %d RELEASED LOCK %d\n",myID,lockNumber1);
-
-	Print1("THREAD %d is done !!!!!!!!!!!!!!!!!! \n",myID);
-
-	Print("END -----------------------------------  testfunc2 \n");
-
-#endif
 	Exit(0);
-
 }
 
 void testCase2()
@@ -183,23 +179,8 @@ void testCase2()
 	Print1("CONDITION ID RECEIVED IS %d\n",cvNumber1);
 
 	Fork(testfunc);
-	/*Fork(testfunc);
-		Fork(testfunc);*/
-	Yield();
-
 	Fork(testfunc1);
-
-	Yield();
-	Yield();
-	Yield();
-	Yield();
-	Yield();
-
-	Fork(testfunc2);
-
 	Print("TestCase 2 Exiting \n");
-
-	Exit(0);
 
 }
 
@@ -233,10 +214,8 @@ int main()
 		break;
 	}
 	/**
-	 * EXIT(0);
+	 * Exit(0);
 	 */
-
-	Exit(0);
 
 }
 
